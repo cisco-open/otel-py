@@ -1,5 +1,4 @@
-from otel_fso_launcher import __version__
-
+import otel_fso_launcher
 
 def test_version():
-    assert __version__ == '0.1.0'
+    assert otel_fso_launcher.__version__ == '0.1.0'

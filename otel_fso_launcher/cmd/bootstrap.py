@@ -17,12 +17,9 @@ limitations under the License.
 import argparse
 import sys
 from opentelemetry.instrumentation.bootstrap import run as otel_bootstrap
-from opentelemetry.instrumentation.auto_instrumentation import run as otel_run
+
 
 def run() -> None:
-    otel_run()
-
-def boot() -> None:
     action_install = "install"
     action_requirements = "requirements"
 

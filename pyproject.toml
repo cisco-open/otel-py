@@ -1,12 +1,13 @@
 [tool.poetry]
 name = "otel-fso-launcher"
-version = "0.1.0"
+version = "0.1.6"
 description = ""
 authors = ["SDK <miso@cisco.com>"]
 
 [tool.poetry.scripts]
 otel-py = 'otel_fso_launcher.cmd.trace:run'
-otel-py-bootstrap = 'otel_fso_launcher.cmd.trace:bootstrap'
+otel-py-bootstrap = 'otel_fso_launcher.cmd.bootstrap:run'
+otel-py-boot = 'otel_fso_launcher.cmd.trace:boot'
 
 [tool.poetry.dependencies]
 python = "^3.9"

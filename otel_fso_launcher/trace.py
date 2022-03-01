@@ -23,7 +23,7 @@ from opentelemetry.sdk.trace.export import (
     ConsoleSpanExporter,
 )
 from pkg_resources import iter_entry_points
-from fso import consts
+from otel_fso_launcher import consts
 
 
 def init() -> TracerProvider:

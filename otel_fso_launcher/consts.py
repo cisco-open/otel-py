@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 SERVICE_NAME = "application"
 FSO_ENDPOINT = "http://localhost:4713"
 FSO_TOKEN = ""

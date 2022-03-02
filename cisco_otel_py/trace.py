@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
 import os
 
 from opentelemetry import trace
@@ -23,7 +24,7 @@ from opentelemetry.sdk.trace.export import (
     ConsoleSpanExporter,
 )
 from pkg_resources import iter_entry_points
-from otel_fso_launcher import consts
+from cisco_otel_py import consts
 
 
 def init() -> TracerProvider:

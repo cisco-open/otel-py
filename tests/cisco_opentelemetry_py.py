@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import otel_fso_launcher
+import cisco_otel_py
+
 
 def test_version():
-    assert otel_fso_launcher.__version__ == '0.1.0'
+    assert cisco_otel_py.__version__ == '0.1.0'

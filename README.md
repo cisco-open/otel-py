@@ -1,7 +1,5 @@
 # otel-py
 
-[![Apache License][license-image]][license-image]
-
 Alpha version
 
 This package provides a Cisco Launcher for OpenTelemetry python

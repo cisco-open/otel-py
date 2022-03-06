@@ -22,7 +22,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExport
 
 class SpanExporterFactory:
 
-    def __init__(self, options : Options):
+    def __init__(self, options: Options):
         if options.exporters.exporter_type is consts.HTTP_EXPORTER_TYPE:
             OTLPHTTPExporter(
                 endpoint=options.exporters.collector_endpoint,

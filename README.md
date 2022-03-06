@@ -13,6 +13,7 @@ pip install cisco-otel-py
 ```
 
 poetry
+
 ```sh
 poetry add cisco-otel-py
 ```

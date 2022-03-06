@@ -30,8 +30,7 @@ def init(
         cisco_token: str = None,
         collector_endpoint: str = None,
         exporter_type: str = None,
-    ) -> TracerProvider:
-
+) -> TracerProvider:
     options = configurations.Options(
         service_name,
         cisco_token,

@@ -19,4 +19,3 @@ from opentelemetry.instrumentation.auto_instrumentation import run as otel_run
 
 def run() -> None:
     otel_run()
-

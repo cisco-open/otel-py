@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-
 from cisco_otel_py import tracing, configurations
 
 tracing.init()

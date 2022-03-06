@@ -19,38 +19,44 @@ import os
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import (
-    BatchSpanProcessor,
-    ConsoleSpanExporter,
-)
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pkg_resources import iter_entry_points
-from cisco_otel_py import consts
+from cisco_otel_py import consts, configurations
+from cisco_otel_py.exporter_factory import SpanExporterFactory
 
 
-def init() -> TracerProvider:
-    """Initiate and return an otel trace provider"""
+def init(
+        service_name: str = None,
+        cisco_token: str = None,
+        collector_endpoint: str = None,
+        exporter_type: str = None,
+    ) -> TracerProvider:
 
-    provider = _set_tracing()
+    options = configurations.Options(
+        service_name,
+        cisco_token,
+        collector_endpoint,
+        exporter_type
+    )
+
+    provider = set_tracing(options)
     _auto_instrument()
 
     return provider
 
 
-def _set_tracing() -> TracerProvider:
+def set_tracing(options: configurations.Options) -> TracerProvider:
     service_name = os.environ.get("serviceName") or consts.SERVICE_NAME
-    fso_endpoint = os.environ.get("FSOEndpoint") or consts.FSO_ENDPOINT
-    fso_token = os.environ.get("FSOToken") or consts.FSO_TOKEN
 
     provider = TracerProvider(
         resource=Resource.create(
             {
                 "service.name": service_name,
-                "FSOEndpoint": fso_endpoint,
-                "FSOToken": fso_token,
             }
         )
     )
-    processor = BatchSpanProcessor(ConsoleSpanExporter())
+    exporter = SpanExporterFactory(options)
+    processor = BatchSpanProcessor(exporter)
     trace.set_tracer_provider(provider)
     provider.add_span_processor(processor)
 

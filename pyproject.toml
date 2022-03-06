@@ -1,15 +1,15 @@
 [tool.poetry]
 name = "cisco-otel-py"
-version = "0.1.0"
+version = "0.1.1"
 description = "a minimal python Cisco Launcher for OpenTelemetry"
 license = "Apache-2.0"
 authors = ["Cisco Epsagon Team <support@epsagon.com>"]
-readme = "readme.md"
+readme = "README.md"
 repository = "https://github.com/epsagon/otel-py"
 
 [tool.poetry.scripts]
 otel-py = 'cisco_otel_py.cmd.trace:run'
-otel-py-boot = 'cisco_otel_py.cmd.trace:boot'
+otel-py-bootstrap = 'cisco_otel_py.cmd.bootstrap:run'
 
 [tool.poetry.dependencies]
 python = "^3.9"

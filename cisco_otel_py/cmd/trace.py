@@ -13,16 +13,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import sys
 
-from opentelemetry.instrumentation.bootstrap import run as otel_bootstrap
 from opentelemetry.instrumentation.auto_instrumentation import run as otel_run
 
 
 def run() -> None:
     otel_run()
 
-
-def boot() -> None:
-    sys.argv.append("--action=install")
-    otel_bootstrap()

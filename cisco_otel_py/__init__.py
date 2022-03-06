@@ -15,6 +15,8 @@ limitations under the License.
 """
 
 
-from .trace import init
+from cisco_otel_py import tracing, configurations
+
+tracing.init()
 
 __version__ = '0.1.0'

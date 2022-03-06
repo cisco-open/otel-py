@@ -26,16 +26,13 @@ from cisco_otel_py.exporter_factory import SpanExporterFactory
 
 
 def init(
-        service_name: str = None,
-        cisco_token: str = None,
-        collector_endpoint: str = None,
-        exporter_type: str = None,
+    service_name: str = None,
+    cisco_token: str = None,
+    collector_endpoint: str = None,
+    exporter_type: str = None,
 ) -> TracerProvider:
     options = configurations.Options(
-        service_name,
-        cisco_token,
-        collector_endpoint,
-        exporter_type
+        service_name, cisco_token, collector_endpoint, exporter_type
     )
 
     provider = set_tracing(options)

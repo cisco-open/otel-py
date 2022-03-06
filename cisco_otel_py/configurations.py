@@ -21,7 +21,6 @@ import consts
 
 
 class ExporterOptions:
-
     def __init__(self, collector_endpoint, exporter_type):
         self.collector_endpoint = collector_endpoint
         self.type = exporter_type
@@ -31,14 +30,17 @@ class Options:
     exporters: ExporterOptions
 
     def __init__(
-            self,
-            service_name: str = None,
-            cisco_token: str = None,
-            collector_endpoint: str = None,
-            exporter_type: str = None):
+        self,
+        service_name: str = None,
+        cisco_token: str = None,
+        collector_endpoint: str = None,
+        exporter_type: str = None,
+    ):
 
         if service_name is None:
-            self.service_name = os.environ.get(consts.KEY_SERVICE_NAME) or consts.DEFAULT_SERVICE_NAME
+            self.service_name = (
+                os.environ.get(consts.KEY_SERVICE_NAME) or consts.DEFAULT_SERVICE_NAME
+            )
 
         if cisco_token is None:
             token = os.environ.get(consts.KEY_TOKEN)
@@ -48,8 +50,12 @@ class Options:
             self.cisco_token = token
 
         if collector_endpoint is None:
-            self.exporters.collector_endpoint = os.environ.get(
-                consts.DEFAULT_COLLECTOR_ENDPOINT) or consts.DEFAULT_COLLECTOR_ENDPOINT
+            self.exporters.collector_endpoint = (
+                os.environ.get(consts.DEFAULT_COLLECTOR_ENDPOINT)
+                or consts.DEFAULT_COLLECTOR_ENDPOINT
+            )
 
         if exporter_type is None:
-            self.exporters.exporter_type = os.environ.get(consts.KEY_EXPORTER_TYPE) or consts.DEFAULT_EXPORTER_TYPE
+            self.exporters.exporter_type = (
+                os.environ.get(consts.KEY_EXPORTER_TYPE) or consts.DEFAULT_EXPORTER_TYPE
+            )

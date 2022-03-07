@@ -18,9 +18,10 @@ from typing import Any, Dict
 
 from opentelemetry.instrumentation.distro import BaseDistro
 
-from cisco_otel_py import tracing, configurations
+import tracing
+import options
 
 
 class _CiscoDistro(BaseDistro):
     def _configure(self, **kwargs: Dict[str, Any]) -> None:
-        tracing.set_tracing(configurations.Options)
+        tracing.set_tracing(options.Options)

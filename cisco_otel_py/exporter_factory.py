@@ -25,7 +25,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 )
 
 
-def init(options: Options):
+def init_exporter(options: Options):
     if options.exporter_type is consts.HTTP_EXPORTER_TYPE:
         return OTLPHTTPExporter(
             endpoint=options.collector_endpoint,

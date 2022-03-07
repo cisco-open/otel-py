@@ -1,10 +1,9 @@
-
-from cisco_otel_py import tracing, options
+from cisco_otel_py import tracing
 from opentelemetry import trace as otel_trace
 
 
 def main():
-    tracing.init(options.Options(cisco_token="mock_token"))
+    tracing.init()
     tracer = otel_trace.get_tracer("basic", "0.1")
     with tracer.start_as_current_span(
         "custom span", kind=otel_trace.SpanKind.INTERNAL

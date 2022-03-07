@@ -14,6 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-SERVICE_NAME = "application"
-FSO_ENDPOINT = "http://localhost:4713"
-FSO_TOKEN = ""
+DEFAULT_SERVICE_NAME = "application"
+DEFAULT_COLLECTOR_ENDPOINT = "http://localhost:4317"
+DEFAULT_EXPORTER_TYPE = "otlp-grpc"
+
+KEY_SERVICE_NAME = "OTEL_SERVICE_NAME"
+KEY_COLLECTOR_ENDPOINT = "OTEL_COLLECTOR_ENDPOINT"
+KEY_EXPORTER_TYPE = "OTEL_EXPORTER_TYPE"
+KEY_TOKEN = "CISCO_TOKEN"
+
+HTTP_EXPORTER_TYPE = "otlp-http"
+GRPC_EXPORTER_TYPE = "otlp-grpc"
+TOKEN_HEADER = "X-Epsagon-Token"

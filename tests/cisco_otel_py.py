@@ -18,4 +18,4 @@ import cisco_otel_py
 
 
 def test_version():
-    assert cisco_otel_py.__version__ == '0.1.0'
+    assert cisco_otel_py.__version__ == "0.1.0"

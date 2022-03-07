@@ -15,20 +15,11 @@ limitations under the License.
 """
 
 import os
-from typing import Optional
 
 import consts
 
 
-class ExporterOptions:
-    def __init__(self, collector_endpoint, exporter_type):
-        self.collector_endpoint = collector_endpoint
-        self.type = exporter_type
-
-
 class Options:
-    exporters: ExporterOptions
-
     def __init__(
         self,
         service_name: str = None,
@@ -50,12 +41,12 @@ class Options:
             self.cisco_token = token
 
         if collector_endpoint is None:
-            self.exporters.collector_endpoint = (
+            self.collector_endpoint = (
                 os.environ.get(consts.DEFAULT_COLLECTOR_ENDPOINT)
                 or consts.DEFAULT_COLLECTOR_ENDPOINT
             )
 
         if exporter_type is None:
-            self.exporters.exporter_type = (
+            self.exporter_type = (
                 os.environ.get(consts.KEY_EXPORTER_TYPE) or consts.DEFAULT_EXPORTER_TYPE
             )

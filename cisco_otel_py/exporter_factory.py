@@ -14,9 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-
-from configurations import Options
+from options import Options
 import consts
+
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
     OTLPSpanExporter as OTLPGrpcExporter,
 )
@@ -25,15 +25,14 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 )
 
 
-class SpanExporterFactory:
-    def __init__(self, options: Options):
-        if options.exporters.exporter_type is consts.HTTP_EXPORTER_TYPE:
-            OTLPHTTPExporter(
-                endpoint=options.exporters.collector_endpoint,
-                headers={consts.TOKEN_HEADER: options.cisco_token},
-            )
-        else:
-            OTLPGrpcExporter(
-                endpoint=options.exporters.collector_endpoint,
-                headers={consts.TOKEN_HEADER: options.cisco_token},
-            )
+def init(options: Options):
+    if options.exporter_type is consts.HTTP_EXPORTER_TYPE:
+        return OTLPHTTPExporter(
+            endpoint=options.collector_endpoint,
+            headers={consts.TOKEN_HEADER: options.cisco_token},
+        )
+    else:
+        return OTLPGrpcExporter(
+            endpoint=options.collector_endpoint,
+            headers={consts.TOKEN_HEADER: options.cisco_token},
+        )

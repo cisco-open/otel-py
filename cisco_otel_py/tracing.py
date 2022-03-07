@@ -21,8 +21,10 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pkg_resources import iter_entry_points
-from cisco_otel_py import consts, configurations
-from cisco_otel_py.exporter_factory import SpanExporterFactory
+
+import consts
+import options
+import exporter_factory
 
 
 def init(
@@ -31,18 +33,18 @@ def init(
     collector_endpoint: str = None,
     exporter_type: str = None,
 ) -> TracerProvider:
-    options = configurations.Options(
-        service_name, cisco_token, collector_endpoint, exporter_type
-    )
+    opt = options.Options(service_name, cisco_token, collector_endpoint, exporter_type)
 
-    provider = set_tracing(options)
+    provider = set_tracing(opt)
     _auto_instrument()
 
     return provider
 
 
-def set_tracing(options: configurations.Options) -> TracerProvider:
-    service_name = os.environ.get("serviceName") or consts.SERVICE_NAME
+def set_tracing(opt: options.Options) -> TracerProvider:
+    service_name = (
+        os.environ.get(consts.KEY_SERVICE_NAME) or consts.DEFAULT_SERVICE_NAME
+    )
 
     provider = TracerProvider(
         resource=Resource.create(
@@ -51,7 +53,7 @@ def set_tracing(options: configurations.Options) -> TracerProvider:
             }
         )
     )
-    exporter = SpanExporterFactory(options)
+    exporter = exporter_factory.init(opt)
     processor = BatchSpanProcessor(exporter)
     trace.set_tracer_provider(provider)
     provider.add_span_processor(processor)

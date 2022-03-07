@@ -1,4 +1,4 @@
-from cisco_otel_py import tracing, configurations
+from cisco_otel_py import tracing, options
 from opentelemetry import trace as otel_trace
 
 

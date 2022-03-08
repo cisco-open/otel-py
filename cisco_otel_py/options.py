@@ -16,10 +16,13 @@ limitations under the License.
 
 import os
 
-import consts
+from . import consts
 
 
 class Options:
+    collector_endpoint = consts.DEFAULT_COLLECTOR_ENDPOINT
+    cisco_token = "token"
+
     def __init__(
         self,
         service_name: str = None,
@@ -37,7 +40,7 @@ class Options:
             token = os.environ.get(consts.KEY_TOKEN)
             if token is None:
                 print("Could not initiate tracing without fso token")
-                return
+                # return
             self.cisco_token = token
 
         if collector_endpoint is None:

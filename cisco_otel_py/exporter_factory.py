@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from options import Options
-import consts
+from . import options
+from . import consts
 
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
     OTLPSpanExporter as OTLPGrpcExporter,
@@ -25,14 +25,13 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 )
 
 
-def init_exporter(options: Options):
-    if options.exporter_type is consts.HTTP_EXPORTER_TYPE:
-        return OTLPHTTPExporter(
-            endpoint=options.collector_endpoint,
-            headers={consts.TOKEN_HEADER: options.cisco_token},
-        )
-    else:
-        return OTLPGrpcExporter(
-            endpoint=options.collector_endpoint,
-            headers={consts.TOKEN_HEADER: options.cisco_token},
-        )
+def init_exporter(opt: options.Options):
+    return OTLPGrpcExporter(
+        endpoint="http://localhost:4317",
+        headers=(("abc", "stam"),),
+    )
+    # else:
+    #     return OTLPGrpcExporter(
+    #         endpoint=opt.collector_endpoint,
+    #         headers={consts.TOKEN_HEADER: opt.cisco_token},
+    #     )

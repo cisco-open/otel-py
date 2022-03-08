@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import tracing
-import options
+#import tracing
+#from . import options
 
 __version__ = "0.1.0"

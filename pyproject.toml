@@ -14,6 +14,10 @@ otel-py-bootstrap = 'cisco_otel_py.cmd.bootstrap:run'
 [tool.poetry.dependencies]
 python = "^3.9"
 argparse = "^1.4.0"
+virtualenv = "^20.13.3"
+opentelemetry-instrumentation = "0.26b1"
+opentelemetry-sdk = "1.7.1"
+opentelemetry-exporter-otlp = "1.7.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

@@ -18,8 +18,8 @@ from typing import Any, Dict
 
 from opentelemetry.instrumentation.distro import BaseDistro
 
-import tracing
-import options
+from . import tracing
+from . import options
 
 
 class _CiscoDistro(BaseDistro):

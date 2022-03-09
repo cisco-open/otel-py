@@ -31,8 +31,6 @@ def _set_default_options():
 
 
 class Options:
-    collector_endpoint = consts.DEFAULT_COLLECTOR_ENDPOINT
-    cisco_token = "token"
 
     def __init__(
         self,

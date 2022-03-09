@@ -19,3 +19,7 @@ clean:
 .PHONY: build
 build:
 	poetry build
+
+.PHONY: test
+test:
+	poetry run pytest tests/

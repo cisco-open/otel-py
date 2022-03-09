@@ -13,3 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+
+from os import environ
+
+LOCAL_COLLECTOR = "localhost:4317"
+TEST_TOKEN = "test_token"
+
+
+def clean_env_vars(env_var_names):
+    for v in env_var_names:
+        del environ[v]
+        print("env var", v, "has been unset")

@@ -19,6 +19,17 @@ import os
 from . import consts
 
 
+def _set_default_options():
+    if os.getenv(consts.KEY_SERVICE_NAME) is None:
+        os.environ[consts.KEY_SERVICE_NAME] = consts.DEFAULT_SERVICE_NAME
+
+    if os.getenv(consts.KEY_EXPORTER_TYPE) is None:
+        os.environ[consts.KEY_EXPORTER_TYPE] = consts.DEFAULT_EXPORTER_TYPE
+
+    if os.getenv(consts.KEY_COLLECTOR_ENDPOINT) is None:
+        os.environ[consts.KEY_COLLECTOR_ENDPOINT] = consts.DEFAULT_COLLECTOR_ENDPOINT
+
+
 class Options:
     collector_endpoint = consts.DEFAULT_COLLECTOR_ENDPOINT
     cisco_token = "token"
@@ -30,26 +41,25 @@ class Options:
         collector_endpoint: str = None,
         exporter_type: str = None,
     ):
+        _set_default_options()
 
-        if service_name is None:
-            self.service_name = (
-                os.environ.get(consts.KEY_SERVICE_NAME) or consts.DEFAULT_SERVICE_NAME
+        try:
+            self.service_name = service_name or os.environ.get(consts.KEY_SERVICE_NAME)
+            self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
+            self.collector_endpoint = collector_endpoint or os.environ.get(
+                consts.DEFAULT_COLLECTOR_ENDPOINT
+            )
+            self.exporter_type = exporter_type or os.environ.get(
+                consts.KEY_EXPORTER_TYPE
             )
 
-        if cisco_token is None:
-            token = os.environ.get(consts.KEY_TOKEN)
-            if token is None:
-                print("Could not initiate tracing without fso token")
-                # return
-            self.cisco_token = token
+            if self.cisco_token is None:
+                print("Can not initiate cisco-otel launcher without token")
+                raise ValueError
 
-        if collector_endpoint is None:
-            self.collector_endpoint = (
-                os.environ.get(consts.DEFAULT_COLLECTOR_ENDPOINT)
-                or consts.DEFAULT_COLLECTOR_ENDPOINT
-            )
+            if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
+                print("Unsupported exported type")
+                raise ValueError
 
-        if exporter_type is None:
-            self.exporter_type = (
-                os.environ.get(consts.KEY_EXPORTER_TYPE) or consts.DEFAULT_EXPORTER_TYPE
-            )
+        except ValueError:
+            raise

@@ -22,9 +22,9 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pkg_resources import iter_entry_points
 
-import consts
-import options
-import exporter_factory
+from . import consts
+from . import options
+from . import exporter_factory
 
 
 def init(
@@ -53,7 +53,7 @@ def set_tracing(opt: options.Options) -> TracerProvider:
             }
         )
     )
-    exporter = exporter_factory.init(opt)
+    exporter = exporter_factory.init_exporter(opt)
     processor = BatchSpanProcessor(exporter)
     trace.set_tracer_provider(provider)
     provider.add_span_processor(processor)

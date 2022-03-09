@@ -20,7 +20,7 @@ from cisco_otel_py import options, consts
 from . import utils
 
 
-class MyTestCase(unittest.TestCase):
+class TestOptions(unittest.TestCase):
     def test_default(self):
         options.Options(cisco_token=utils.TEST_TOKEN)
         self.assertEqual(

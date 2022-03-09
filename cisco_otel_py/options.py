@@ -31,7 +31,6 @@ def _set_default_options():
 
 
 class Options:
-
     def __init__(
         self,
         service_name: str = None,

@@ -42,16 +42,8 @@ def init(
 
 
 def set_tracing(opt: options.Options) -> TracerProvider:
-    service_name = (
-        os.environ.get(consts.KEY_SERVICE_NAME) or consts.DEFAULT_SERVICE_NAME
-    )
-
     provider = TracerProvider(
-        resource=Resource.create(
-            {
-                "service.name": service_name,
-            }
-        )
+        resource=Resource.create({"service.name": opt.service_name})
     )
     exporter = exporter_factory.init_exporter(opt)
     processor = BatchSpanProcessor(exporter)

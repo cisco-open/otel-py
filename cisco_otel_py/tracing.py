@@ -28,9 +28,9 @@ from . import exporter_factory
 
 
 def init(
-        service_name: str = None,
-        cisco_token: str = None,
-        exporters: [options.ExporterOptions] = None,
+    service_name: str = None,
+    cisco_token: str = None,
+    exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
     opt = options.Options(service_name, cisco_token, exporters)
 

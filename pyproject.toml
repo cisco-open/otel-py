@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cisco-otel-py"
-version = "0.1.5"
+version = "0.1.6"
 description = "a minimal python Cisco Launcher for OpenTelemetry"
 license = "Apache-2.0"
 authors = ["Cisco Epsagon Team <support@epsagon.com>"]

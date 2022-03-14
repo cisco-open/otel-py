@@ -31,22 +31,22 @@ def _set_default_options():
 
 
 class ExporterOptions:
-    def __init__(self,
-                 exporter_type: str = None,
-                 collector_endpoint: str = None):
+    def __init__(self, exporter_type: str = None, collector_endpoint: str = None):
         self.exporter_type = exporter_type or os.environ.get(consts.KEY_EXPORTER_TYPE)
         if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
             print("Unsupported exported type")
             raise ValueError
-        self.collector_endpoint = collector_endpoint or os.environ.get(consts.KEY_COLLECTOR_ENDPOINT)
+        self.collector_endpoint = collector_endpoint or os.environ.get(
+            consts.KEY_COLLECTOR_ENDPOINT
+        )
 
 
 class Options:
     def __init__(
-            self,
-            service_name: str = None,
-            cisco_token: str = None,
-            exporters: [ExporterOptions] = None,
+        self,
+        service_name: str = None,
+        cisco_token: str = None,
+        exporters: [ExporterOptions] = None,
     ):
         _set_default_options()
 

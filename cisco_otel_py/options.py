@@ -30,32 +30,33 @@ def _set_default_options():
         os.environ[consts.KEY_COLLECTOR_ENDPOINT] = consts.DEFAULT_COLLECTOR_ENDPOINT
 
 
+class ExporterOptions:
+    def __init__(self,
+                 exporter_type: str = None,
+                 collector_endpoint: str = None):
+        self.exporter_type = exporter_type or os.environ.get(consts.KEY_EXPORTER_TYPE)
+        if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
+            print("Unsupported exported type")
+            raise ValueError
+        self.collector_endpoint = collector_endpoint or os.environ.get(consts.KEY_COLLECTOR_ENDPOINT)
+
+
 class Options:
     def __init__(
-        self,
-        service_name: str = None,
-        cisco_token: str = None,
-        collector_endpoint: str = None,
-        exporter_type: str = None,
+            self,
+            service_name: str = None,
+            cisco_token: str = None,
+            exporters: [ExporterOptions] = None,
     ):
         _set_default_options()
 
         try:
+            self.exporters = exporters
             self.service_name = service_name or os.environ.get(consts.KEY_SERVICE_NAME)
             self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
-            self.collector_endpoint = collector_endpoint or os.environ.get(
-                consts.DEFAULT_COLLECTOR_ENDPOINT
-            )
-            self.exporter_type = exporter_type or os.environ.get(
-                consts.KEY_EXPORTER_TYPE
-            )
 
             if self.cisco_token is None:
                 print("Can not initiate cisco-otel launcher without token")
-                raise ValueError
-
-            if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
-                print("Unsupported exported type")
                 raise ValueError
 
         except ValueError:

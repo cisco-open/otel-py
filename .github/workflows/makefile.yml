@@ -14,11 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install make
+        run: apt-get update && apt-get install make python3-pip
+
       - name: Install dependencies
         run: make
 
+      - name: Install deps
+        run: make install-tools
+
       - name: Install
         run: make deps
+
+      - name: clean
+        run: make clean
 
       - name: Build
         run: make build

@@ -17,6 +17,9 @@ jobs:
       - name: Install dependencies
         run: make
 
+      - name: Install
+        run: make deps
+
       - name: Build
         run: make build
 

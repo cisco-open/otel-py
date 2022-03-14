@@ -1,9 +1,6 @@
 DEV_VENV?=""
 VERSION?=""
 
-.PHONY: all
-all: test
-
 .PHONY: install-poetry
 install-poetry:
 	pip install poetry==1.1.12
@@ -26,3 +23,6 @@ build:
 .PHONY: test
 test:
 	poetry run pytest tests/
+
+.PHONY: all
+all: test

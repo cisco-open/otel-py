@@ -1,11 +1,6 @@
 DEV_VENV?=""
 VERSION?=""
 
-.PHONY: all
-all: install-poetry deps clean boot build test
-
-
-
 install-poetry:
 .PHONY: install-poetry
 install-poetry:
@@ -23,10 +18,6 @@ deps:
 clean:
 	@rm -rf dist
 
-.PHONY: boot
-boot:
-	otel-py-bootstrap
-
 .PHONY: build
 build:
 	poetry build
@@ -36,4 +27,4 @@ test:
 	poetry run pytest tests/
 
 .PHONY: all
-all: test
+all: install-poetry deps clean build test

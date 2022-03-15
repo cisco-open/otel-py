@@ -15,7 +15,7 @@ limitations under the License.
 """
 
 import unittest
-from cisco_otel_py import tracing, consts
+from cisco_otel_py import tracing, consts, options
 from opentelemetry import trace
 
 from . import utils
@@ -25,9 +25,17 @@ class TestInit(unittest.TestCase):
     def test_happy_flow(self):
         try:
             tracing.init(
-                exporter_type=consts.TEST_EXPORTER_TYPE,
-                collector_endpoint=utils.LOCAL_COLLECTOR,
                 cisco_token=utils.TEST_TOKEN,
+                exporters=[
+                    options.ExporterOptions(
+                        exporter_type=consts.TEST_EXPORTER_TYPE,
+                        collector_endpoint=utils.LOCAL_COLLECTOR,
+                    ),
+                    options.ExporterOptions(
+                        exporter_type=consts.GRPC_EXPORTER_TYPE,
+                        collector_endpoint=utils.LOCAL_COLLECTOR,
+                    ),
+                ],
             )
 
             tracer = trace.get_tracer("happy_flow")
@@ -54,7 +62,11 @@ class TestInit(unittest.TestCase):
     def test_exporter_type(self):
 
         with self.assertRaises(ValueError) as context:
-            tracing.init(exporter_type="non_relevant_exporter_type")
+            tracing.init(
+                exporters=[
+                    options.ExporterOptions(exporter_type="non_relevant_exporter_type")
+                ]
+            )
 
         self.assertTrue("Unsupported exported type", context.exception)
 

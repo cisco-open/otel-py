@@ -26,17 +26,22 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 )
 
 
-def init_exporter(opt: options.Options):
-    if opt.exporter_type == consts.GRPC_EXPORTER_TYPE:
+def set_exporter(exporter: options.ExporterOptions, opt: options.Options):
+    if exporter.exporter_type == consts.GRPC_EXPORTER_TYPE:
         return OTLPGrpcExporter(
-            endpoint=opt.collector_endpoint,
+            endpoint=exporter.collector_endpoint,
             headers=((consts.TOKEN_HEADER, opt.cisco_token),),
         )
 
-    elif opt.exporter_type == consts.HTTP_EXPORTER_TYPE:
+    elif exporter.exporter_type == consts.HTTP_EXPORTER_TYPE:
         return OTLPHTTPExporter(
-            endpoint=opt.collector_endpoint,
+            endpoint=exporter.collector_endpoint,
             headers={consts.TOKEN_HEADER: opt.cisco_token},
         )
     else:
         return ConsoleSpanExporter(service_name=opt.service_name)
+
+
+def init_exporters(opt: options.Options):
+    for exporter in opt.exporters:
+        return [set_exporter(exporter, opt)]

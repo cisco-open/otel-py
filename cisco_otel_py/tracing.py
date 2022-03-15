@@ -30,10 +30,9 @@ from . import exporter_factory
 def init(
     service_name: str = None,
     cisco_token: str = None,
-    collector_endpoint: str = None,
-    exporter_type: str = None,
+    exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
-    opt = options.Options(service_name, cisco_token, collector_endpoint, exporter_type)
+    opt = options.Options(service_name, cisco_token, exporters)
 
     provider = set_tracing(opt)
     _auto_instrument()
@@ -43,12 +42,14 @@ def init(
 
 def set_tracing(opt: options.Options) -> TracerProvider:
     provider = TracerProvider(
-        resource=Resource.create({"service.name": opt.service_name})
+        resource=Resource.create({"application": opt.service_name})
     )
-    exporter = exporter_factory.init_exporter(opt)
-    processor = BatchSpanProcessor(exporter)
-    trace.set_tracer_provider(provider)
-    provider.add_span_processor(processor)
+    exporters = exporter_factory.init_exporters(opt)
+
+    for exporter in exporters:
+        processor = BatchSpanProcessor(exporter)
+        trace.set_tracer_provider(provider)
+        provider.add_span_processor(processor)
 
     return provider
 

@@ -16,6 +16,10 @@ deps:
 clean:
 	@rm -rf dist
 
+.PHONY: boot
+boot:
+	otel-py-bootstrap
+
 .PHONY: build
 build:
 	poetry build

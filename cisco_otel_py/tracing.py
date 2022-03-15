@@ -42,9 +42,9 @@ def init(
 
 def set_tracing(opt: options.Options) -> TracerProvider:
     provider = TracerProvider(
-        resource=Resource.create({"service.name": opt.service_name})
+        resource=Resource.create({"application": opt.service_name})
     )
-    exporters = exporter_factory.init_exporter(opt)
+    exporters = exporter_factory.init_exporters(opt)
 
     for exporter in exporters:
         processor = BatchSpanProcessor(exporter)

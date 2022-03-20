@@ -2,3 +2,4 @@
 .vscode/
 dist/
 coverage/
+sami_tests/

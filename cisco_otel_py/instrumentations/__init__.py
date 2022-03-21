@@ -3,6 +3,7 @@ import traceback
 from opentelemetry.trace.span import Span
 from cisco_opentelemetry_specifications import SemanticAttributes
 from cisco_otel_py.consts import ALLOWED_CONTENT_TYPES
+from .utils import lowercase_items, add_attributes_to_span
 
 
 # This is a base class for all Instrumentation wrapper classes
@@ -24,18 +25,6 @@ class BaseInstrumentorWrapper:
     # Set max body size
     def set_body_max_size(self, max_body_size) -> None:
         self._max_body_size = max_body_size
-
-    # we need the headers lowercased multiple times
-    # just do it once upfront
-    def lowercase_headers(self, headers):  # pylint:disable=R0201
-        return {k.lower(): v for k, v in headers.items()}
-
-    def add_headers_to_span(
-        self, prefix: str, span: Span, headers: dict
-    ):  # pylint:disable=R0201
-        """set header attributes on the span"""
-        for header_key, header_value in headers.items():
-            span.set_attribute(f"{prefix}{header_key}", header_value)
 
     # We need the content type to do some escaping
     # so if we return a content type, that indicates valid for capture,
@@ -61,12 +50,12 @@ class BaseInstrumentorWrapper:
             if not span.is_recording():
                 return span
 
-            lowercased_headers = self.lowercase_headers(headers)
+            lowercase_headers = lowercase_items(headers)
             if record_headers:
-                self.add_headers_to_span(header_prefix, span, lowercased_headers)
+                add_attributes_to_span(header_prefix, span, lowercase_headers)
 
             if record_body:
-                content_type = self.eligible_based_on_content_type(lowercased_headers)
+                content_type = self.eligible_based_on_content_type(lowercase_headers)
                 if content_type is None:
                     return span
 

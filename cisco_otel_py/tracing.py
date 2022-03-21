@@ -22,7 +22,10 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pkg_resources import iter_entry_points
 
-from .instrumentations.wrapped_instrumentation import WRAPPED_INSTRUMENTATION_KEYS, get_instrumentation_wrapper
+from .instrumentations.wrapped_instrumentation import (
+    WRAPPED_INSTRUMENTATION_KEYS,
+    get_instrumentation_wrapper,
+)
 from . import consts
 from . import options
 from . import exporter_factory

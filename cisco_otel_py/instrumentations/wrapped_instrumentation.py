@@ -1,4 +1,4 @@
-REQUESTS_KEY = 'requests'
+REQUESTS_KEY = "requests"
 
 WRAPPED_INSTRUMENTATION_KEYS = [
     REQUESTS_KEY,
@@ -25,6 +25,7 @@ def get_instrumentation_wrapper(library_key):
         wrapper_instance = None
         if REQUESTS_KEY == library_key:
             from .requests import RequestsInstrumentorWrapper  # pylint:disable=C0415
+
             wrapper_instance = RequestsInstrumentorWrapper()
             wrapper_instance.set_process_request_headers(True)
         else:
@@ -33,5 +34,7 @@ def get_instrumentation_wrapper(library_key):
         _mark_as_instrumented(library_key, wrapper_instance)
         return wrapper_instance
     except Exception as _err:  # pylint:disable=W0703
-        print(f"Error while attempting to load instrumentation wrapper for {library_key}")
+        print(
+            f"Error while attempting to load instrumentation wrapper for {library_key}"
+        )
         return None

@@ -2,6 +2,7 @@ import sys
 import traceback
 from opentelemetry.trace.span import Span
 from cisco_opentelemetry_specifications import SemanticAttributes
+from cisco_otel_py.consts import ALLOWED_CONTENT_TYPES
 
 
 # This is a base class for all Instrumentation wrapper classes
@@ -36,12 +37,6 @@ class BaseInstrumentorWrapper:
         for header_key, header_value in headers.items():
             span.set_attribute(f"{prefix}{header_key}", header_value)
 
-    _ALLOWED_CONTENT_TYPES = [
-        "application/json",
-        "application/graphql",
-        "application/x-www-form-urlencoded",
-    ]
-
     # We need the content type to do some escaping
     # so if we return a content type, that indicates valid for capture,
     # otherwise don't capture
@@ -49,7 +44,7 @@ class BaseInstrumentorWrapper:
         """find content-type in headers"""
         content_type = headers.get("content-type")
         return (
-            content_type if content_type in self._ALLOWED_CONTENT_TYPES else None
+            content_type if content_type in ALLOWED_CONTENT_TYPES else None
         )  # plyint:disable=R1710
 
     def _generic_handler(

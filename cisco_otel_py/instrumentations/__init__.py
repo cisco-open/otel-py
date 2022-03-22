@@ -112,7 +112,7 @@ class BaseInstrumentorWrapper:
         body_len = len(body)
         max_body_size = self._max_body_size
         if max_body_size and body_len > max_body_size:
-            print("message body size is greater than max size.")
+            print(f"Truncating body to {max_body_size} length")
             return True
         return False
 

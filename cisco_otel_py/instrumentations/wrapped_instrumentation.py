@@ -1,8 +1,4 @@
-REQUESTS_KEY = "requests"
-
-WRAPPED_INSTRUMENTATION_KEYS = [
-    REQUESTS_KEY,
-]
+from cisco_otel_py.consts import REQUESTS_KEY
 
 _INSTRUMENTATION_STATE = {}
 
@@ -24,7 +20,7 @@ def get_instrumentation_wrapper(library_key):
     try:
         wrapper_instance = None
         if REQUESTS_KEY == library_key:
-            from .requests import RequestsInstrumentorWrapper  # pylint:disable=C0415
+            from .requests import RequestsInstrumentorWrapper
 
             wrapper_instance = RequestsInstrumentorWrapper()
             wrapper_instance.set_process_request_headers(True)

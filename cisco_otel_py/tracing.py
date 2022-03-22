@@ -22,10 +22,7 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pkg_resources import iter_entry_points
 
-from .instrumentations.wrapped_instrumentation import (
-    WRAPPED_INSTRUMENTATION_KEYS,
-    get_instrumentation_wrapper,
-)
+from .instrumentations.wrapped_instrumentation import get_instrumentation_wrapper
 from . import consts
 from . import options
 from . import exporter_factory
@@ -61,7 +58,7 @@ def set_tracing(opt: options.Options) -> TracerProvider:
 def _auto_instrument():
     for entry_point in iter_entry_points("opentelemetry_instrumentor"):
         try:
-            if entry_point.name in WRAPPED_INSTRUMENTATION_KEYS:
+            if entry_point.name in consts.WRAPPED_INSTRUMENTATION_KEYS:
                 wrapped_instrument = get_instrumentation_wrapper(entry_point.name)
                 if wrapped_instrument is None:
                     continue

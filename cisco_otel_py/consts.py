@@ -28,4 +28,16 @@ GRPC_EXPORTER_TYPE = "otlp-grpc"
 TEST_EXPORTER_TYPE = "local"
 TOKEN_HEADER = "x-epsagon-token"
 
+MAX_PAYLOAD_SIZE = 128 * 1024
+
 ALLOWED_EXPORTER_TYPES = [HTTP_EXPORTER_TYPE, GRPC_EXPORTER_TYPE, TEST_EXPORTER_TYPE]
+
+ALLOWED_CONTENT_TYPES = [
+    "application/json",
+    "application/graphql",
+    "application/x-www-form-urlencoded",
+]
+
+REQUESTS_KEY = "requests"
+
+WRAPPED_INSTRUMENTATION_KEYS = [REQUESTS_KEY]

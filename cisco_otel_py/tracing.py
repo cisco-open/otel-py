@@ -31,9 +31,10 @@ from . import exporter_factory
 def init(
     service_name: str = None,
     cisco_token: str = None,
+    max_payload_size: int = None,
     exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
-    opt = options.Options(service_name, cisco_token, exporters)
+    opt = options.Options(service_name, cisco_token, max_payload_size, exporters)
 
     provider = set_tracing(opt)
     _auto_instrument()

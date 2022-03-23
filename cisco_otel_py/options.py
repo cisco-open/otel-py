@@ -46,6 +46,7 @@ class Options:
         self,
         service_name: str = None,
         cisco_token: str = None,
+        max_payload_size: int = None,
         exporters: [ExporterOptions] = None,
     ):
         _set_default_options()
@@ -54,6 +55,7 @@ class Options:
             self.exporters = exporters
             self.service_name = service_name or os.environ.get(consts.KEY_SERVICE_NAME)
             self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
+            self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
 
             if self.cisco_token is None:
                 print("Can not initiate cisco-otel launcher without token")

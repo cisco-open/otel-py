@@ -14,17 +14,14 @@ class BaseInstrumentorWrapper:
         self._process_response_headers = False
         self._process_request_body = False
         self._process_response_body = False
-        self._max_body_size = 128 * 1024
+        self.max_payload_size: int = None
 
     def set_process_request_headers(self, process_request_headers) -> None:
         self._process_request_headers = process_request_headers
 
-    def set_process_request_body(self, process_request_body) -> None:
+    def set_process_request_body(self, process_request_body, max_payload_size) -> None:
         self._process_request_body = process_request_body
-
-    # Set max body size
-    def set_body_max_size(self, max_body_size) -> None:
-        self._max_body_size = max_body_size
+        self.max_payload_size = max_payload_size
 
     # We need the content type to do some escaping
     # so if we return a content type, that indicates valid for capture,
@@ -110,7 +107,7 @@ class BaseInstrumentorWrapper:
         if body in (None, ""):
             return False
         body_len = len(body)
-        max_body_size = self._max_body_size
+        max_body_size = self.max_payload_size
         if max_body_size and body_len > max_body_size:
             print(f"Truncating body to {max_body_size} length")
             return True
@@ -120,6 +117,6 @@ class BaseInstrumentorWrapper:
         if body in (None, ""):
             return ""
         if self.check_body_size(body):  # pylint: disable=R1705
-            return body[0, self._max_body_size]
+            return body[0, self.max_payload_size]
         else:
             return body

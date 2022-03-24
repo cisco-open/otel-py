@@ -11,9 +11,7 @@ class BaseInstrumentorWrapper:
     def __init__(self):
         super().__init__()
         self._process_request_headers = False
-        self._process_response_headers = False
         self._process_request_body = False
-        self._process_response_body = False
         self.max_payload_size: int = None
 
     def set_process_request_headers(self, process_request_headers) -> None:
@@ -86,20 +84,6 @@ class BaseInstrumentorWrapper:
             span,
             request_headers,
             request_body,
-        )
-
-    # Generic HTTP Response Handler
-    def generic_response_handler(
-        self, response_headers: dict, response_body, span: Span  # pylint: disable=R0912
-    ) -> Span:  # pylint: disable=R0912
-        return self._generic_handler(
-            self._process_response_headers,
-            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
-            self._process_response_body,
-            SemanticAttributes.HTTP_RESPONSE_BODY.key,
-            span,
-            response_headers,
-            response_body,
         )
 
     # Check body size

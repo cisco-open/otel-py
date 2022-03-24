@@ -19,9 +19,6 @@ def get_active_span_for_call_wrapper(requests_wrapper):
             requests_wrapper.generic_request_handler(
                 response.request.headers, request_content, span
             )
-            requests_wrapper.generic_response_handler(
-                response.headers, response_content, span
-            )
 
     return get_active_span_for_call
 

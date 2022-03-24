@@ -26,10 +26,10 @@ build:
 test:
 	poetry run pytest tests/
 
-.PHONY: boot
-boot:
+.PHONY: bootstrap
+bootstrap:
 	pip install opentelemetry-distro==0.26b1
 	opentelemetry-bootstrap --action=install
 
 .PHONY: all
-all: install-poetry deps boot build test clean
+all: install-poetry deps bootstrap build test clean

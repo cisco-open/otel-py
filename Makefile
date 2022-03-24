@@ -26,5 +26,9 @@ build:
 test:
 	poetry run pytest tests/
 
+.PHONY: boot
+boot:
+	otel-py-bootstrap
+
 .PHONY: all
-all: install-poetry deps clean build test
+all: install-poetry deps boot build test clean

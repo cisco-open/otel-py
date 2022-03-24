@@ -28,6 +28,7 @@ test:
 
 .PHONY: boot
 boot:
+	pip install opentelemetry-distro==0.26b1
 	opentelemetry-bootstrap --action=install
 
 .PHONY: all

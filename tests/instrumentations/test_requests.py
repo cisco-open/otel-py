@@ -13,16 +13,14 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
 import unittest
 
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider, ReadableSpan
+from opentelemetry.sdk.trace import ReadableSpan
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-from opentelemetry import trace
 
-from cisco_otel_py import tracing
+from cisco_otel_py import tracing, options, consts
+from tests import utils
 from cisco_opentelemetry_specifications import SemanticAttributes
 
 from requests import get
@@ -31,15 +29,18 @@ from requests import get
 class TestRequests(unittest.TestCase):
     async def test_http_request_headers(self):
         try:
-            provider = TracerProvider(
-                resource=Resource.create({"application": "Test_App"})
+            provider = tracing.init(
+                cisco_token=utils.TEST_TOKEN,
+                exporters=[
+                    options.ExporterOptions(
+                        exporter_type=consts.TEST_EXPORTER_TYPE,
+                        collector_endpoint=utils.LOCAL_COLLECTOR,
+                    )
+                ],
             )
 
             exporter = InMemorySpanExporter()
-            trace.set_tracer_provider(provider)
             provider.add_span_processor(SimpleSpanProcessor(exporter))
-
-            tracing._auto_instrument()
 
             get(
                 url="https://google.com/",

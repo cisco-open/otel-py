@@ -28,7 +28,7 @@ test:
 
 .PHONY: boot
 boot:
-	python3 cisco_otel_py/cmd/call_bootstrap.py
+	opentelemetry-bootstrap --action=install
 
 .PHONY: all
 all: install-poetry deps boot build test clean

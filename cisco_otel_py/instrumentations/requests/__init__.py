@@ -10,8 +10,8 @@ def get_active_span_for_call_wrapper(requests_wrapper):
         else:
             response_content = ""
         request_content = None
-        if hasattr(response.request, "content"):
-            request_content = response.request.content.decode()
+        if hasattr(response.request, "body"):
+            request_content = response.request.body.decode()
         else:
             request_content = ""
 

@@ -13,7 +13,7 @@ def _mark_as_instrumented(library_key, wrapper_instance):
     _INSTRUMENTATION_STATE[library_key] = wrapper_instance
 
 
-def get_instrumentation_wrapper(library_key):
+def get_instrumentation_wrapper(library_key, max_payload_size):
     """load an initialize an instrumentation wrapper"""
     if is_already_instrumented(library_key):
         return None
@@ -24,6 +24,7 @@ def get_instrumentation_wrapper(library_key):
 
             wrapper_instance = RequestsInstrumentorWrapper()
             wrapper_instance.set_process_request_headers(True)
+            wrapper_instance.set_process_request_body(True, max_payload_size)
         else:
             return None
 

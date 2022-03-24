@@ -31,4 +31,4 @@ boot:
 	otel-py-bootstrap
 
 .PHONY: all
-all: install-poetry deps boot build test clean
+all: install-poetry deps build test clean

@@ -28,7 +28,7 @@ test:
 
 .PHONY: boot
 boot:
-	otel-py-bootstrap
+	python3 cisco_otel_py/cmd/call_bootstrap.py
 
 .PHONY: all
-all: install-poetry deps build test clean
+all: install-poetry deps boot build test clean

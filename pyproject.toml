@@ -15,6 +15,7 @@ otel-py-bootstrap = 'cisco_otel_py.cmd.bootstrap:run'
 python = "^3.9"
 argparse = "^1.4.0"
 virtualenv = "^20.13.3"
+opentelemetry-distro = "0.26b1"
 opentelemetry-instrumentation = "0.26b1"
 opentelemetry-sdk = "1.7.1"
 opentelemetry-exporter-otlp = "1.7.1"

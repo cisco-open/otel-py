@@ -32,4 +32,4 @@ bootstrap:
 	opentelemetry-bootstrap --action=install
 
 .PHONY: all
-all: install-poetry deps bootstrap build test clean
+all: install-poetry deps bootstrap build

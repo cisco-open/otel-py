@@ -1,4 +1,4 @@
-name: Makefile CI
+name: Continuous Integration
 
 on: [push, pull_request]
 
@@ -12,7 +12,10 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v3
         with:
-          python-version: 3.9
+          python-version: 3.x
 
-      - name: make
+      - name: build
+        run: make all
+
+      -name: test
         run: make test

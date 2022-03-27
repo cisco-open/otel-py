@@ -1,13 +1,11 @@
-name: Makefile CI
+name: Continuous Integration
 
-on:
-  push:
+on: [push, pull_request]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: setup python
@@ -15,5 +13,8 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: make
+      - name: build
         run: make all
+
+      - name: test
+        run: make test

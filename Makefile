@@ -24,7 +24,7 @@ build:
 
 .PHONY: test
 test:
-	poetry run pytest tests/
+	poetry run pytest --cov=cisco_otel_py tests/
 
 .PHONY: bootstrap
 bootstrap:

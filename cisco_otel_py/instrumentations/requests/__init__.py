@@ -6,7 +6,11 @@ def get_active_span_for_call_wrapper(requests_wrapper):
     def get_active_span_for_call(span, response) -> None:
         request_content = None
         if hasattr(response.request, "body"):
-            request_content = response.request.body.decode() if response.request.body is not None else ""
+            request_content = (
+                response.request.body.decode()
+                if response.request.body is not None
+                else ""
+            )
         else:
             request_content = ""
 

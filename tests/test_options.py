@@ -20,28 +20,19 @@ from cisco_otel_py import options, consts
 from . import utils
 
 
-class TestOptions(unittest.TestCase):
-    def test_default(self):
-        options.Options(cisco_token=utils.TEST_TOKEN)
-        self.assertEqual(
-            environ.get(consts.KEY_SERVICE_NAME), consts.DEFAULT_SERVICE_NAME
-        )
-        self.assertEqual(
-            environ.get(consts.KEY_EXPORTER_TYPE), consts.DEFAULT_EXPORTER_TYPE
-        )
-        self.assertEqual(
-            environ.get(consts.KEY_COLLECTOR_ENDPOINT),
-            consts.DEFAULT_COLLECTOR_ENDPOINT,
-        )
+def test_default():
+    options.Options(cisco_token=utils.TEST_TOKEN)
 
-        utils.clean_env_vars(
-            [
-                consts.KEY_SERVICE_NAME,
-                consts.KEY_EXPORTER_TYPE,
-                consts.KEY_COLLECTOR_ENDPOINT,
-            ]
-        )
+    assert environ.get(consts.KEY_SERVICE_NAME) == consts.DEFAULT_SERVICE_NAME
+    assert environ.get(consts.KEY_EXPORTER_TYPE) == consts.DEFAULT_EXPORTER_TYPE
+    assert (
+        environ.get(consts.KEY_COLLECTOR_ENDPOINT) == consts.DEFAULT_COLLECTOR_ENDPOINT
+    )
 
-
-if __name__ == "__main__":
-    unittest.main()
+    utils.clean_env_vars(
+        [
+            consts.KEY_SERVICE_NAME,
+            consts.KEY_EXPORTER_TYPE,
+            consts.KEY_COLLECTOR_ENDPOINT,
+        ]
+    )

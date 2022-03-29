@@ -50,7 +50,3 @@ def test_exporter_type():
         )
 
     assert "Unsupported exported type" == str(exceptionInfo.value)
-
-
-if __name__ == "__main__":
-    unittest.main()

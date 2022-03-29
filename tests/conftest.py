@@ -1,4 +1,3 @@
-
 import pytest
 from opentelemetry.sdk.trace import TracerProvider
 

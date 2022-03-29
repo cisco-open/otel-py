@@ -17,87 +17,45 @@ import json
 import unittest
 
 from opentelemetry.sdk.trace import ReadableSpan
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-
-from cisco_otel_py import tracing, options, consts
-from tests import utils
 from cisco_opentelemetry_specifications import SemanticAttributes
 
 from requests import get, post
 
 
-class TestRequests(unittest.TestCase):
-    provider = None
-    exporter = InMemorySpanExporter()
+def test_http_request_headers(cisco_tracer, exporter):
+    get(
+        url="https://google.com/",
+        headers={"test-header-key": "test-header-value"},
+    )
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.provider = tracing.init(
-            cisco_token=utils.TEST_TOKEN,
-            exporters=[
-                options.ExporterOptions(
-                    exporter_type=consts.TEST_EXPORTER_TYPE,
-                    collector_endpoint=utils.LOCAL_COLLECTOR,
-                )
-            ],
-        )
+    spans = exporter.get_finished_spans()
+    assert len(spans) == 1
 
-        cls.provider.add_span_processor(SimpleSpanProcessor(cls.exporter))
+    span: ReadableSpan = spans[0]
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        cls.provider = None
+    custom_attribute_value = span.attributes[
+        f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
+    ]
 
-    def tearDown(self) -> None:
-        self.exporter.clear()
+    assert custom_attribute_value == "test-header-value"
 
-    def test_http_request_headers(self):
-        try:
-            get(
-                url="https://google.com/",
-                headers={"test-header-key": "test-header-value"},
-            )
 
-            spans = self.exporter.get_finished_spans()
+def test_http_request_body(cisco_tracer, exporter):
+    post("https://google.com/", json={"test-key": "test-value"})
 
-            self.assertEqual(len(spans), 1)
+    spans = exporter.get_finished_spans()
 
-            span: ReadableSpan = spans[0]
+    assert len(spans) == 1
 
-            self.assertEqual(
-                span.attributes[
-                    f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
-                ],
-                "test-header-value",
-            )
-        except Exception as err:
-            self.fail(f"unexpected exception: {err}")
+    span: ReadableSpan = spans[0]
 
-    def test_http_request_body(self):
-        try:
-            post("https://google.com/", json={"test-key": "test-value"})
+    assert f"{SemanticAttributes.HTTP_REQUEST_BODY.key}" in span.attributes
 
-            spans = self.exporter.get_finished_spans()
+    request_body = json.loads(
+        span.attributes[f"{SemanticAttributes.HTTP_REQUEST_BODY.key}"]
+    )
 
-            self.assertEqual(len(spans), 1)
-
-            span: ReadableSpan = spans[0]
-
-            self.assertIn(
-                f"{SemanticAttributes.HTTP_REQUEST_BODY.key}", span.attributes
-            )
-
-            request_body = json.loads(
-                span.attributes[f"{SemanticAttributes.HTTP_REQUEST_BODY.key}"]
-            )
-
-            self.assertEqual(
-                request_body["test-key"],
-                "test-value",
-            )
-        except Exception as err:
-            self.fail(f"unexpected exception: {err}")
+    assert request_body["test-key"] == "test-value"
 
 
 if __name__ == "__main__":

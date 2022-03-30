@@ -6,9 +6,9 @@ def get_active_span_for_call_wrapper(requests_wrapper):
     def get_active_span_for_call(span, response) -> None:
         request_headers = dict()
         request_body = ""
-        if hasattr(response, 'request'):
-            request_headers = getattr(response.request, 'headers', dict())
-            request_body = getattr(response.request, 'body', '')
+        if hasattr(response, "request"):
+            request_headers = getattr(response.request, "headers", dict())
+            request_body = getattr(response.request, "body", "")
 
         if span.is_recording():
             requests_wrapper.generic_request_handler(

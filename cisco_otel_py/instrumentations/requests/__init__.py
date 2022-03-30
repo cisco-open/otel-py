@@ -4,19 +4,15 @@ from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
 
 def get_active_span_for_call_wrapper(requests_wrapper):
     def get_active_span_for_call(span, response) -> None:
-        request_content = None
-        if hasattr(response.request, "body"):
-            request_content = (
-                response.request.body.decode()
-                if response.request.body is not None
-                else ""
-            )
-        else:
-            request_content = ""
+        request_headers = dict()
+        request_body = ""
+        if hasattr(response, 'request'):
+            request_headers = getattr(response.request, 'headers', dict())
+            request_body = getattr(response.request, 'body', '')
 
         if span.is_recording():
             requests_wrapper.generic_request_handler(
-                response.request.headers, request_content, span
+                request_headers, request_body, span
             )
 
     return get_active_span_for_call

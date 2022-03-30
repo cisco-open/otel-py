@@ -34,8 +34,7 @@ class ExporterOptions:
     def __init__(self, exporter_type: str = None, collector_endpoint: str = None):
         self.exporter_type = exporter_type or os.environ.get(consts.KEY_EXPORTER_TYPE)
         if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
-            print("Unsupported exported type")
-            raise ValueError
+            raise ValueError("Unsupported exported type")
         self.collector_endpoint = collector_endpoint or os.environ.get(
             consts.KEY_COLLECTOR_ENDPOINT
         )
@@ -58,8 +57,7 @@ class Options:
             self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
 
             if self.cisco_token is None:
-                print("Can not initiate cisco-otel launcher without token")
-                raise ValueError
+                raise ValueError("Can not initiate cisco-otel launcher without token")
 
         except ValueError:
             raise

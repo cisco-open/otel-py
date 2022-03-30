@@ -13,55 +13,49 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import json
 import unittest
 
 from opentelemetry.sdk.trace import ReadableSpan
-from opentelemetry.sdk.trace.export import SimpleSpanProcessor
-from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
-
-from cisco_otel_py import tracing, options, consts
-from tests import utils
 from cisco_opentelemetry_specifications import SemanticAttributes
 
-from requests import get
+from requests import get, post
 
 
-class TestRequests(unittest.TestCase):
-    async def test_http_request_headers(self):
-        try:
-            provider = tracing.init(
-                cisco_token=utils.TEST_TOKEN,
-                exporters=[
-                    options.ExporterOptions(
-                        exporter_type=consts.TEST_EXPORTER_TYPE,
-                        collector_endpoint=utils.LOCAL_COLLECTOR,
-                    )
-                ],
-            )
+def test_http_request_headers(cisco_tracer, exporter):
+    get(
+        url="https://google.com/",
+        headers={"test-header-key": "test-header-value"},
+    )
 
-            exporter = InMemorySpanExporter()
-            provider.add_span_processor(SimpleSpanProcessor(exporter))
+    spans = exporter.get_finished_spans()
+    assert len(spans) == 1
 
-            get(
-                url="https://google.com/",
-                headers={"test-header-key": "test-header-value"},
-            )
+    span: ReadableSpan = spans[0]
 
-            spans = exporter.get_finished_spans()
+    custom_attribute_value = span.attributes[
+        f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
+    ]
 
-            self.assertEqual(len(spans), 1)
+    assert custom_attribute_value == "test-header-value"
 
-            span: ReadableSpan = spans[0]
 
-            self.assertEqual(
-                span.attributes[
-                    f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
-                ],
-                "test-header-value",
-            )
+def test_http_request_body(cisco_tracer, exporter):
+    post("https://google.com/", json={"test-key": "test-value"})
 
-        except Exception as err:
-            self.fail(f"unexpected exception: {err}")
+    spans = exporter.get_finished_spans()
+
+    assert len(spans) == 1
+
+    span: ReadableSpan = spans[0]
+
+    assert f"{SemanticAttributes.HTTP_REQUEST_BODY.key}" in span.attributes
+
+    request_body = json.loads(
+        span.attributes[f"{SemanticAttributes.HTTP_REQUEST_BODY.key}"]
+    )
+
+    assert request_body["test-key"] == "test-value"
 
 
 if __name__ == "__main__":

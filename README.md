@@ -19,18 +19,20 @@ poetry add cisco-otel-py
 
 ## Usage
 
-One-time script run to install opentelemetry dependencies:
+Run this script once to install dependencies, or add to your container setup:
 
 ```shell
 otel-py-bootstrap
 ```
 
+Then add to the beginning of your python application:
+
 ```python
 from cisco_otel_py import tracing, options
 
 tracing.init(
-    service_name="my-service-name",
-    cisco_token="my-cisco-token",
+    service_name="<your-service-name>", 
+    cisco_token="<your-cisco-token",
     exporters=[options.ExporterOptions(
         collector_endpoint="http://localhost:4317",
         exporter_type="otlp-grpc"

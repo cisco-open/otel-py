@@ -24,31 +24,19 @@ def _mark_as_instrumented(library_key, wrapper_instance):
 
 def get_instrumentation_wrapper(library_key, max_payload_size):
     """load and initialize an instrumentation wrapper"""
-
     if is_already_instrumented(library_key):
         return None
     try:
         wrapper_instance = None
         if REQUESTS_KEY == library_key:
             from .requests import RequestsInstrumentorWrapper
-
             wrapper_instance = RequestsInstrumentorWrapper()
-            wrapper_instance.set_process_request_headers(True)
-            wrapper_instance.set_process_request_body(True, max_payload_size)
         elif GRPC_SERVER_KEY == library_key:
             from .grpc import GrpcInstrumentorServerWrapper
             wrapper_instance = GrpcInstrumentorServerWrapper()
-            wrapper_instance.set_process_request_headers(True)
-            wrapper_instance.set_process_request_body(True, max_payload_size)
-            wrapper_instance.set_process_response_headers(True)
-            wrapper_instance.set_process_response_body(True)
         elif GRPC_CLIENT_KEY == library_key:
             from .grpc import GrpcInstrumentorClientWrapper
             wrapper_instance = GrpcInstrumentorClientWrapper()
-            wrapper_instance.set_process_request_headers(True)
-            wrapper_instance.set_process_request_body(True, max_payload_size)
-            wrapper_instance.set_process_response_headers(True)
-            wrapper_instance.set_process_response_body(True)
         else:
             return None
 

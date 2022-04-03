@@ -1,7 +1,6 @@
 """Used for holding filters to apply to ingress traffic"""
 from typing import Union, Type
 from opentelemetry.trace import Span
-
 from cisco_otel_py.instrumentations.filter import Filter
 
 TYPE_HTTP = 'http'
@@ -9,9 +8,7 @@ TYPE_RPC = 'rpc'
 
 
 class Registry:
-    """
-    Registry is used to register and apply request filters
-    """
+    """Registry is used to register and apply request filters"""
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(Registry, cls).__new__(cls)

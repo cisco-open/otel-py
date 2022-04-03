@@ -68,17 +68,12 @@ class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrap
 
 # The main entry point for a wrapper around the OTel grpc:client instrumentation module
 class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrapper):
-    """Hypertrace wrapper around OTel grpc:client instrumentor class"""
-
-    # constructor
     def __init__(self):
-        """constructor"""
         print('Entering GrpcInstrumentorClientWrapper constructor.')
         super().__init__()
 
     # Internal initialize instrumentation
     def _instrument(self, **kwargs) -> None:
-        """Internal initialize instrumentation"""
         print('Entering GrpcInstrumentorClientWrapper._instrument().')
         super()._instrument(**kwargs)
 
@@ -146,27 +141,18 @@ class _OpenTelemetryWrapperServicerContext(_server._OpenTelemetryServicerContext
 
 # Wrapper around server-side interceptor
 class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerInterceptor):  # pylint: disable=R0903
-    """Hypertrace wrapper around OTel grpc:server Instrumentor class"""
 
     def __init__(self, tracer, gisw):
-        """constructor"""
-        print('Entering OpenTelemetryServerInterceptorWrapper.__init__().')
         super().__init__(tracer)
         self._gisw = gisw
 
     def intercept_service(self, continuation, handler_call_details):
-        """Setup interceptor"""
         print('Entering OpenTelemetryServerInterceptorWrapper.intercept_service().')
-        import pdb;pdb.set_trace()
 
         def telemetry_wrapper(behavior, request_streaming, response_streaming):  # pylint: disable=W0613
-            """Setup interceptor helper for unary requests."""
             print('Entering OpenTelemetryServerInterceptorWrapper.telemetry_wrapper().')
-            import pdb;pdb.set_trace()
 
             def telemetry_interceptor(request_or_iterator, context) -> None:
-                """Process request for hypertrace."""
-                import pdb; pdb.set_trace()
                 print('Entering OpenTelemetryServerInterceptorWrapper.telemetry_interceptor().')
                 # handle streaming responses specially
                 if response_streaming:
@@ -181,11 +167,9 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
 
                 invocation_metadata = dict(handler_call_details.invocation_metadata)
                 req_dict = MessageToDict(request_or_iterator)
-                #import pdb;pdb.set_trace()
                 self._gisw.generic_rpc_request_handler(
                     invocation_metadata, json.dumps(req_dict), span)
                 try:
-                    #import pdb;pdb.set_trace()
                     block_result = Registry().apply_filters(span,
                                                             '',
                                                             invocation_metadata,
@@ -199,7 +183,6 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     context = _OpenTelemetryWrapperServicerContext(
                         context, span)
                     response = behavior(request_or_iterator, context)
-                    import pdb;pdb.set_trace()
                     trailing_metadata = context.get_trailing_metadata()
                     if len(trailing_metadata) > 0:
                         trailing_metadata = dict(trailing_metadata[0])
@@ -240,15 +223,12 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
 
 # Wrapper around client-side interceptor
 class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientInterceptor):
-    """Hypertrace wrapper around OTel grpc:client instrumentor class."""
 
     def __init__(self, tracer):
-        """constructor"""
         print('Entering OpenTelemetryClientInterceptorWrapper.__init__().')
         super().__init__(tracer)
 
     def intercept_unary(self, request, metadata, client_info, invoker) -> None:
-        """Process unary request for hypertrace."""
         print('Entering OpenTelemetryClientInterceptorWrapper.intercept_unary().')
         try:
             # Not sure how to obtain span object here
@@ -270,6 +250,5 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
             client_info,
             invoker
     ) -> None:
-        """process streaming request for hypertrace"""
         print('Entering OpenTelemetryClientInterceptorWrapper.intercept_stream().')
         # COME_BACK -- need to implement this

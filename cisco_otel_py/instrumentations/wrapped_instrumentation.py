@@ -30,16 +30,13 @@ def get_instrumentation_wrapper(library_key, max_payload_size):
     try:
         wrapper_instance = None
         if REQUESTS_KEY == library_key:
-            # import pdb;pdb.set_trace()
             from .requests import RequestsInstrumentorWrapper
 
             wrapper_instance = RequestsInstrumentorWrapper()
             wrapper_instance.set_process_request_headers(True)
             wrapper_instance.set_process_request_body(True, max_payload_size)
         elif GRPC_SERVER_KEY == library_key:
-            #import pdb;pdb.set_trace()
             from .grpc import GrpcInstrumentorServerWrapper
-            #import pdb;pdb.set_trace()
             wrapper_instance = GrpcInstrumentorServerWrapper()
             wrapper_instance.set_process_request_headers(True)
             wrapper_instance.set_process_request_body(True, max_payload_size)
@@ -58,7 +55,6 @@ def get_instrumentation_wrapper(library_key, max_payload_size):
         _mark_as_instrumented(library_key, wrapper_instance)
         return wrapper_instance
     except Exception as _err:  # pylint:disable=W0703
-        #import pdb;pdb.set_trace()
         print(
             f"Error while attempting to load instrumentation wrapper for {library_key}"
         )

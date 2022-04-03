@@ -17,7 +17,6 @@ import json
 import unittest
 from concurrent import futures
 import grpc
-# import pdb;pdb.set_trace()
 from . import hello_pb2
 from . import hello_pb2_grpc
 from opentelemetry.sdk.trace import ReadableSpan
@@ -26,25 +25,24 @@ from cisco_opentelemetry_specifications import SemanticAttributes
 
 class Greeter(hello_pb2_grpc.GreeterServicer):
     def SayHello(self, request, context):
-        print('Received request.')
-        metadata = (('tester', 'tester'), ('tester2', 'tester2'))
-        print('Setting custom headers.')
-        # import pdb;pdb.set_trace()
+        print('Received request')
+        metadata = (('key1', 'val1'), ('key2', 'val2'))
+        print('Setting custom headers')
         context.set_trailing_metadata(metadata)
-        print('Returning response.')
+        print('Returning response')
         return hello_pb2.HelloReply(message='Hello, %s!' % request.name)
 
 
 def serve():
-    print('Creating server.')
+    print('Creating server')
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    print('Adding GreeterServicer endpoint to server.')
+    print('Adding GreeterServicer endpoint to server')
     hello_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
-    print('Adding insecure port.')
+    print('Adding insecure port')
     server.add_insecure_port('[::]:50051')
-    print('Starting server.')
+    print('Starting server')
     server.start()
-    print('Waiting for termination.')
+    print('Waiting for termination')
     return server
 
 
@@ -53,15 +51,12 @@ def test_grpc(cisco_tracer, exporter):
 
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = hello_pb2_grpc.GreeterStub(channel)
-        # import pdb;pdb.set_trace()
-        response = stub.SayHello(hello_pb2.HelloRequest(name='Shalom'))
-        # import pdb;pdb.set_trace()
-        assert response.message == 'Hello, Shalom!'
+        response = stub.SayHello(hello_pb2.HelloRequest(name='Cisco'))
+        assert response.message == 'Hello, Cisco!'
         print("Greeter client received: " + response.message)
         # Get all the in memory spans that were recorded for this iteration
         spans = exporter.get_finished_spans()
         # Confirm something was returned.
-        # import pdb;pdb.set_trace()
         assert len(spans) == 2
         # span: ReadableSpan = spans[0]
         print(spans[0].attributes)

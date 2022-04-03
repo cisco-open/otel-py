@@ -105,7 +105,6 @@ class BaseInstrumentorWrapper:
                                     request_body,
                                     span: Span) -> Span:
         """Add extended request rpc data to span."""
-        import pdb;pdb.set_trace()
         print('Entering BaseInstrumentationWrapper.genericRpcRequestHandler().')
         try:
             # Is the span currently recording?
@@ -138,7 +137,6 @@ class BaseInstrumentorWrapper:
                                      response_body,
                                      span: Span) -> Span:
         """Add extended response rpc data to span"""
-        import pdb;pdb.set_trace()
         print('Entering BaseInstrumentationWrapper.genericRpcResponseHandler().')
         try:
             # is the span currently recording?

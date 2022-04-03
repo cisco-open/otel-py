@@ -28,8 +28,8 @@ test:
 
 .PHONY: pretty
 pretty:
-	python3 -m black cisco_otel_py/*.*
-	python3 -m black tests/*.*
+	black */*.py
+	black */*/*.py
 
 .PHONY: bootstrap
 bootstrap:

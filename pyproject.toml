@@ -20,9 +20,11 @@ opentelemetry-sdk = "1.7.1"
 opentelemetry-exporter-otlp = "1.7.1"
 requests = "^2.27.1"
 opentelemetry-instrumentation-requests = "0.26b1"
+opentelemetry-instrumentation-grpc = "0.26b1"
 Flask = "^2.0.3"
 cisco-opentelemetry-specifications = "^0.0.4"
 pytest-cov = "^3.0.0"
+grpclib = "^0.4.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

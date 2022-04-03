@@ -58,17 +58,10 @@ def test_grpc(cisco_tracer, exporter):
         spans = exporter.get_finished_spans()
         # Confirm something was returned.
         assert len(spans) == 2
-        # span: ReadableSpan = spans[0]
-        print(spans[0].attributes)
-        print(spans[1].attributes)
-
-    # span: ReadableSpan = spans[0]
-    #
-    # custom_attribute_value = span.attributes[
-    #     f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
-    # ]
-    #
-    # assert custom_attribute_value == "test-header-value"
+        span: ReadableSpan = spans[0]
+        assert span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key1"] == "val1"
+        assert span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key2"] == "val2"
+        assert span.attributes[SemanticAttributes.RPC_RESPONSE_BODY.key] == '{"message": "Hello, Cisco!"}'
 
 
 if __name__ == "__main__":

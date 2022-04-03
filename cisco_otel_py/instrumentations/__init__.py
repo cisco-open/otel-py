@@ -8,7 +8,6 @@ from .utils import lowercase_items, add_attributes_to_span
 
 # This is a base class for all Instrumentation wrapper classes
 class BaseInstrumentorWrapper:
-
     def __init__(self):
         super().__init__()
         self.max_payload_size: int = None
@@ -89,12 +88,12 @@ class BaseInstrumentorWrapper:
             # Is the span currently recording?
             if not span.is_recording():
                 return span
-
             print('Span is Recording!')
-            lowercased_headers = lowercase_items(request_headers)
 
             # Add rpc request metadata
+            lowercased_headers = lowercase_items(request_headers)
             add_attributes_to_span(SemanticAttributes.RPC_REQUEST_METADATA.key, span, lowercased_headers)
+
             # Add rpc response body
             request_body_str = str(request_body)
             request_body_str = self.grab_first_n_bytes(request_body_str)
@@ -118,8 +117,8 @@ class BaseInstrumentorWrapper:
             # is the span currently recording?
             if not span.is_recording():
                 return span
-
             print('Span is Recording!')
+
             # Add rpc metadata
             print('Add Response Headers:')
             lowercased_headers = lowercase_items(response_headers)
@@ -137,7 +136,6 @@ class BaseInstrumentorWrapper:
             # Not rethrowing to avoid causing runtime errors
         finally:
             return span  # pylint: disable=W0150
-
 
     # Check body size
     def check_body_size(self, body: str) -> bool:

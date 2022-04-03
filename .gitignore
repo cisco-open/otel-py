@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 .coverage
+.pytest_cache
 dist/
 coverage/
 sami_tests/

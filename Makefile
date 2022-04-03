@@ -26,9 +26,14 @@ build:
 test:
 	poetry run pytest --cov=cisco_otel_py tests/
 
+.PHONY: pretty
+pretty:
+	python3 -m black cisco_otel_py/*.*
+	python3 -m black tests/*.*
+
 .PHONY: bootstrap
 bootstrap:
-	pip install opentelemetry-distro==0.26b1
+	pip install opentelemetry-distro==0.29b0
 	opentelemetry-bootstrap --action=install
 
 .PHONY: all

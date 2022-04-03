@@ -8,17 +8,13 @@ from .utils import lowercase_items, add_attributes_to_span
 
 # This is a base class for all Instrumentation wrapper classes
 class BaseInstrumentorWrapper:
-    RPC_REQUEST_METADATA_PREFIX = 'rpc.request.metadata.'
-    RPC_REQUEST_BODY_PREFIX = 'rpc.request.body'
-    RPC_RESPONSE_METADATA_PREFIX = 'rpc.response.metadata.'
-    RPC_RESPONSE_BODY_PREFIX = 'rpc.response.body'
 
     def __init__(self):
         super().__init__()
         self.max_payload_size: int = None
 
     def set_payload_max_size(self, max_payload_size) -> None:
-        print('Setting self.body_max_size to %s.' % max_payload_size)
+        print('Setting self.max_payload_size to %s.' % max_payload_size)
         self.max_payload_size = max_payload_size
 
     # We need the content type to do some escaping
@@ -98,11 +94,11 @@ class BaseInstrumentorWrapper:
             lowercased_headers = lowercase_items(request_headers)
 
             # Add rpc request metadata
-            add_attributes_to_span(self.RPC_REQUEST_METADATA_PREFIX, span, lowercased_headers)
+            add_attributes_to_span(SemanticAttributes.RPC_REQUEST_METADATA.key, span, lowercased_headers)
             # Add rpc response body
             request_body_str = str(request_body)
             request_body_str = self.grab_first_n_bytes(request_body_str)
-            span.set_attribute(self.RPC_REQUEST_BODY_PREFIX, request_body_str)
+            span.set_attribute(SemanticAttributes.RPC_REQUEST_BODY.key, request_body_str)
         except:  # pylint: disable=W0702
             print('An error occurred in genericRequestHandler: exception=%s, stacktrace=%s',
                   sys.exc_info()[0],
@@ -127,13 +123,13 @@ class BaseInstrumentorWrapper:
             # Add rpc metadata
             print('Add Response Headers:')
             lowercased_headers = lowercase_items(response_headers)
-            add_attributes_to_span(self.RPC_RESPONSE_METADATA_PREFIX, span, lowercased_headers)
+            add_attributes_to_span(SemanticAttributes.RPC_RESPONSE_METADATA.key, span, lowercased_headers)
 
             # Add rpc body
             response_body_str = str(response_body)
             print('Processing response body')
             response_body_str = self.grab_first_n_bytes(response_body_str)
-            span.set_attribute(self.RPC_RESPONSE_BODY_PREFIX, response_body_str)
+            span.set_attribute(SemanticAttributes.RPC_RESPONSE_BODY.key, response_body_str)
         except:  # pylint: disable=W0702
             print('An error occurred in genericResponseHandler: exception=%s, stacktrace=%s',
                          sys.exc_info()[0],
@@ -148,9 +144,8 @@ class BaseInstrumentorWrapper:
         if body in (None, ""):
             return False
         body_len = len(body)
-        max_body_size = self.max_payload_size
-        if max_body_size and body_len > max_body_size:
-            print(f"Truncating body to {max_body_size} length")
+        if self.max_payload_size and body_len > self.max_payload_size:
+            print(f"Truncating body to {self.max_payload_size} length")
             return True
         return False
 

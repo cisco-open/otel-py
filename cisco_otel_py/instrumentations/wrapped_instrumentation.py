@@ -31,6 +31,7 @@ def get_instrumentation_wrapper(library_key, max_payload_size):
         if REQUESTS_KEY == library_key:
             from .requests import RequestsInstrumentorWrapper
             wrapper_instance = RequestsInstrumentorWrapper()
+            wrapper_instance.set_payload_max_size(max_payload_size)
         elif GRPC_SERVER_KEY == library_key:
             from .grpc import GrpcInstrumentorServerWrapper
             wrapper_instance = GrpcInstrumentorServerWrapper()

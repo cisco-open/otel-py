@@ -32,7 +32,10 @@ def test_http_request_headers(cisco_tracer, exporter):
     assert len(spans) >= 1
 
     for span in spans:
-        if f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key" not in span.attributes:
+        if (
+            f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
+            not in span.attributes
+        ):
             continue
         custom_attribute_value = span.attributes[
             f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"

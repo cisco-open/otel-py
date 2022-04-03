@@ -15,6 +15,10 @@ limitations under the License.
 """
 
 from os import environ
+import logging
+logging.basicConfig(level=logging.NOTSET)
+logger = logging.getLogger(__name__)
+
 
 LOCAL_COLLECTOR = "localhost:4317"
 TEST_TOKEN = "test_token"
@@ -23,4 +27,4 @@ TEST_TOKEN = "test_token"
 def clean_env_vars(env_var_names):
     for v in env_var_names:
         del environ[v]
-        print("env var", v, "has been unset")
+        logger.debug("env var", v, "has been unset")

@@ -41,6 +41,8 @@ def test_http_request_headers(cisco_tracer, exporter):
             f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
         ]
         assert custom_attribute_value == "test-header-value"
+        return
+    assert 1 == 0  # fail if loop hasn't reach relevant span
 
 
 def test_http_request_body(cisco_tracer, exporter):
@@ -59,6 +61,8 @@ def test_http_request_body(cisco_tracer, exporter):
         )
 
         assert request_body["test-key"] == "test-value"
+        return
+    assert 1 == 0  # fail if loop hasn't reach relevant span
 
 
 if __name__ == "__main__":

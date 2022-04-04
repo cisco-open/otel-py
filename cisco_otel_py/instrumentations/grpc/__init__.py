@@ -72,9 +72,7 @@ class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrap
         super()._uninstrument(**kwargs)
 
     # Wrap function for initializing the request handler
-    def wrapper_fn_wrapper(
-        self, original_func, instance, args, kwargs
-    ) -> None:  # pylint: disable=W0613,R0201
+    def wrapper_fn_wrapper(self, original_func, instance, args, kwargs) -> None:
         """Wrap function for initializing the request handler"""
         channel = original_func(*args, **kwargs)
         tracer_provider = kwargs.get("tracer_provider")
@@ -101,9 +99,7 @@ def client_interceptor_wrapper(tracer_provider) -> None:
 
 
 # Wrapper around Server-side telemetry context
-class _OpenTelemetryWrapperServicerContext(
-    _server._OpenTelemetryServicerContext
-):  # pylint: disable=W0212,W0223
+class _OpenTelemetryWrapperServicerContext(_server._OpenTelemetryServicerContext):
     """grpc:server telemetry context"""
 
     def __init__(self, servicer_context, active_span):
@@ -124,9 +120,7 @@ class _OpenTelemetryWrapperServicerContext(
 
 
 # Wrapper around server-side interceptor
-class OpenTelemetryServerInterceptorWrapper(
-    _server.OpenTelemetryServerInterceptor
-):  # pylint: disable=R0903
+class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerInterceptor):
     def __init__(self, tracer, gisw):
         super().__init__(tracer)
         self._gisw = gisw
@@ -134,9 +128,7 @@ class OpenTelemetryServerInterceptorWrapper(
     def intercept_service(self, continuation, handler_call_details):
         print("Entering OpenTelemetryServerInterceptorWrapper.intercept_service().")
 
-        def telemetry_wrapper(
-            behavior, request_streaming, response_streaming
-        ):  # pylint: disable=W0613
+        def telemetry_wrapper(behavior, request_streaming, response_streaming):
             print("Entering OpenTelemetryServerInterceptorWrapper.telemetry_wrapper().")
 
             def telemetry_interceptor(request_or_iterator, context) -> None:
@@ -152,7 +144,7 @@ class OpenTelemetryServerInterceptorWrapper(
                         context,
                     )
 
-                span = context._active_span  # pylint: disable=W0212
+                span = context._active_span
 
                 invocation_metadata = dict(handler_call_details.invocation_metadata)
                 req_dict = MessageToDict(request_or_iterator)
@@ -175,7 +167,7 @@ class OpenTelemetryServerInterceptorWrapper(
                     )
 
                     return response
-                except Exception as error:  # pylint: disable=W0703
+                except Exception as error:
                     # Bare exceptions are likely to be gRPC aborts, which
                     # we handle in our context wrapper.
                     # Here, we're interested in uncaught exceptions.
@@ -212,7 +204,7 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
         try:
             # TODO: find how to obtain span object here
             # TODO" find how to obtain trailing metadata here
-            result = invoker(request, metadata)  # pylint:disable=W0612
+            result = invoker(request, metadata)
         except grpc.RpcError as err:
             print(
                 "An error occurred in %s: exception=%s, stacktrace=%s"

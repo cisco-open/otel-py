@@ -28,13 +28,13 @@ class BaseInstrumentorWrapper:
 
     def _generic_handler(
         self,
-        header_prefix: str,  # pylint:disable=R0913
+        header_prefix: str,
         body_prefix: str,
         span: Span,
         headers: dict,
         body,
     ):
-        try:  # pylint: disable=R1702
+        try:
             if not span.is_recording():
                 return span
 
@@ -56,17 +56,17 @@ class BaseInstrumentorWrapper:
             request_body_str = self.grab_first_n_bytes(body_str)
             span.set_attribute(body_prefix, request_body_str)
 
-        except:  # pylint: disable=W0702
+        except:
             print(
                 "An error occurred in genericRequestHandler: exception=%s, stacktrace=%s"
                 % (sys.exc_info()[0], traceback.format_exc())
             )
         finally:
-            return span  # pylint: disable=W0150
+            return span
 
     # Generic HTTP Request Handler
     def generic_request_handler(
-        self, request_headers: dict, request_body, span: Span  # pylint: disable=R0912
+        self, request_headers: dict, request_body, span: Span
     ) -> Span:
         return self._generic_handler(
             SemanticAttributes.HTTP_REQUEST_HEADER.key,
@@ -100,14 +100,14 @@ class BaseInstrumentorWrapper:
             span.set_attribute(
                 SemanticAttributes.RPC_REQUEST_BODY.key, request_body_str
             )
-        except:  # pylint: disable=W0702
+        except:
             print(
                 "An error occurred in genericRequestHandler: exception=%s, stacktrace=%s"
                 % (sys.exc_info()[0], traceback.format_exc())
             )
             # Not rethrowing to avoid causing runtime errors
         finally:
-            return span  # pylint: disable=W0150
+            return span
 
     # Generic RPC Response Handler
     def generic_rpc_response_handler(
@@ -135,14 +135,14 @@ class BaseInstrumentorWrapper:
             span.set_attribute(
                 SemanticAttributes.RPC_RESPONSE_BODY.key, response_body_str
             )
-        except:  # pylint: disable=W0702
+        except:
             print(
                 "An error occurred in genericResponseHandler: exception=%s, stacktrace=%s"
                 % (sys.exc_info()[0], traceback.format_exc())
             )
             # Not rethrowing to avoid causing runtime errors
         finally:
-            return span  # pylint: disable=W0150
+            return span
 
     # Check body size
     def check_body_size(self, body: str) -> bool:
@@ -157,7 +157,7 @@ class BaseInstrumentorWrapper:
     def grab_first_n_bytes(self, body: str) -> str:
         if body in (None, ""):
             return ""
-        if self.check_body_size(body):  # pylint: disable=R1705
+        if self.check_body_size(body):
             return body[0, self.max_payload_size]
         else:
             return body

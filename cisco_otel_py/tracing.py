@@ -70,5 +70,5 @@ def _auto_instrument(max_payload_size):
             else:
                 entry_point.load()().instrument()  # type: ignore
                 print("Instrumented %s" % entry_point.name)
-        except Exception:  # pylint: disable=broad-except
+        except Exception:
             print("Instrumenting of %s failed" % entry_point.name)

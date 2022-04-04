@@ -46,7 +46,7 @@ def get_instrumentation_wrapper(library_key, max_payload_size):
 
         _mark_as_instrumented(library_key, wrapper_instance)
         return wrapper_instance
-    except Exception as _err:  # pylint:disable=W0703
+    except Exception:
         print(
             "Error while attempting to load instrumentation wrapper for %s"
             % library_key

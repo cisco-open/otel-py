@@ -16,7 +16,6 @@ limitations under the License.
 
 from os import environ
 
-
 LOCAL_COLLECTOR = "localhost:4317"
 TEST_TOKEN = "test_token"
 

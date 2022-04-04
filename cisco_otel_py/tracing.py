@@ -28,7 +28,6 @@ from . import options
 from . import exporter_factory
 
 
-
 def init(
     service_name: str = None,
     cisco_token: str = None,

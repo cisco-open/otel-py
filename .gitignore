@@ -5,3 +5,6 @@
 dist/
 coverage/
 sami_tests/
+.DS_Store
+__pycache__/
+.idea/misc.xml

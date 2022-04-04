@@ -77,7 +77,7 @@ tracing.init(
 ```
 
 ## How to contribute
-1. git clone otel-py code
+1. git fork otel-py code
 2. if using PyCharm - go to Preferences > Python Interpreter > and use poetry interpreter.
 3. run `poetry build`
 4. run `make all`

@@ -30,6 +30,7 @@ test:
 pretty:
 	black */*.py
 	black */*/*.py
+	black */*/*/*.py
 
 .PHONY: bootstrap
 bootstrap:

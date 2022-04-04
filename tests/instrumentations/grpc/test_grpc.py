@@ -24,43 +24,52 @@ from cisco_opentelemetry_specifications import SemanticAttributes
 
 class Greeter(hello_pb2_grpc.GreeterServicer):
     def SayHello(self, request, context):
-        print('Received request')
-        metadata = (('key1', 'val1'), ('key2', 'val2'))
-        print('Setting custom headers')
+        print("Received request")
+        metadata = (("key1", "val1"), ("key2", "val2"))
+        print("Setting custom headers")
         context.set_trailing_metadata(metadata)
-        print('Returning response')
-        return hello_pb2.HelloReply(message='Hello, %s!' % request.name)
+        print("Returning response")
+        return hello_pb2.HelloReply(message="Hello, %s!" % request.name)
 
 
 def serve():
-    print('Creating server')
+    print("Creating server")
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    print('Adding GreeterServicer endpoint to server')
+    print("Adding GreeterServicer endpoint to server")
     hello_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
-    print('Adding insecure port')
-    server.add_insecure_port('[::]:50051')
-    print('Starting server')
+    print("Adding insecure port")
+    server.add_insecure_port("[::]:50051")
+    print("Starting server")
     server.start()
-    print('Waiting for termination')
+    print("Waiting for termination")
     return server
 
 
 def test_grpc(cisco_tracer, exporter):
     serve()
 
-    with grpc.insecure_channel('localhost:50051') as channel:
+    with grpc.insecure_channel("localhost:50051") as channel:
         stub = hello_pb2_grpc.GreeterStub(channel)
-        response = stub.SayHello(hello_pb2.HelloRequest(name='Cisco'))
-        assert response.message == 'Hello, Cisco!'
+        response = stub.SayHello(hello_pb2.HelloRequest(name="Cisco"))
+        assert response.message == "Hello, Cisco!"
         print("Greeter client received: " + response.message)
         # Get all the in memory spans that were recorded for this iteration
         spans = exporter.get_finished_spans()
         # Confirm something was returned.
         assert len(spans) == 2
         span: ReadableSpan = spans[0]
-        assert span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key1"] == "val1"
-        assert span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key2"] == "val2"
-        assert span.attributes[SemanticAttributes.RPC_RESPONSE_BODY.key] == '{"message": "Hello, Cisco!"}'
+        assert (
+            span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key1"]
+            == "val1"
+        )
+        assert (
+            span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key2"]
+            == "val2"
+        )
+        assert (
+            span.attributes[SemanticAttributes.RPC_RESPONSE_BODY.key]
+            == '{"message": "Hello, Cisco!"}'
+        )
 
 
 if __name__ == "__main__":

@@ -38,6 +38,9 @@ ALLOWED_CONTENT_TYPES = [
     "application/x-www-form-urlencoded",
 ]
 
+ENCODING_UTF8 = "UTF8"
+DECODE_RESPONSE_IN_CASE_OF_ERROR = "backslashreplace"
+
 REQUESTS_KEY = "requests"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"

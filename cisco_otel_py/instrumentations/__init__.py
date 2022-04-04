@@ -4,7 +4,7 @@ from opentelemetry.trace.span import Span
 from cisco_opentelemetry_specifications import SemanticAttributes
 from cisco_otel_py.consts import ALLOWED_CONTENT_TYPES
 from .utils import lowercase_items, add_attributes_to_span
-
+from cisco_otel_py import consts
 
 # This is a base class for all Instrumentation wrapper classes
 class BaseInstrumentorWrapper:
@@ -49,7 +49,7 @@ class BaseInstrumentorWrapper:
 
             body_str = None
             if isinstance(body, bytes):
-                body_str = body.decode("UTF8", "backslashreplace")
+                body_str = body.decode(consts.ENCODING_UTF8, consts.DECODE_RESPONSE_IN_CASE_OF_ERROR)
             else:
                 body_str = body
 

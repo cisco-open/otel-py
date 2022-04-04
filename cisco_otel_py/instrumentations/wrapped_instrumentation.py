@@ -1,7 +1,4 @@
-from cisco_otel_py.consts import REQUESTS_KEY
-from cisco_otel_py.consts import GRPC_SERVER_KEY
-from cisco_otel_py.consts import GRPC_CLIENT_KEY
-
+from cisco_otel_py import consts
 _INSTRUMENTATION_STATE = {}
 
 
@@ -28,16 +25,16 @@ def get_instrumentation_wrapper(library_key, max_payload_size):
         return None
     try:
         wrapper_instance = None
-        if REQUESTS_KEY == library_key:
+        if consts.REQUESTS_KEY == library_key:
             from .requests import RequestsInstrumentorWrapper
 
             wrapper_instance = RequestsInstrumentorWrapper()
             wrapper_instance.set_payload_max_size(max_payload_size)
-        elif GRPC_SERVER_KEY == library_key:
+        elif consts.GRPC_SERVER_KEY == library_key:
             from .grpc import GrpcInstrumentorServerWrapper
 
             wrapper_instance = GrpcInstrumentorServerWrapper()
-        elif GRPC_CLIENT_KEY == library_key:
+        elif consts.GRPC_CLIENT_KEY == library_key:
             from .grpc import GrpcInstrumentorClientWrapper
 
             wrapper_instance = GrpcInstrumentorClientWrapper()

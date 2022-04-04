@@ -26,6 +26,10 @@ build:
 test:
 	poetry run pytest --cov=cisco_otel_py tests/
 
+.PHONY: proto
+proto:
+	python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. tests/instrumentations/grpc/hello.proto
+
 .PHONY: pretty
 pretty:
 	black */*.py

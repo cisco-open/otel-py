@@ -1,4 +1,5 @@
 from cisco_otel_py import consts
+
 _INSTRUMENTATION_STATE = {}
 
 

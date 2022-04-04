@@ -49,7 +49,9 @@ class BaseInstrumentorWrapper:
 
             body_str = None
             if isinstance(body, bytes):
-                body_str = body.decode(consts.ENCODING_UTF8, consts.DECODE_RESPONSE_IN_CASE_OF_ERROR)
+                body_str = body.decode(
+                    consts.ENCODING_UTF8, consts.DECODE_RESPONSE_IN_CASE_OF_ERROR
+                )
             else:
                 body_str = body
 

@@ -12,7 +12,6 @@ from opentelemetry.instrumentation.grpc import (
 from opentelemetry.instrumentation.grpc.version import __version__
 from opentelemetry.instrumentation.grpc.grpcext import intercept_channel
 from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
-from cisco_otel_py.instrumentations.registry import Registry, TYPE_RPC
 
 
 class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrapper):
@@ -161,15 +160,6 @@ class OpenTelemetryServerInterceptorWrapper(
                     invocation_metadata, json.dumps(req_dict), span
                 )
                 try:
-                    block_result = Registry().apply_filters(
-                        span, "", invocation_metadata, request_or_iterator, TYPE_RPC
-                    )
-                    if block_result:
-                        print("should block evaluated to true, aborting with 403")
-                        return context.abort(
-                            grpc.StatusCode.PERMISSION_DENIED, "Permission Denied"
-                        )
-
                     # Capture response
                     context = _OpenTelemetryWrapperServicerContext(context, span)
                     response = behavior(request_or_iterator, context)

@@ -212,8 +212,6 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
             )
             raise err
 
-    #        return self._trace_result(result)
-
     def intercept_stream(
         self, request_or_iterator, metadata, client_info, invoker
     ) -> None:

@@ -27,9 +27,6 @@ from . import consts
 from . import options
 from . import exporter_factory
 
-import logging
-logging.basicConfig(level=logging.NOTSET)
-logger = logging.getLogger(__name__)
 
 
 def init(
@@ -70,9 +67,9 @@ def _auto_instrument(max_payload_size):
                 if wrapped_instrument is None:
                     continue
                 wrapped_instrument.instrument()
-                logger.debug("Instrumented %s" % entry_point.name)
+                print("Instrumented %s" % entry_point.name)
             else:
                 entry_point.load()().instrument()  # type: ignore
-                logger.debug("Instrumented %s", entry_point.name)
+                print("Instrumented %s" % entry_point.name)
         except Exception:  # pylint: disable=broad-except
-            logger.debug("Instrumenting of %s failed", entry_point.name)
+            print("Instrumenting of %s failed" % entry_point.name)

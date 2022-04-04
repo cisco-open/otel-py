@@ -20,31 +20,28 @@ from . import hello_pb2
 from . import hello_pb2_grpc
 from opentelemetry.sdk.trace import ReadableSpan
 from cisco_opentelemetry_specifications import SemanticAttributes
-import logging
-logging.basicConfig(level=logging.NOTSET)
-logger = logging.getLogger(__name__)
 
 
 class Greeter(hello_pb2_grpc.GreeterServicer):
     def SayHello(self, request, context):
-        logger.debug('Received request')
+        print('Received request')
         metadata = (('key1', 'val1'), ('key2', 'val2'))
-        logger.debug('Setting custom headers')
+        print('Setting custom headers')
         context.set_trailing_metadata(metadata)
-        logger.debug('Returning response')
+        print('Returning response')
         return hello_pb2.HelloReply(message='Hello, %s!' % request.name)
 
 
 def serve():
-    logger.debug('Creating server')
+    print('Creating server')
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    logger.debug('Adding GreeterServicer endpoint to server')
+    print('Adding GreeterServicer endpoint to server')
     hello_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
-    logger.debug('Adding insecure port')
+    print('Adding insecure port')
     server.add_insecure_port('[::]:50051')
-    logger.debug('Starting server')
+    print('Starting server')
     server.start()
-    logger.debug('Waiting for termination')
+    print('Waiting for termination')
     return server
 
 
@@ -55,7 +52,7 @@ def test_grpc(cisco_tracer, exporter):
         stub = hello_pb2_grpc.GreeterStub(channel)
         response = stub.SayHello(hello_pb2.HelloRequest(name='Cisco'))
         assert response.message == 'Hello, Cisco!'
-        logger.debug("Greeter client received: " + response.message)
+        print("Greeter client received: " + response.message)
         # Get all the in memory spans that were recorded for this iteration
         spans = exporter.get_finished_spans()
         # Confirm something was returned.

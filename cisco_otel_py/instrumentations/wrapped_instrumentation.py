@@ -1,9 +1,6 @@
 from cisco_otel_py.consts import REQUESTS_KEY
 from cisco_otel_py.consts import GRPC_SERVER_KEY
 from cisco_otel_py.consts import GRPC_CLIENT_KEY
-import logging
-logging.basicConfig(level=logging.NOTSET)
-logger = logging.getLogger(__name__)
 
 _INSTRUMENTATION_STATE = {}
 
@@ -47,5 +44,5 @@ def get_instrumentation_wrapper(library_key, max_payload_size):
         _mark_as_instrumented(library_key, wrapper_instance)
         return wrapper_instance
     except Exception as _err:  # pylint:disable=W0703
-        logger.error(f"Error while attempting to load instrumentation wrapper for {library_key}")
+        print("Error while attempting to load instrumentation wrapper for %s" % library_key)
         return None

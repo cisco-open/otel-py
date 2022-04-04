@@ -20,9 +20,6 @@ import pytest
 
 from cisco_otel_py import tracing, options
 from opentelemetry import trace
-import logging
-logging.basicConfig(level=logging.NOTSET)
-logger = logging.getLogger(__name__)
 
 
 def test_happy_flow():
@@ -31,7 +28,7 @@ def test_happy_flow():
         "test span", kind=trace.SpanKind.INTERNAL
     ) as span:
         span.add_event("test_event", {"test_key": "test_value"})
-        logger.debug("trigger span event")
+        print("trigger span event")
 
 
 def test_missing_token():

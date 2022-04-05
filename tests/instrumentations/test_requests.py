@@ -33,8 +33,6 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         self.http_url_base = "http://" + self.http_host
         self.http_url = self.http_url_base + "/status/200"
         temp_shit = RequestsInstrumentorWrapper()
-        temp_shit.set_process_request_headers(True)
-        temp_shit.set_process_request_body(True, 1024)
         temp_shit.instrument()
 
     def tearDown(self) -> None:

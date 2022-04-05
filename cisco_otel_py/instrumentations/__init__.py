@@ -28,12 +28,12 @@ class BaseInstrumentorWrapper:
         )
 
     def _generic_handler(
-            self,
-            header_prefix: str,
-            body_prefix: str,
-            span: Span,
-            headers: dict,
-            body,
+        self,
+        header_prefix: str,
+        body_prefix: str,
+        span: Span,
+        headers: dict,
+        body,
     ):
         try:
             if not span.is_recording():
@@ -82,9 +82,7 @@ class BaseInstrumentorWrapper:
             self, response_headers: dict, response_body, span: Span
     ) -> Span:
         return self._generic_handler(
-            self._process_request_headers,
             SemanticAttributes.HTTP_RESPONSE_HEADER.key,
-            self._process_request_body,
             SemanticAttributes.HTTP_RESPONSE_BODY.key,
             span,
             response_headers,

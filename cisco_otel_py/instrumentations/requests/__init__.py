@@ -4,7 +4,6 @@ from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
 
 def get_active_span_for_call_wrapper(requests_wrapper, stream):
     def get_active_span_for_call(span, response) -> None:
-        import ipdb;ipdb.set_trace()
         request_headers = dict()
         request_body = ""
         if hasattr(response, "request"):

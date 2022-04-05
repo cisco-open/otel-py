@@ -2,7 +2,7 @@ from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
 
 
-def get_active_span_for_call_wrapper(requests_wrapper, stream):
+def get_active_span_for_call_wrapper(requests_wrapper):
     def get_active_span_for_call(span, response) -> None:
         request_headers = dict()
         request_body = ""
@@ -11,7 +11,7 @@ def get_active_span_for_call_wrapper(requests_wrapper, stream):
             request_body = getattr(response.request, "body", str())
 
         response_headers = getattr(response, "headers", dict())
-        response_body = getattr(response, "content", str())
+        response_body = getattr(response, "content", bytes())
 
         if span.is_recording():
             requests_wrapper.generic_request_handler(
@@ -19,7 +19,7 @@ def get_active_span_for_call_wrapper(requests_wrapper, stream):
             )
 
             requests_wrapper.generic_response_handler(
-                response_headers, response_body, span
+                response_headers, response_body.decode(), span
             )
 
     return get_active_span_for_call
@@ -36,7 +36,7 @@ class RequestsInstrumentorWrapper(RequestsInstrumentor, BaseInstrumentorWrapper)
     def _instrument(self, **kwargs) -> None:
         super()._instrument(
             tracer_provider=kwargs.get("tracer_provider"),
-            span_callback=get_active_span_for_call_wrapper(self, kwargs.get("stream")),
+            span_callback=get_active_span_for_call_wrapper(self),
             name_callback=name_callback,
         )
 

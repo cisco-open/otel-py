@@ -5,6 +5,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from http import HTTPStatus
 from threading import Thread
 
+from opentelemetry.sdk.trace import Span
+
 
 class BaseHttpTest(unittest.TestCase):
     """
@@ -14,6 +16,21 @@ class BaseHttpTest(unittest.TestCase):
     """
 
     server, server_thread = None, None
+
+    @classmethod
+    def response_headers(cls):
+        return {
+            "server-response-header": "the response",
+            "another-header": "bruh"
+        }
+
+    @classmethod
+    def response_body(cls):
+        return 'The response body'
+
+    def assert_captured_headers(self, span: Span, prefix: str, headers: dict):
+        for key, val in headers.items():
+            self.assertEqual(span.attributes[f"{prefix}.{key}"], val)
 
     class Handler(BaseHTTPRequestHandler):
         protocol_version = "HTTP/1.1"  # Support keep-alive.
@@ -27,11 +44,11 @@ class BaseHttpTest(unittest.TestCase):
             if status_match:
                 status = int(status_match.group(1))
             if status == 200:
-                body = "shit"
+                body = BaseHttpTest.response_body()
                 self.send_response(HTTPStatus.OK)
                 self.send_all_headers(len(body))
                 self.end_headers()
-                self.wfile.write(bytes(body, 'utf-8'))
+                self.wfile.write(bytes(body, "utf-8"))
             else:
                 self.send_error(status)
 
@@ -41,10 +58,11 @@ class BaseHttpTest(unittest.TestCase):
             if status_match:
                 status = int(status_match.group(1))
             if status == 200:
-                body = "shit"
+                body = BaseHttpTest.response_body()
                 self.send_response(HTTPStatus.OK)
                 self.send_all_headers(len(body))
-                self.wfile.write(bytes(body, 'utf-8'))
+                self.end_headers()
+                self.wfile.write(bytes(body, "utf-8"))
             else:
                 self.send_error(status)
 
@@ -60,13 +78,6 @@ class BaseHttpTest(unittest.TestCase):
         return HTTPServer(server_address, cls.Handler)
 
     @classmethod
-    def response_headers(cls):
-        return {
-            "server-response-header": "the response",
-            "another-header": "bruh"
-        }
-
-    @classmethod
     def run_server(cls):
         httpd = cls.create_server()
         worker = Thread(
@@ -79,6 +90,11 @@ class BaseHttpTest(unittest.TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.server_thread, cls.server = cls.run_server()
+        http_host = ":".join(map(str, cls.server.server_address[:2]))
+        http_url_base = f"http://{http_host}"
+
+        cls.http_url_sanity = f"{http_url_base}/status/200"
+        cls.http_url_error = f"{http_url_base}/status/404"
 
     @classmethod
     def tearDownClass(cls):

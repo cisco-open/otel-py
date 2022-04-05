@@ -16,11 +16,10 @@ limitations under the License.
 import unittest
 import requests
 
+
 from opentelemetry.test.test_base import TestBase
-from opentelemetry.test.httptest import HttpTestBase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
-
 from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
 from .base_http_test import BaseHttpTest
 
@@ -28,12 +27,7 @@ from .base_http_test import BaseHttpTest
 class TestRequestsWrapper(BaseHttpTest, TestBase):
     def setUp(self) -> None:
         super().setUp()
-        self.assert_ip = self.server.server_address[0]
-        self.http_host = ":".join(map(str, self.server.server_address[:2]))
-        self.http_url_base = "http://" + self.http_host
-        self.http_url = self.http_url_base + "/status/200"
-        temp_shit = RequestsInstrumentorWrapper()
-        temp_shit.instrument()
+        RequestsInstrumentorWrapper().instrument()
 
     def tearDown(self) -> None:
         super().tearDown()
@@ -43,14 +37,47 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
     def request_headers(cls) -> dict[str, str]:
         return {"test-header-key": "test-header-value"}
 
-    @staticmethod
-    def perform_request(url: str) -> requests.Response:
-        return requests.get(url, stream=True)
+    @classmethod
+    def request_body(cls) -> str:
+        return "The response body"
 
-    def test_get_request(self):
-        response = self.perform_request(self.http_url)
+    def test_get_request_sanity(self):
+        _ = requests.get(self.http_url_sanity, headers=self.request_headers())
         spans = self.memory_exporter.get_finished_spans()
-        print(spans[0].to_json())
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
+        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_RESPONSE_HEADER.key, self.response_headers())
+        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key], self.response_body())
+
+    def test_post_request_sanity(self):
+        requests.get(self.http_url_sanity, headers=self.request_headers(), data=self.request_body()).close()
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
+        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key], self.request_body())
+        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_RESPONSE_HEADER.key, self.response_headers())
+        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key], self.response_body())
+
+    def test_get_request_error_response(self):
+        _ = requests.get(self.http_url_error, headers=self.request_headers())
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
+
+    def test_post_request_error_response(self):
+        _ = requests.post(self.http_url_error, headers=self.request_headers(), data=self.request_body()).close()
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
+        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key], self.request_body())
 
 
 if __name__ == "__main__":

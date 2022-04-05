@@ -25,7 +25,6 @@ def get_instrumentation_wrapper(library_key, max_payload_size):
     if is_already_instrumented(library_key):
         return None
     try:
-        wrapper_instance = None
         if consts.REQUESTS_KEY == library_key:
             from .requests import RequestsInstrumentorWrapper
 

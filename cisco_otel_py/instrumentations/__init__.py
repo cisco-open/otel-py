@@ -11,7 +11,7 @@ from cisco_otel_py import consts
 class BaseInstrumentorWrapper:
     def __init__(self):
         super().__init__()
-        self.max_payload_size: int = 0
+        self.max_payload_size: int = 1024
 
     def set_payload_max_size(self, max_payload_size) -> None:
         print("Setting self.max_payload_size to %s." % max_payload_size)
@@ -42,11 +42,6 @@ class BaseInstrumentorWrapper:
             # Add headers
             lowercase_headers = lowercase_items(headers)
             add_attributes_to_span(header_prefix, span, lowercase_headers)
-
-            # Add body
-            content_type = self.eligible_based_on_content_type(lowercase_headers)
-            if content_type is None:
-                return span
 
             if isinstance(body, bytes):
                 body_str = body.decode(

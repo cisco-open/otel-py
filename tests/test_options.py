@@ -14,17 +14,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from os import environ
-import unittest
 from cisco_otel_py import options, consts
 from . import utils
 
 
 def test_default():
-    opt = options.Options(
-        cisco_token=utils.TEST_TOKEN,
-        exporters=[options.ExporterOptions(exporter_type="local")],
-    )
+    opt = options.Options(cisco_token=utils.TEST_TOKEN,
+                          exporters=[options.ExporterOptions(
+                              exporter_type="local"
+                          )])
 
     assert opt.service_name == consts.DEFAULT_SERVICE_NAME
     assert opt.cisco_token == utils.TEST_TOKEN

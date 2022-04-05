@@ -31,22 +31,3 @@ def test_happy_flow():
         print("trigger span event")
 
 
-def test_missing_token():
-    with pytest.raises(ValueError) as exceptionInfo:
-        tracing.init(cisco_token=None)
-
-    assert "Can not initiate cisco-otel launcher without token" == str(
-        exceptionInfo.value
-    )
-
-
-def test_exporter_type():
-
-    with pytest.raises(ValueError) as exceptionInfo:
-        tracing.init(
-            exporters=[
-                options.ExporterOptions(exporter_type="non_relevant_exporter_type")
-            ]
-        )
-
-    assert "Unsupported exported type" == str(exceptionInfo.value)

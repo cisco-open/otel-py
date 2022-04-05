@@ -21,6 +21,5 @@ TEST_TOKEN = "test_token"
 
 
 def clean_env_vars(env_var_names):
-    for v in env_var_names:
-        del environ[v]
-        print("env var", v, "has been unset")
+    for key in env_var_names:
+        environ.pop(key, None)

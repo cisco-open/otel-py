@@ -14,10 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-DEFAULT_SERVICE_NAME = "application"
-DEFAULT_COLLECTOR_ENDPOINT = "http://localhost:4317"
-DEFAULT_EXPORTER_TYPE = "otlp-grpc"
-
 KEY_SERVICE_NAME = "OTEL_SERVICE_NAME"
 KEY_COLLECTOR_ENDPOINT = "OTEL_COLLECTOR_ENDPOINT"
 KEY_EXPORTER_TYPE = "OTEL_EXPORTER_TYPE"
@@ -27,6 +23,10 @@ HTTP_EXPORTER_TYPE = "otlp-http"
 GRPC_EXPORTER_TYPE = "otlp-grpc"
 TEST_EXPORTER_TYPE = "local"
 TOKEN_HEADER = "x-epsagon-token"
+
+DEFAULT_SERVICE_NAME = "application"
+DEFAULT_COLLECTOR_ENDPOINT = "http://localhost:4317"
+DEFAULT_EXPORTER_TYPE = GRPC_EXPORTER_TYPE
 
 MAX_PAYLOAD_SIZE = 128 * 1024
 

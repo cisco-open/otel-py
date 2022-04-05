@@ -21,18 +21,11 @@ from . import utils
 
 
 def test_default():
-    options.Options(cisco_token=utils.TEST_TOKEN)
-
-    assert environ.get(consts.KEY_SERVICE_NAME) == consts.DEFAULT_SERVICE_NAME
-    assert environ.get(consts.KEY_EXPORTER_TYPE) == consts.DEFAULT_EXPORTER_TYPE
-    assert (
-        environ.get(consts.KEY_COLLECTOR_ENDPOINT) == consts.DEFAULT_COLLECTOR_ENDPOINT
+    opt = options.Options(
+        cisco_token=utils.TEST_TOKEN,
+        exporters=[options.ExporterOptions(exporter_type="local")],
     )
 
-    utils.clean_env_vars(
-        [
-            consts.KEY_SERVICE_NAME,
-            consts.KEY_EXPORTER_TYPE,
-            consts.KEY_COLLECTOR_ENDPOINT,
-        ]
-    )
+    assert opt.service_name == consts.DEFAULT_SERVICE_NAME
+    assert opt.cisco_token == utils.TEST_TOKEN
+    assert opt.exporters[0].collector_endpoint == consts.DEFAULT_COLLECTOR_ENDPOINT

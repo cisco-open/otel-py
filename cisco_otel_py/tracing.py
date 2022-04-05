@@ -66,9 +66,9 @@ def _auto_instrument(max_payload_size):
                 if wrapped_instrument is None:
                     continue
                 wrapped_instrument.instrument()
-                print("Instrumented %s", entry_point.name)
+                print("Instrumented %s" % entry_point.name)
             else:
                 entry_point.load()().instrument()  # type: ignore
-                print("Instrumented %s", entry_point.name)
-        except Exception:  # pylint: disable=broad-except
-            print("Instrumenting of %s failed", entry_point.name)
+                print("Instrumented %s" % entry_point.name)
+        except Exception:
+            print("Instrumenting of %s failed" % entry_point.name)

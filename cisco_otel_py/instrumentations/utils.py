@@ -1,7 +1,7 @@
 from opentelemetry.trace.span import Span
 
 
-def lowercase_items(items: dict):  # pylint:disable=R0201
+def lowercase_items(items: dict):
     return {k.lower(): v for k, v in items.items()}
 
 

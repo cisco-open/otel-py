@@ -14,11 +14,9 @@ otel-py-bootstrap = 'cisco_otel_py.cmd.bootstrap:run'
 [tool.poetry.dependencies]
 python = "^3.8"
 argparse = "^1.4.0"
-virtualenv = "^20.13.3"
 requests = "^2.27.1"
-Flask = "^2.0.3"
+opentelemetry-instrumentation-grpc = "0.29b0"
 cisco-opentelemetry-specifications = "^0.0.4"
-pytest-cov = "^3.0.0"
 opentelemetry-semantic-conventions = "^0.29b0"
 opentelemetry-sdk = "^1.10.0"
 opentelemetry-instrumentation = "^0.29b0"
@@ -29,6 +27,9 @@ opentelemetry-instrumentation-requests = "^0.29b0"
 pytest = "^5.2"
 ipdb = "^0.13.9"
 opentelemetry-test-utils = "0.29b0"
+pytest-cov = "^3.0.0"
+virtualenv = "^20.14.0"
+black = "^22.3.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

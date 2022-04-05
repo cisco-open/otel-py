@@ -12,7 +12,7 @@ class BaseInstrumentorWrapper:
         super().__init__()
         self._process_request_headers = False
         self._process_request_body = False
-        self.max_payload_size: int = None
+        self.max_payload_size: int = 0
 
     def set_process_request_headers(self, process_request_headers) -> None:
         self._process_request_headers = process_request_headers
@@ -29,19 +29,19 @@ class BaseInstrumentorWrapper:
         content_type = headers.get("content-type")
         return (
             content_type if content_type in ALLOWED_CONTENT_TYPES else None
-        )  # plyint:disable=R1710
+        )
 
     def _generic_handler(
-        self,
-        record_headers: bool,
-        header_prefix: str,  # pylint:disable=R0913
-        record_body: bool,
-        body_prefix: str,
-        span: Span,
-        headers: dict,
-        body,
-    ):
-        try:  # pylint: disable=R1702
+            self,
+            record_headers: bool,
+            header_prefix: str,
+            record_body: bool,
+            body_prefix: str,
+            span: Span,
+            headers: dict,
+            body,
+    ) -> Span:
+        try:
             if not span.is_recording():
                 return span
 
@@ -54,7 +54,6 @@ class BaseInstrumentorWrapper:
                 if content_type is None:
                     return span
 
-                body_str = None
                 if isinstance(body, bytes):
                     body_str = body.decode("UTF8", "backslashreplace")
                 else:
@@ -63,18 +62,18 @@ class BaseInstrumentorWrapper:
                 request_body_str = self.grab_first_n_bytes(body_str)
                 span.set_attribute(body_prefix, request_body_str)
 
-        except:  # pylint: disable=W0702
+        except:
             print(
                 "An error occurred in genericRequestHandler: exception=%s, stacktrace=%s",
                 sys.exc_info()[0],
                 traceback.format_exc(),
             )
         finally:
-            return span  # pylint: disable=W0150
+            return span
 
     # Generic HTTP Request Handler
     def generic_request_handler(
-        self, request_headers: dict, request_body, span: Span  # pylint: disable=R0912
+            self, request_headers: dict, request_body, span: Span
     ) -> Span:
         return self._generic_handler(
             self._process_request_headers,
@@ -84,6 +83,20 @@ class BaseInstrumentorWrapper:
             span,
             request_headers,
             request_body,
+        )
+
+    # Generic HTTP Request Handler
+    def generic_response_handler(
+            self, response_headers: dict, response_body, span: Span
+    ) -> Span:
+        return self._generic_handler(
+            self._process_request_headers,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            self._process_request_body,
+            SemanticAttributes.HTTP_RESPONSE_BODY.key,
+            span,
+            response_headers,
+            response_body,
         )
 
     # Check body size
@@ -100,7 +113,7 @@ class BaseInstrumentorWrapper:
     def grab_first_n_bytes(self, body: str) -> str:
         if body in (None, ""):
             return ""
-        if self.check_body_size(body):  # pylint: disable=R1705
+        if self.check_body_size(body):
             return body[0, self.max_payload_size]
         else:
             return body

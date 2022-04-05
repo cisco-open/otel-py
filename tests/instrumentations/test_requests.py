@@ -13,56 +13,46 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import json
 import unittest
+import requests
 
-from opentelemetry.sdk.trace import ReadableSpan
+from opentelemetry.test.test_base import TestBase
+from opentelemetry.test.httptest import HttpTestBase
+
 from cisco_opentelemetry_specifications import SemanticAttributes
 
-from requests import get, post
+from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
+from .base_http_test import BaseHttpTest
 
 
-def test_http_request_headers(cisco_tracer, exporter):
-    get(
-        url="https://google.com/",
-        headers={"test-header-key": "test-header-value"},
-    )
+class TestRequestsWrapper(BaseHttpTest, TestBase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.assert_ip = self.server.server_address[0]
+        self.http_host = ":".join(map(str, self.server.server_address[:2]))
+        self.http_url_base = "http://" + self.http_host
+        self.http_url = self.http_url_base + "/status/200"
+        temp_shit = RequestsInstrumentorWrapper()
+        temp_shit.set_process_request_headers(True)
+        temp_shit.set_process_request_body(True, 1024)
+        temp_shit.instrument()
 
-    spans = exporter.get_finished_spans()
-    assert len(spans) >= 1
+    def tearDown(self) -> None:
+        super().tearDown()
+        RequestsInstrumentorWrapper().uninstrument()
 
-    for span in spans:
-        if (
-            f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
-            not in span.attributes
-        ):
-            continue
-        custom_attribute_value = span.attributes[
-            f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
-        ]
-        assert custom_attribute_value == "test-header-value"
-        return
-    assert 1 == 0  # fail if loop hasn't reach relevant span
+    @classmethod
+    def request_headers(cls) -> dict[str, str]:
+        return {"test-header-key": "test-header-value"}
 
+    @staticmethod
+    def perform_request(url: str) -> requests.Response:
+        return requests.get(url, stream=True)
 
-def test_http_request_body(cisco_tracer, exporter):
-    post("https://google.com/", json={"test-key": "test-value"})
-
-    spans = exporter.get_finished_spans()
-    assert len(spans) >= 1
-
-    for span in spans:
-        if f"{SemanticAttributes.HTTP_REQUEST_BODY.key}" not in span.attributes:
-            continue
-        assert f"{SemanticAttributes.HTTP_REQUEST_BODY.key}" in span.attributes
-
-        request_body = json.loads(
-            span.attributes[f"{SemanticAttributes.HTTP_REQUEST_BODY.key}"]
-        )
-
-        assert request_body["test-key"] == "test-value"
-        return
-    assert 1 == 0  # fail if loop hasn't reach relevant span
+    def test_get_request(self):
+        response = self.perform_request(self.http_url)
+        spans = self.memory_exporter.get_finished_spans()
+        print(spans[0].to_json())
 
 
 if __name__ == "__main__":

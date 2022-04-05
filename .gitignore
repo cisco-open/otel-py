@@ -5,3 +5,4 @@
 dist/
 coverage/
 sami_tests/
+__pycache__/

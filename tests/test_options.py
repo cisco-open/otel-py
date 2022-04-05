@@ -15,7 +15,7 @@ limitations under the License.
 """
 
 from os import environ
-import unittest
+
 from cisco_otel_py import options, consts
 from . import utils
 

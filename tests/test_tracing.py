@@ -16,18 +16,11 @@ limitations under the License.
 
 import unittest
 
-import pytest
-
-from cisco_otel_py import tracing, options
-from opentelemetry import trace
+from cisco_otel_py import options, tracing
 
 
-def test_happy_flow():
-    tracer = trace.get_tracer("happy_flow")
-    with tracer.start_as_current_span(
-        "test span", kind=trace.SpanKind.INTERNAL
-    ) as span:
-        span.add_event("test_event", {"test_key": "test_value"})
-        print("trigger span event")
-
+class TestTracing(unittest.TestCase):
+    def test_init_defaults(self):
+        trace_provider = tracing.init(cisco_token='sometoken')
+        import ipdb;ipdb.set_trace()
 

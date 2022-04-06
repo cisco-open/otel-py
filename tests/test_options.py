@@ -27,18 +27,27 @@ class TestOptions(unittest.TestCase):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
 
         self.assertEqual(opt.service_name, consts.DEFAULT_SERVICE_NAME)
+        self.assertEqual(opt.exporters, [options.ExporterOptions()])
         self.assertEqual(opt.max_payload_size, consts.MAX_PAYLOAD_SIZE)
 
+    def test_empty_exporter_defaults(self):
+        opt = options.Options(cisco_token=utils.TEST_TOKEN, exporters=[])
+
+        self.assertEqual(opt.exporters, [options.ExporterOptions()])
+
     def test_parameters(self):
+        exporters = [options.ExporterOptions(exporter_type=consts.HTTP_EXPORTER_TYPE, collector_endpoint='endpoint')]
         opt = options.Options(
             cisco_token=utils.TEST_TOKEN,
             service_name='Service',
             max_payload_size=1023,
+            exporters=exporters
         )
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.service_name, "Service")
         self.assertEqual(opt.max_payload_size, 1023)
+        self.assertEqual(opt.exporters, exporters)
 
     @mock.patch.dict(
         os.environ,

@@ -36,13 +36,13 @@ def init(
 ) -> TracerProvider:
     opt = options.Options(service_name, cisco_token, max_payload_size, exporters)
 
-    provider = set_tracing(opt)
+    provider = _set_tracing(opt)
     _auto_instrument(opt.max_payload_size)
 
     return provider
 
 
-def set_tracing(opt: options.Options) -> TracerProvider:
+def _set_tracing(opt: options.Options) -> TracerProvider:
     provider = TracerProvider(
         resource=Resource.create({"application": opt.service_name})
     )

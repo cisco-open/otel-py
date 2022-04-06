@@ -30,6 +30,13 @@ class ExporterOptions:
             consts.KEY_COLLECTOR_ENDPOINT, consts.DEFAULT_COLLECTOR_ENDPOINT
         )
 
+    def __eq__(self, other):
+        return (
+            type(other) == ExporterOptions and
+            self.exporter_type == other.exporter_type and
+            self.collector_endpoint == other.collector_endpoint
+        )
+
 
 class Options:
     def __init__(
@@ -40,7 +47,11 @@ class Options:
         exporters: [ExporterOptions] = None,
     ):
 
-        self.exporters = exporters
+        if not exporters or len(exporters) == 0:
+            self.exporters = [ExporterOptions()]
+        else:
+            self.exporters = exporters
+
         self.service_name = service_name or os.environ.get(
             consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
         )

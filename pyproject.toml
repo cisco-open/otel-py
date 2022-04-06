@@ -22,7 +22,6 @@ opentelemetry-sdk = "^1.10.0"
 opentelemetry-instrumentation = "^0.29b0"
 opentelemetry-exporter-otlp = "^1.10.0"
 opentelemetry-instrumentation-requests = "^0.29b0"
-pytest-xdist = "^2.5.0"
 
 [tool.poetry.dev-dependencies]
 ipdb = "^0.13.9"

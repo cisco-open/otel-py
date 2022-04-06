@@ -37,7 +37,7 @@ def init(
     opt = options.Options(service_name, cisco_token, max_payload_size, exporters)
 
     provider = set_tracing(opt)
-    _auto_instrument(opt.max_payload_size)
+    _auto_instrument()
 
     return provider
 
@@ -56,15 +56,11 @@ def set_tracing(opt: options.Options) -> TracerProvider:
     return provider
 
 
-def _auto_instrument(max_payload_size):
+def _auto_instrument():
     for entry_point in iter_entry_points("opentelemetry_instrumentor"):
         try:
-            if entry_point.name in consts.WRAPPED_INSTRUMENTATION_KEYS:
-                wrapped_instrument = get_instrumentation_wrapper(
-                    entry_point.name, max_payload_size
-                )
-                if wrapped_instrument is None:
-                    continue
+            wrapped_instrument = get_instrumentation_wrapper(entry_point.name)
+            if wrapped_instrument:
                 wrapped_instrument.instrument()
                 print("Instrumented %s" % entry_point.name)
             else:

@@ -1,4 +1,4 @@
-from cisco_otel_py import consts
+from cisco_otel_py.instrumentations.wrappers import Wrapper
 
 _INSTRUMENTATION_STATE = {}
 
@@ -20,33 +20,23 @@ def _mark_as_instrumented(library_key, wrapper_instance):
     _INSTRUMENTATION_STATE[library_key] = wrapper_instance
 
 
-def get_instrumentation_wrapper(library_key, max_payload_size):
+def get_instrumentation_wrapper(library_key):
     """load and initialize an instrumentation wrapper"""
     if is_already_instrumented(library_key):
         return None
     try:
-        wrapper_instance = None
-        if consts.REQUESTS_KEY == library_key:
-            from .requests import RequestsInstrumentorWrapper
-
-            wrapper_instance = RequestsInstrumentorWrapper()
-            wrapper_instance.set_payload_max_size(max_payload_size)
-        elif consts.GRPC_SERVER_KEY == library_key:
-            from .grpc import GrpcInstrumentorServerWrapper
-
-            wrapper_instance = GrpcInstrumentorServerWrapper()
-        elif consts.GRPC_CLIENT_KEY == library_key:
-            from .grpc import GrpcInstrumentorClientWrapper
-
-            wrapper_instance = GrpcInstrumentorClientWrapper()
+        inst_dict = Wrapper.get_wrappers()
+        if library_key in inst_dict:
+            wrapper_object = inst_dict[library_key]
+            wrapper_instance = wrapper_object();
+            _mark_as_instrumented(library_key, wrapper_instance)
+            return wrapper_instance
         else:
+            print("No instrumentation wrapper for %s" % library_key)
             return None
-
-        _mark_as_instrumented(library_key, wrapper_instance)
-        return wrapper_instance
-    except Exception:
+    except Exception as err:
         print(
             "Error while attempting to load instrumentation wrapper for %s"
-            % library_key
+            % err
         )
         return None

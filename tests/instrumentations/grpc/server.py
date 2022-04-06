@@ -26,4 +26,3 @@ def create_server():
     server.start()
     print("Waiting for termination")
     return server
-

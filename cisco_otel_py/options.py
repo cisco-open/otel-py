@@ -32,9 +32,9 @@ class ExporterOptions:
 
     def __eq__(self, other):
         return (
-            type(other) == ExporterOptions and
-            self.exporter_type == other.exporter_type and
-            self.collector_endpoint == other.collector_endpoint
+            type(other) == ExporterOptions
+            and self.exporter_type == other.exporter_type
+            and self.collector_endpoint == other.collector_endpoint
         )
 
 

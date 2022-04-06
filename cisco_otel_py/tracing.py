@@ -44,10 +44,12 @@ def init(
 
 def _set_tracing(opt: options.Options) -> TracerProvider:
     provider = TracerProvider(
-        resource=Resource.create({
-            "application": opt.service_name,
-            ResourceAttributes.SERVICE_NAME: opt.service_name
-        })
+        resource=Resource.create(
+            {
+                "application": opt.service_name,
+                ResourceAttributes.SERVICE_NAME: opt.service_name,
+            }
+        )
     )
     exporters = exporter_factory.init_exporters(opt)
 

@@ -20,34 +20,42 @@ class TestExporterFactory(unittest.TestCase):
         cls.test_options = options.Options(cisco_token=utils.TEST_TOKEN)
 
     def test_otlp_grpc_exporter(self):
-        self.test_options.exporters = [options.ExporterOptions(
-            exporter_type=consts.GRPC_EXPORTER_TYPE,
-            collector_endpoint='my-end'
-        )]
+        self.test_options.exporters = [
+            options.ExporterOptions(
+                exporter_type=consts.GRPC_EXPORTER_TYPE, collector_endpoint="my-end"
+            )
+        ]
         exporters = exporter_factory.init_exporters(self.test_options)
         self.assertEqual(len(exporters), 1)
 
         otlp_exporter = exporters[0]
         self.assertIsInstance(otlp_exporter, OTLPGrpcExporter)
-        self.assertEqual(otlp_exporter._headers, ((consts.TOKEN_HEADER, utils.TEST_TOKEN),))
+        self.assertEqual(
+            otlp_exporter._headers, ((consts.TOKEN_HEADER, utils.TEST_TOKEN),)
+        )
 
     def test_otlp_http_exporter(self):
-        self.test_options.exporters = [options.ExporterOptions(
-            exporter_type=consts.HTTP_EXPORTER_TYPE,
-            collector_endpoint='my-end'
-        )]
+        self.test_options.exporters = [
+            options.ExporterOptions(
+                exporter_type=consts.HTTP_EXPORTER_TYPE, collector_endpoint="my-end"
+            )
+        ]
         exporters = exporter_factory.init_exporters(self.test_options)
         self.assertEqual(len(exporters), 1)
 
         otlp_exporter = exporters[0]
         self.assertIsInstance(otlp_exporter, OTLPHTTPExporter)
-        self.assertEqual(otlp_exporter._headers, {consts.TOKEN_HEADER: utils.TEST_TOKEN})
-        self.assertEqual(otlp_exporter._endpoint, 'my-end')
+        self.assertEqual(
+            otlp_exporter._headers, {consts.TOKEN_HEADER: utils.TEST_TOKEN}
+        )
+        self.assertEqual(otlp_exporter._endpoint, "my-end")
 
     def test_console_exporter(self):
-        self.test_options.exporters = [options.ExporterOptions(
-            exporter_type=consts.CONSOLE_EXPORTER_TYPE,
-        )]
+        self.test_options.exporters = [
+            options.ExporterOptions(
+                exporter_type=consts.CONSOLE_EXPORTER_TYPE,
+            )
+        ]
         exporters = exporter_factory.init_exporters(self.test_options)
         self.assertEqual(len(exporters), 1)
 

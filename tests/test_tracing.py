@@ -23,13 +23,12 @@ from cisco_otel_py import tracing
 
 class TestTracing(unittest.TestCase):
     def test_init_defaults(self):
-        trace_provider = tracing.init(
-            cisco_token='sometoken',
-            service_name='service'
-        )
+        trace_provider = tracing.init(cisco_token="sometoken", service_name="service")
 
         resource = trace_provider.resource
 
         self.assertIsInstance(resource, Resource)
-        self.assertEqual(resource.attributes[ResourceAttributes.SERVICE_NAME], 'service')
-        self.assertEqual(resource.attributes['application'], 'service')
+        self.assertEqual(
+            resource.attributes[ResourceAttributes.SERVICE_NAME], "service"
+        )
+        self.assertEqual(resource.attributes["application"], "service")

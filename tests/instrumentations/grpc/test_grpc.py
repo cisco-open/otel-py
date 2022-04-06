@@ -51,14 +51,20 @@ class TestGrpcInstrumentationWrapper(TestBase):
             server_span: ReadableSpan = spans[0]
 
             self.assertEqual(
-                server_span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key1"], "val1"
+                server_span.attributes[
+                    f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key1"
+                ],
+                "val1",
             )
 
             self.assertEqual(
-                server_span.attributes[f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key2"], "val2"
+                server_span.attributes[
+                    f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key2"
+                ],
+                "val2",
             )
 
             self.assertEqual(
                 server_span.attributes[SemanticAttributes.RPC_RESPONSE_BODY.key],
-                '{"message": "Hello, Cisco!"}'
+                '{"message": "Hello, Cisco!"}',
             )

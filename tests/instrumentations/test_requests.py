@@ -47,20 +47,49 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         self.assertEqual(len(spans), 1)
         request_span = spans[0]
 
-        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
-        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_RESPONSE_HEADER.key, self.response_headers())
-        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key], self.response_body())
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            self.response_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            self.response_body(),
+        )
 
     def test_post_request_sanity(self):
-        requests.get(self.http_url_sanity, headers=self.request_headers(), data=self.request_body()).close()
+        requests.get(
+            self.http_url_sanity,
+            headers=self.request_headers(),
+            data=self.request_body(),
+        ).close()
         spans = self.memory_exporter.get_finished_spans()
         self.assertEqual(len(spans), 1)
         request_span = spans[0]
 
-        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
-        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key], self.request_body())
-        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_RESPONSE_HEADER.key, self.response_headers())
-        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key], self.response_body())
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            self.request_body(),
+        )
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            self.response_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            self.response_body(),
+        )
 
     def test_get_request_error_response(self):
         _ = requests.get(self.http_url_error, headers=self.request_headers())
@@ -68,16 +97,31 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         self.assertEqual(len(spans), 1)
         request_span = spans[0]
 
-        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
 
     def test_post_request_error_response(self):
-        _ = requests.post(self.http_url_error, headers=self.request_headers(), data=self.request_body()).close()
+        _ = requests.post(
+            self.http_url_error,
+            headers=self.request_headers(),
+            data=self.request_body(),
+        ).close()
         spans = self.memory_exporter.get_finished_spans()
         self.assertEqual(len(spans), 1)
         request_span = spans[0]
 
-        self.assert_captured_headers(request_span, SemanticAttributes.HTTP_REQUEST_HEADER.key, self.request_headers())
-        self.assertEqual(request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key], self.request_body())
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            self.request_body(),
+        )
 
 
 if __name__ == "__main__":

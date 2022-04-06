@@ -19,14 +19,11 @@ class BaseHttpTest(unittest.TestCase):
 
     @classmethod
     def response_headers(cls):
-        return {
-            "server-response-header": "the response",
-            "another-header": "bruh"
-        }
+        return {"server-response-header": "the response", "another-header": "bruh"}
 
     @classmethod
     def response_body(cls):
-        return 'The response body'
+        return "The response body"
 
     def assert_captured_headers(self, span: Span, prefix: str, headers: dict):
         for key, val in headers.items():

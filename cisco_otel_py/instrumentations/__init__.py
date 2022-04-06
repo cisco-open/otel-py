@@ -23,9 +23,7 @@ class BaseInstrumentorWrapper:
     def eligible_based_on_content_type(self, headers: dict):
         """find content-type in headers"""
         content_type = headers.get("content-type")
-        return (
-            content_type if content_type in ALLOWED_CONTENT_TYPES else None
-        )
+        return content_type if content_type in ALLOWED_CONTENT_TYPES else None
 
     def _generic_handler(
         self,
@@ -63,7 +61,7 @@ class BaseInstrumentorWrapper:
 
     # Generic HTTP Request Handler
     def generic_request_handler(
-            self, request_headers: dict, request_body, span: Span
+        self, request_headers: dict, request_body, span: Span
     ) -> Span:
         return self._generic_handler(
             SemanticAttributes.HTTP_REQUEST_HEADER.key,
@@ -74,7 +72,7 @@ class BaseInstrumentorWrapper:
         )
 
     def generic_response_handler(
-            self, response_headers: dict, response_body, span: Span
+        self, response_headers: dict, response_body, span: Span
     ) -> Span:
         return self._generic_handler(
             SemanticAttributes.HTTP_RESPONSE_HEADER.key,
@@ -86,7 +84,7 @@ class BaseInstrumentorWrapper:
 
     # Generic RPC Request Handler
     def generic_rpc_request_handler(
-            self, request_headers: dict, request_body, span: Span
+        self, request_headers: dict, request_body, span: Span
     ) -> Span:
         """Add extended request rpc data to span."""
         print("Entering BaseInstrumentationWrapper.genericRpcRequestHandler().")
@@ -119,7 +117,7 @@ class BaseInstrumentorWrapper:
 
     # Generic RPC Response Handler
     def generic_rpc_response_handler(
-            self, response_headers: dict, response_body, span: Span
+        self, response_headers: dict, response_body, span: Span
     ) -> Span:
         """Add extended response rpc data to span"""
         print("Entering BaseInstrumentationWrapper.genericRpcResponseHandler().")

@@ -19,10 +19,10 @@ from . import utils
 
 
 def test_default():
-    opt = options.Options(cisco_token=utils.TEST_TOKEN,
-                          exporters=[options.ExporterOptions(
-                              exporter_type="local"
-                          )])
+    opt = options.Options(
+        cisco_token=utils.TEST_TOKEN,
+        exporters=[options.ExporterOptions(exporter_type="local")],
+    )
 
     assert opt.service_name == consts.DEFAULT_SERVICE_NAME
     assert opt.cisco_token == utils.TEST_TOKEN

@@ -20,6 +20,7 @@ from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.semconv.resource import ResourceAttributes
 from pkg_resources import iter_entry_points
 
 from .instrumentations.wrapped_instrumentation import get_instrumentation_wrapper
@@ -38,13 +39,15 @@ def init(
 
     provider = _set_tracing(opt)
     _auto_instrument(opt.max_payload_size)
-
     return provider
 
 
 def _set_tracing(opt: options.Options) -> TracerProvider:
     provider = TracerProvider(
-        resource=Resource.create({"application": opt.service_name})
+        resource=Resource.create({
+            "application": opt.service_name,
+            ResourceAttributes.SERVICE_NAME: opt.service_name
+        })
     )
     exporters = exporter_factory.init_exporters(opt)
 

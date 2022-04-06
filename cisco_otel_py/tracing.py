@@ -14,8 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os
-
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -23,8 +21,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
 from pkg_resources import iter_entry_points
 
-from .instrumentations.wrapped_instrumentation import get_instrumentation_wrapper
-from . import consts
+from .instrumentations.wrappers import InstrumentationWrapper
 from . import options
 from . import exporter_factory
 
@@ -38,7 +35,8 @@ def init(
     opt = options.Options(service_name, cisco_token, max_payload_size, exporters)
 
     provider = _set_tracing(opt)
-    _auto_instrument(opt.max_payload_size)
+    _auto_instrument()
+
     return provider
 
 
@@ -61,15 +59,13 @@ def _set_tracing(opt: options.Options) -> TracerProvider:
     return provider
 
 
-def _auto_instrument(max_payload_size):
+def _auto_instrument():
     for entry_point in iter_entry_points("opentelemetry_instrumentor"):
         try:
-            if entry_point.name in consts.WRAPPED_INSTRUMENTATION_KEYS:
-                wrapped_instrument = get_instrumentation_wrapper(
-                    entry_point.name, max_payload_size
-                )
-                if wrapped_instrument is None:
-                    continue
+            wrapped_instrument = InstrumentationWrapper.get_instrumentation_wrapper(
+                entry_point.name
+            )
+            if wrapped_instrument:
                 wrapped_instrument.instrument()
                 print("Instrumented %s" % entry_point.name)
             else:

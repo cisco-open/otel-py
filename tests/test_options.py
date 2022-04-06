@@ -55,6 +55,15 @@ class TestOptions(unittest.TestCase):
 
 
 class TestExporterOptions(unittest.TestCase):
+    def setUp(self) -> None:
+        utils.clean_env_vars(
+            [
+                consts.KEY_SERVICE_NAME,
+                consts.KEY_EXPORTER_TYPE,
+                consts.KEY_COLLECTOR_ENDPOINT,
+            ]
+        )
+
     def test_defaults(self):
         exporter_opts = options.ExporterOptions()
 

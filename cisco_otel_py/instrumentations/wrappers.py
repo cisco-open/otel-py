@@ -10,5 +10,5 @@ class Wrapper:
         return {
             consts.REQUESTS_KEY: RequestsInstrumentorWrapper,
             consts.GRPC_SERVER_KEY: GrpcInstrumentorServerWrapper,
-            consts.GRPC_CLIENT_KEY: GrpcInstrumentorClientWrapper
+            consts.GRPC_CLIENT_KEY: GrpcInstrumentorClientWrapper,
         }

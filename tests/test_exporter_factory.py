@@ -13,6 +13,7 @@ from cisco_otel_py import consts, options, exporter_factory
 
 class TestExporterFactory(unittest.TestCase):
     def setUpClass(cls) -> None:
+        super().setUpClass()
         cls.test_options = options.Options(cisco_token='sometoken')
 
     def test_otlp_exporter(self):

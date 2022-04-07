@@ -24,7 +24,9 @@ opentelemetry-exporter-otlp = "^1.10.0"
 opentelemetry-instrumentation-requests = "^0.29b0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+ipdb = "^0.13.9"
+pytest-xdist = "^2.5.0"
+opentelemetry-test-utils = "0.29b0"
 pytest-cov = "^3.0.0"
 virtualenv = "^20.14.0"
 black = "^22.3.0"

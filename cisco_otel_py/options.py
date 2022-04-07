@@ -30,6 +30,13 @@ class ExporterOptions:
             consts.KEY_COLLECTOR_ENDPOINT, consts.DEFAULT_COLLECTOR_ENDPOINT
         )
 
+    def __eq__(self, other):
+        return (
+            type(other) == ExporterOptions
+            and self.exporter_type == other.exporter_type
+            and self.collector_endpoint == other.collector_endpoint
+        )
+
 
 class Options:
     def __init__(
@@ -40,16 +47,16 @@ class Options:
         exporters: [ExporterOptions] = None,
     ):
 
-        try:
+        if not exporters or len(exporters) == 0:
+            self.exporters = [ExporterOptions()]
+        else:
             self.exporters = exporters
-            self.service_name = service_name or os.environ.get(
-                consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
-            )
-            self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
-            self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
 
-            if self.cisco_token is None:
-                raise ValueError("Can not initiate cisco-otel launcher without token")
+        self.service_name = service_name or os.environ.get(
+            consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
+        )
+        self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
+        self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
 
-        except ValueError:
-            raise
+        if self.cisco_token is None:
+            raise ValueError("Can not initiate cisco-otel launcher without token")

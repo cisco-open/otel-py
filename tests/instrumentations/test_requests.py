@@ -13,56 +13,115 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import json
 import unittest
+import requests
 
-from opentelemetry.sdk.trace import ReadableSpan
+
+from opentelemetry.test.test_base import TestBase
+
 from cisco_opentelemetry_specifications import SemanticAttributes
-
-from requests import get, post
-
-
-def test_http_request_headers(cisco_tracer, exporter):
-    get(
-        url="https://google.com/",
-        headers={"test-header-key": "test-header-value"},
-    )
-
-    spans = exporter.get_finished_spans()
-    assert len(spans) >= 1
-
-    for span in spans:
-        if (
-            f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
-            not in span.attributes
-        ):
-            continue
-        custom_attribute_value = span.attributes[
-            f"{SemanticAttributes.HTTP_REQUEST_HEADER.key}.test-header-key"
-        ]
-        assert custom_attribute_value == "test-header-value"
-        return
-    assert 1 == 0  # fail if loop hasn't reach relevant span
+from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
+from .base_http_test import BaseHttpTest
 
 
-def test_http_request_body(cisco_tracer, exporter):
-    post("https://google.com/", json={"test-key": "test-value"})
+class TestRequestsWrapper(BaseHttpTest, TestBase):
+    def setUp(self) -> None:
+        super().setUp()
+        RequestsInstrumentorWrapper().instrument()
 
-    spans = exporter.get_finished_spans()
-    assert len(spans) >= 1
+    def tearDown(self) -> None:
+        super().tearDown()
+        RequestsInstrumentorWrapper().uninstrument()
 
-    for span in spans:
-        if f"{SemanticAttributes.HTTP_REQUEST_BODY.key}" not in span.attributes:
-            continue
-        assert f"{SemanticAttributes.HTTP_REQUEST_BODY.key}" in span.attributes
+    @classmethod
+    def request_headers(cls) -> dict[str, str]:
+        return {"test-header-key": "test-header-value"}
 
-        request_body = json.loads(
-            span.attributes[f"{SemanticAttributes.HTTP_REQUEST_BODY.key}"]
+    @classmethod
+    def request_body(cls) -> str:
+        return "The response body"
+
+    def test_get_request_sanity(self):
+        _ = requests.get(self.http_url_sanity, headers=self.request_headers())
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            self.response_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            self.response_body(),
         )
 
-        assert request_body["test-key"] == "test-value"
-        return
-    assert 1 == 0  # fail if loop hasn't reach relevant span
+    def test_post_request_sanity(self):
+        requests.get(
+            self.http_url_sanity,
+            headers=self.request_headers(),
+            data=self.request_body(),
+        ).close()
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            self.request_body(),
+        )
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            self.response_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            self.response_body(),
+        )
+
+    def test_get_request_error_response(self):
+        _ = requests.get(self.http_url_error, headers=self.request_headers())
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+
+    def test_post_request_error_response(self):
+        _ = requests.post(
+            self.http_url_error,
+            headers=self.request_headers(),
+            data=self.request_body(),
+        ).close()
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            self.request_body(),
+        )
 
 
 if __name__ == "__main__":

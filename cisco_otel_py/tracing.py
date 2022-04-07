@@ -14,16 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os
-
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.semconv.resource import ResourceAttributes
 from pkg_resources import iter_entry_points
 
-from .instrumentations.wrappers import InstrumentationWrapper
-from . import consts
+from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
 from . import options
 from . import exporter_factory
 
@@ -36,15 +34,20 @@ def init(
 ) -> TracerProvider:
     opt = options.Options(service_name, cisco_token, max_payload_size, exporters)
 
-    provider = set_tracing(opt)
+    provider = _set_tracing(opt)
     _auto_instrument()
 
     return provider
 
 
-def set_tracing(opt: options.Options) -> TracerProvider:
+def _set_tracing(opt: options.Options) -> TracerProvider:
     provider = TracerProvider(
-        resource=Resource.create({"application": opt.service_name})
+        resource=Resource.create(
+            {
+                "application": opt.service_name,
+                ResourceAttributes.SERVICE_NAME: opt.service_name,
+            }
+        )
     )
     exporters = exporter_factory.init_exporters(opt)
 

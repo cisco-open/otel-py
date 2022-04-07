@@ -8,11 +8,18 @@ def get_active_span_for_call_wrapper(requests_wrapper):
         request_body = ""
         if hasattr(response, "request"):
             request_headers = getattr(response.request, "headers", dict())
-            request_body = getattr(response.request, "body", "")
+            request_body = getattr(response.request, "body", str())
+
+        response_headers = getattr(response, "headers", dict())
+        response_body = getattr(response, "content", bytes())
 
         if span.is_recording():
             requests_wrapper.generic_request_handler(
                 request_headers, request_body, span
+            )
+
+            requests_wrapper.generic_response_handler(
+                response_headers, response_body.decode(), span
             )
 
     return get_active_span_for_call

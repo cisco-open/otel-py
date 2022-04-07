@@ -26,7 +26,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 )
 
 
-def set_exporter(exporter: options.ExporterOptions, opt: options.Options):
+def _set_exporter(exporter: options.ExporterOptions, opt: options.Options):
     if exporter.exporter_type == consts.GRPC_EXPORTER_TYPE:
         return OTLPGrpcExporter(
             endpoint=exporter.collector_endpoint,
@@ -45,5 +45,4 @@ def set_exporter(exporter: options.ExporterOptions, opt: options.Options):
 
 
 def init_exporters(opt: options.Options):
-    for exporter in opt.exporters:
-        return [set_exporter(exporter, opt)]
+    return [_set_exporter(exporter, opt) for exporter in opt.exporters]

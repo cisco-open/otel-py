@@ -6,6 +6,7 @@ from cisco_otel_py.consts import ALLOWED_CONTENT_TYPES
 from .utils import lowercase_items, add_attributes_to_span
 from cisco_otel_py import consts
 
+
 # This is a base class for all Instrumentation wrapper classes
 class BaseInstrumentorWrapper:
     def __init__(self):
@@ -22,9 +23,7 @@ class BaseInstrumentorWrapper:
     def eligible_based_on_content_type(self, headers: dict):
         """find content-type in headers"""
         content_type = headers.get("content-type")
-        return (
-            content_type if content_type in ALLOWED_CONTENT_TYPES else None
-        )  # plyint:disable=R1710
+        return content_type if content_type in ALLOWED_CONTENT_TYPES else None
 
     def _generic_handler(
         self,
@@ -42,12 +41,6 @@ class BaseInstrumentorWrapper:
             lowercase_headers = lowercase_items(headers)
             add_attributes_to_span(header_prefix, span, lowercase_headers)
 
-            # Add body
-            content_type = self.eligible_based_on_content_type(lowercase_headers)
-            if content_type is None:
-                return span
-
-            body_str = None
             if isinstance(body, bytes):
                 body_str = body.decode(
                     consts.ENCODING_UTF8, consts.DECODE_RESPONSE_IN_CASE_OF_ERROR
@@ -76,6 +69,17 @@ class BaseInstrumentorWrapper:
             span,
             request_headers,
             request_body,
+        )
+
+    def generic_response_handler(
+        self, response_headers: dict, response_body, span: Span
+    ) -> Span:
+        return self._generic_handler(
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            SemanticAttributes.HTTP_RESPONSE_BODY.key,
+            span,
+            response_headers,
+            response_body,
         )
 
     # Generic RPC Request Handler

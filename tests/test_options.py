@@ -22,7 +22,6 @@ from cisco_otel_py import options, consts
 from . import utils
 
 
-<<<<<<< HEAD
 class TestOptions(unittest.TestCase):
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
@@ -57,12 +56,6 @@ class TestOptions(unittest.TestCase):
     @mock.patch.dict(
         os.environ,
         {consts.KEY_SERVICE_NAME: "Service", consts.KEY_TOKEN: utils.TEST_TOKEN},
-=======
-def test_default():
-    opt = options.Options(
-        cisco_token=utils.TEST_TOKEN,
-        exporters=[options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)],
->>>>>>> 8336bf23f98e82817b391fcc28f60052abbe96cb
     )
     def test_parameters_from_env(self):
         opt = options.Options()

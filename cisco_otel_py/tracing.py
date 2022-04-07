@@ -21,7 +21,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
 from pkg_resources import iter_entry_points
 
-from .instrumentations.wrappers import InstrumentationWrapper
+from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
 from . import options
 from . import exporter_factory
 

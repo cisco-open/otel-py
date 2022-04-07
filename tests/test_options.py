@@ -21,7 +21,7 @@ from . import utils
 def test_default():
     opt = options.Options(
         cisco_token=utils.TEST_TOKEN,
-        exporters=[options.ExporterOptions(exporter_type="local")],
+        exporters=[options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)],
     )
 
     assert opt.service_name == consts.DEFAULT_SERVICE_NAME

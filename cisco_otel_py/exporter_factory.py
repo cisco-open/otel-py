@@ -38,8 +38,10 @@ def set_exporter(exporter: options.ExporterOptions, opt: options.Options):
             endpoint=exporter.collector_endpoint,
             headers={consts.TOKEN_HEADER: opt.cisco_token},
         )
-    else:
+    elif exporter.exporter_type == consts.CONSOLE_EXPORTER_TYPE:
         return ConsoleSpanExporter(service_name=opt.service_name)
+    else:
+        raise ValueError("Unsupported exported type")
 
 
 def init_exporters(opt: options.Options):

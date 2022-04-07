@@ -13,7 +13,7 @@ def cisco_tracer():
         cisco_token=utils.TEST_TOKEN,
         exporters=[
             options.ExporterOptions(
-                exporter_type=consts.TEST_EXPORTER_TYPE,
+                exporter_type=consts.CONSOLE_EXPORTER_TYPE,
                 collector_endpoint=utils.LOCAL_COLLECTOR,
             ),
         ],

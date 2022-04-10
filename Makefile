@@ -32,9 +32,7 @@ proto:
 
 .PHONY: pretty
 pretty:
-	black */*.py
-	black */*/*.py
-	black */*/*/*.py
+	black .
 
 .PHONY: bootstrap
 bootstrap:

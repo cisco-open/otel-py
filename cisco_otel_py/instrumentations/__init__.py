@@ -83,7 +83,7 @@ class BaseInstrumentorWrapper:
         )
 
     # Generic RPC Request Handler
-    def generic_rpc_request_handler(
+    def generi_rpc_request_handler(
         self, request_headers: dict, request_body, span: Span
     ) -> Span:
         """Add extended request rpc data to span."""

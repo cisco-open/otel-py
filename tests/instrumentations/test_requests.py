@@ -104,7 +104,7 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         )
 
     def test_post_request_error_response(self):
-        _ = requests.post(
+        requests.post(
             self.http_url_error,
             headers=self.request_headers(),
             data=self.request_body(),

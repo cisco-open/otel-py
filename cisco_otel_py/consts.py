@@ -39,7 +39,7 @@ ALLOWED_CONTENT_TYPES = [
 ]
 
 ENCODING_UTF8 = "UTF8"
-DECODE_RESPONSE_IN_CASE_OF_ERROR = "backslashreplace"
+DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
 
 REQUESTS_KEY = "requests"
 GRPC_SERVER_KEY = "grpc_server"

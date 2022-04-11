@@ -1,11 +1,33 @@
+from typing import AnyStr
 from opentelemetry.trace.span import Span
 
-
-def lowercase_items(items: dict):
-    return {k.lower(): v for k, v in items.items()}
+from .. import consts
 
 
-def add_attributes_to_span(prefix: str, span: Span, attributes: dict):
-    """set attributes to span"""
-    for attribute_key, attribute_value in attributes.items():
-        span.set_attribute(f"{prefix}.{attribute_key}", attribute_value)
+class Utils(object):
+    @staticmethod
+    def set_payload(
+        span: Span, attr_prefix: str, payload: AnyStr, max_payload_size: int
+    ):
+        if payload is None:
+            payload_decoded = ""
+
+        elif isinstance(payload, bytes):
+            payload_decoded = payload.decode(
+                consts.ENCODING_UTF8, consts.DECODE_PAYLOAD_IN_CASE_OF_ERROR
+            )
+
+        else:
+            payload_decoded = payload
+
+        span.set_attribute(attr_prefix, payload_decoded[:max_payload_size])
+
+    @staticmethod
+    def lowercase_items(items: dict):
+        return {k.lower(): v for k, v in items.items()}
+
+    @staticmethod
+    def add_flattened_dict(span: Span, prefix, attributes: dict):
+        """Add Dictionary to Span as flattened labels with lower cased key values"""
+        for attribute_key, attribute_value in Utils.lowercase_items(attributes).items():
+            span.set_attribute(f"{prefix}.{attribute_key}", attribute_value)

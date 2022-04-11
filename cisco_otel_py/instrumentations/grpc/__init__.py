@@ -1,6 +1,7 @@
 import json
 import traceback
 import grpc
+from typing import Any
 from google.protobuf.json_format import MessageToDict
 from opentelemetry import trace
 from opentelemetry.instrumentation.grpc import (
@@ -12,6 +13,9 @@ from opentelemetry.instrumentation.grpc import (
 from opentelemetry.instrumentation.grpc.version import __version__
 from opentelemetry.instrumentation.grpc.grpcext import intercept_channel
 from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
+from ..utils import Utils
+
+from cisco_opentelemetry_specifications import SemanticAttributes
 
 
 class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrapper):
@@ -131,7 +135,7 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
         def telemetry_wrapper(behavior, request_streaming, response_streaming):
             print("Entering OpenTelemetryServerInterceptorWrapper.telemetry_wrapper().")
 
-            def telemetry_interceptor(request_or_iterator, context) -> None:
+            def telemetry_interceptor(request_or_iterator, context) -> Any:
                 print(
                     "Entering OpenTelemetryServerInterceptorWrapper.telemetry_interceptor()."
                 )
@@ -146,27 +150,24 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
 
                 span = context._active_span
 
-                invocation_metadata = dict(handler_call_details.invocation_metadata)
-                req_dict = MessageToDict(request_or_iterator)
-                self._gisw.generic_rpc_request_handler(
-                    invocation_metadata, json.dumps(req_dict), span
+                Utils.set_payload(
+                    span,
+                    SemanticAttributes.RPC_REQUEST_BODY.key,
+                    json.dumps(MessageToDict(request_or_iterator)),
+                    self._gisw.max_payload_size,
                 )
+
+                Utils.add_flattened_dict(
+                    span,
+                    SemanticAttributes.RPC_REQUEST_METADATA.key,
+                    dict(handler_call_details.invocation_metadata),
+                )
+
                 try:
-                    # Capture response
                     context = _OpenTelemetryWrapperServicerContext(context, span)
+                    # Capture response
                     response = behavior(request_or_iterator, context)
-                    trailing_metadata = context.get_trailing_metadata()
-                    if len(trailing_metadata) > 0:
-                        trailing_metadata = dict(trailing_metadata[0])
-                    else:
-                        trailing_metadata = {}
 
-                    response_dict = MessageToDict(response)
-                    self._gisw.generic_rpc_response_handler(
-                        trailing_metadata, json.dumps(response_dict), span
-                    )
-
-                    return response
                 except Exception as error:
                     # Bare exceptions are likely to be gRPC aborts, which
                     # we handle in our context wrapper.
@@ -175,7 +176,30 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     if type(error) != Exception:
                         span.record_exception(error)
                         raise error
-                    return None
+
+                else:
+                    trailing_metadata = context.get_trailing_metadata()
+                    if len(trailing_metadata) > 0:
+                        trailing_metadata = dict(trailing_metadata[0])
+                    else:
+                        trailing_metadata = {}
+
+                    response_dict = MessageToDict(response)
+
+                    Utils.set_payload(
+                        span,
+                        SemanticAttributes.RPC_RESPONSE_BODY.key,
+                        json.dumps(response_dict),
+                        self._gisw.max_payload_size,
+                    )
+
+                    Utils.add_flattened_dict(
+                        span,
+                        SemanticAttributes.RPC_RESPONSE_METADATA.key,
+                        trailing_metadata,
+                    )
+
+                    return response
 
             return telemetry_interceptor
 

@@ -1,26 +1,42 @@
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
 
+from ..utils import Utils
+
+from cisco_opentelemetry_specifications import SemanticAttributes
+
 
 def get_active_span_for_call_wrapper(requests_wrapper):
     def get_active_span_for_call(span, response) -> None:
-        request_headers = dict()
-        request_body = ""
+        if not span.is_recording():
+            return
+
         if hasattr(response, "request"):
-            request_headers = getattr(response.request, "headers", dict())
-            request_body = getattr(response.request, "body", str())
-
-        response_headers = getattr(response, "headers", dict())
-        response_body = getattr(response, "content", bytes())
-
-        if span.is_recording():
-            requests_wrapper.generic_request_handler(
-                request_headers, request_body, span
+            Utils.add_flattened_dict(
+                span,
+                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                getattr(response.request, "headers", dict()),
             )
 
-            requests_wrapper.generic_response_handler(
-                response_headers, response_body.decode(), span
+            Utils.set_payload(
+                span,
+                SemanticAttributes.HTTP_REQUEST_BODY.key,
+                getattr(response.request, "body", str()),
+                requests_wrapper.max_payload_size,
             )
+
+        Utils.add_flattened_dict(
+            span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            getattr(response, "headers", dict()),
+        )
+
+        Utils.set_payload(
+            span,
+            SemanticAttributes.HTTP_RESPONSE_BODY.key,
+            getattr(response, "content", bytes()),
+            requests_wrapper.max_payload_size,
+        )
 
     return get_active_span_for_call
 

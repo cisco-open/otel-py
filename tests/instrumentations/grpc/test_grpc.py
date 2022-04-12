@@ -43,14 +43,15 @@ class TestGrpcInstrumentationWrapper(TestBase):
         with grpc.insecure_channel("localhost:50051") as channel:
             stub = hello_pb2_grpc.GreeterStub(channel)
             response, call = stub.SayHello.with_call(
-                hello_pb2.HelloRequest(name='Cisco'),
-                metadata=(
-                    ('initial-metadata-1', 'some str data'),
-                ))
+                hello_pb2.HelloRequest(name="Cisco"),
+                metadata=(("initial-metadata-1", "some str data"),),
+            )
             print("Greeter client received: " + response.message)
             for key, value in call.trailing_metadata():
-                print('Greeter client received trailing metadata: key=%s value=%s' %
-                      (key, value))
+                print(
+                    "Greeter client received trailing metadata: key=%s value=%s"
+                    % (key, value)
+                )
 
             # Get all the in memory spans that were recorded for this iteration
             spans = self.memory_exporter.get_finished_spans()
@@ -79,9 +80,7 @@ class TestGrpcInstrumentationWrapper(TestBase):
 
             client_span: ReadableSpan = spans[1]
             self.assertEqual(
-                client_span.attributes[
-                    SemanticAttributes.RPC_REQUEST_BODY.key
-                ],
+                client_span.attributes[SemanticAttributes.RPC_REQUEST_BODY.key],
                 'name: "Cisco"\n',
             )
 
@@ -89,5 +88,5 @@ class TestGrpcInstrumentationWrapper(TestBase):
                 client_span.attributes[
                     f"{SemanticAttributes.RPC_REQUEST_METADATA.key}.initial-metadata-1"
                 ],
-                'some str data',
+                "some str data",
             )

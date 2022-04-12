@@ -74,7 +74,11 @@ class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrap
     def _instrument(self, **kwargs) -> None:
         print("Entering GrpcInstrumentorClientWrapper._instrument().")
         for ctype in self._which_channel(kwargs):
-            _wrap("grpc", ctype, self.wrapper_fn_wrapper, )
+            _wrap(
+                "grpc",
+                ctype,
+                self.wrapper_fn_wrapper,
+            )
 
     # Internal disable instrumentation
     def _uninstrument(self, **kwargs) -> None:
@@ -227,10 +231,10 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
         else:
             mutable_metadata = OrderedDict(metadata)
         with self._start_span(
-                client_info.full_method,
-                end_on_exit=False,
-                record_exception=False,
-                set_status_on_exception=False,
+            client_info.full_method,
+            end_on_exit=False,
+            record_exception=False,
+            set_status_on_exception=False,
         ) as span:
             result = None
             try:
@@ -249,13 +253,16 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
                 # Add request headers
                 lowercased_metadata = lowercase_items(dict(metadata))
                 add_attributes_to_span(
-                    SemanticAttributes.RPC_REQUEST_METADATA.key, span, lowercased_metadata
+                    SemanticAttributes.RPC_REQUEST_METADATA.key,
+                    span,
+                    lowercased_metadata,
                 )
 
                 # Add request body
                 request_body_str = str(request)
-                request_body_str = utils.grab_first_n_bytes(request_body_str,
-                                                            consts.MAX_PAYLOAD_SIZE)
+                request_body_str = utils.grab_first_n_bytes(
+                    request_body_str, consts.MAX_PAYLOAD_SIZE
+                )
                 span.set_attribute(
                     SemanticAttributes.RPC_REQUEST_BODY.key, request_body_str
                 )

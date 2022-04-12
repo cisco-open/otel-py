@@ -102,7 +102,9 @@ class BaseInstrumentorWrapper:
 
             # Add rpc response body
             request_body_str = str(request_body)
-            request_body_str = utils.grab_first_n_bytes(request_body_str, self.max_payload_size)
+            request_body_str = utils.grab_first_n_bytes(
+                request_body_str, self.max_payload_size
+            )
             span.set_attribute(
                 SemanticAttributes.RPC_REQUEST_BODY.key, request_body_str
             )
@@ -137,7 +139,9 @@ class BaseInstrumentorWrapper:
             # Add rpc body
             response_body_str = str(response_body)
             print("Processing response body")
-            response_body_str = utils.grab_first_n_bytes(response_body_str, self.max_payload_size)
+            response_body_str = utils.grab_first_n_bytes(
+                response_body_str, self.max_payload_size
+            )
             span.set_attribute(
                 SemanticAttributes.RPC_RESPONSE_BODY.key, response_body_str
             )

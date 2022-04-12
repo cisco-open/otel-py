@@ -9,7 +9,7 @@ class Greeter(hello_pb2_grpc.GreeterServicer):
     def SayHello(self, request, context):
         print("Received request")
         for key, value in context.invocation_metadata():
-            print('Received initial metadata: key=%s value=%s' % (key, value))
+            print("Received initial metadata: key=%s value=%s" % (key, value))
 
         print("Setting custom headers")
         context.set_trailing_metadata((("key1", "val1"), ("key2", "val2")))

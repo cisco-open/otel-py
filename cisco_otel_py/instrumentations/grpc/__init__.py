@@ -1,6 +1,10 @@
 import json
 import traceback
 import grpc
+from typing import MutableMapping
+from collections import OrderedDict
+
+from wrapt import wrap_function_wrapper as _wrap
 from typing import Any
 from google.protobuf.json_format import MessageToDict
 from opentelemetry import trace
@@ -10,12 +14,19 @@ from opentelemetry.instrumentation.grpc import (
     _server,
     _client,
 )
+from opentelemetry.propagate import inject
+from opentelemetry.propagators.textmap import Setter
 from opentelemetry.instrumentation.grpc.version import __version__
 from opentelemetry.instrumentation.grpc.grpcext import intercept_channel
-from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
 from ..utils import Utils
+from opentelemetry.instrumentation.grpc._utilities import RpcInfo
+from opentelemetry.trace.status import Status, StatusCode
+from cisco_otel_py.instrumentations import BaseInstrumentorWrapper, utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
+
+# code was taken from github commit sha: f7eb9673bca5d6fb4d16040e8ac28053225ad302
+# https://github.com/hypertrace/pythonagent/pull/262
 
 
 class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrapper):
@@ -67,7 +78,12 @@ class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrap
     # Internal initialize instrumentation
     def _instrument(self, **kwargs) -> None:
         print("Entering GrpcInstrumentorClientWrapper._instrument().")
-        super()._instrument(**kwargs)
+        for ctype in self._which_channel(kwargs):
+            _wrap(
+                "grpc",
+                ctype,
+                self.wrapper_fn_wrapper,
+            )
 
     # Internal disable instrumentation
     def _uninstrument(self, **kwargs) -> None:
@@ -82,7 +98,7 @@ class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrap
         tracer_provider = kwargs.get("tracer_provider")
         return intercept_channel(
             channel,
-            client_interceptor_wrapper(tracer_provider=tracer_provider),
+            client_interceptor_wrapper(self, tracer_provider=tracer_provider),
         )
 
 
@@ -95,11 +111,11 @@ def server_interceptor_wrapper(gisw, tracer_provider=None) -> None:
 
 
 # Initialize the client handler
-def client_interceptor_wrapper(tracer_provider) -> None:
+def client_interceptor_wrapper(gicw, tracer_provider) -> None:
     """Helper function to set interceptor."""
     print("Entering client_interceptor_wrapper().")
     tracer = trace.get_tracer(__name__, __version__, tracer_provider)
-    return OpenTelemetryClientInterceptorWrapper(tracer)
+    return OpenTelemetryClientInterceptorWrapper(tracer, gicw)
 
 
 # Wrapper around Server-side telemetry context
@@ -217,24 +233,83 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
         # TODO: -- need to implement this
 
 
+class _CarrierSetter(Setter):
+    """We use a custom setter in order to be able to lower case
+    keys as is required by grpc.
+    """
+
+    def set(self, carrier: MutableMapping[str, str], key: str, value: str):
+        carrier[key.lower()] = value
+
+
 # Wrapper around client-side interceptor
 class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientInterceptor):
-    def __init__(self, tracer):
+    def __init__(self, tracer, gicw):
         print("Entering OpenTelemetryClientInterceptorWrapper.__init__().")
         super().__init__(tracer)
+        self._gicw = gicw
 
-    def intercept_unary(self, request, metadata, client_info, invoker) -> None:
-        print("Entering OpenTelemetryClientInterceptorWrapper.intercept_unary().")
-        try:
-            # TODO: find how to obtain span object here
-            # TODO" find how to obtain trailing metadata here
-            result = invoker(request, metadata)
-        except grpc.RpcError as err:
-            print(
-                "An error occurred in %s: exception=%s, stacktrace=%s"
-                % ("processing client request", err, traceback.format_exc())
-            )
-            raise err
+    def _intercept(self, request, metadata, client_info, invoker):
+        # if context.get_value(_SUPPRESS_INSTRUMENTATION_KEY):
+        #     return invoker(request, metadata)
+        if not metadata:
+            mutable_metadata = OrderedDict()
+        else:
+            mutable_metadata = OrderedDict(metadata)
+        with self._start_span(
+            client_info.full_method,
+            end_on_exit=False,
+            record_exception=False,
+            set_status_on_exception=False,
+        ) as span:
+            result = None
+            try:
+                inject(mutable_metadata, setter=_CarrierSetter())
+                metadata = tuple(mutable_metadata.items())
+
+                rpc_info = RpcInfo(
+                    full_method=client_info.full_method,
+                    metadata=metadata,
+                    timeout=client_info.timeout,
+                    request=request,
+                )
+
+                result = invoker(request, metadata)
+
+                # Add request headers
+                Utils.add_flattened_dict(
+                    span,
+                    SemanticAttributes.RPC_REQUEST_METADATA.key,
+                    utils.Utils.lowercase_items(dict(metadata)),
+                )
+
+                # Add request body
+                Utils.set_payload(
+                    span,
+                    SemanticAttributes.RPC_REQUEST_BODY.key,
+                    str(request),  # body
+                    self._gicw.max_payload_size,
+                )
+
+            except Exception as exc:
+                if isinstance(exc, grpc.RpcError):
+                    span.set_attribute(
+                        "rpc.grpc.status_code",  # SpanAttributes.RPC_GRPC_STATUS_CODE
+                        exc.code().value[0],
+                    )
+                span.set_status(
+                    Status(
+                        status_code=StatusCode.ERROR,
+                        description=f"{type(exc).__name__}: {exc}",
+                    )
+                )
+                span.record_exception(exc)
+                raise exc
+            finally:
+                if not result:
+                    span.end()
+
+        return self._trace_result(span, rpc_info, result)
 
     def intercept_stream(
         self, request_or_iterator, metadata, client_info, invoker

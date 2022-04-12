@@ -1,12 +1,8 @@
-from logging import getLogger
-
+import logging
 from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
 from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorServerWrapper
 from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorClientWrapper
 from .. import consts, options
-
-
-logger = getLogger(__name__)
 
 
 class InstrumentationWrapper:
@@ -40,10 +36,10 @@ class InstrumentationWrapper:
                 cls._mark_as_instrumented(library_key, wrapper_instance)
                 return wrapper_instance
             else:
-                logger.warning(f"No instrumentation wrapper for {library_key}")
+                logging.info(f"No instrumentation wrapper for {library_key}")
                 return
         except Exception:
-            logger.exception(f"Error while attempting to load instrumentation wrapper")
+            logging.exception(f"Error while attempting to load instrumentation wrapper")
             return
 
     @classmethod

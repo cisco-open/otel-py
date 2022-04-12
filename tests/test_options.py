@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import os
+from distutils.util import strtobool
 import unittest
 from unittest import mock
 
@@ -23,11 +24,16 @@ from . import utils
 
 
 class TestOptions(unittest.TestCase):
+    def tearDown(self) -> None:
+        utils.clean_env_vars([consts.KEY_DEBUG_NAME])
+
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
 
         self.assertEqual(opt.service_name, consts.DEFAULT_SERVICE_NAME)
         self.assertEqual(opt.exporters, [options.ExporterOptions()])
+        self.assertEqual(opt.debug, strtobool(consts.DEFAULT_DEBUG))
+        self.assertEqual(opt.debug, False)
         self.assertEqual(opt.max_payload_size, consts.MAX_PAYLOAD_SIZE)
 
     def test_empty_exporter_defaults(self):
@@ -46,22 +52,25 @@ class TestOptions(unittest.TestCase):
             service_name="Service",
             max_payload_size=1023,
             exporters=exporters,
+            debug=True
         )
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.service_name, "Service")
+        self.assertEqual(opt.debug, True)
         self.assertEqual(opt.max_payload_size, 1023)
         self.assertEqual(opt.exporters, exporters)
 
     @mock.patch.dict(
         os.environ,
-        {consts.KEY_SERVICE_NAME: "Service", consts.KEY_TOKEN: utils.TEST_TOKEN},
+        {consts.KEY_SERVICE_NAME: "Service", consts.KEY_TOKEN: utils.TEST_TOKEN, consts.KEY_DEBUG_NAME: "True"},
     )
     def test_parameters_from_env(self):
         opt = options.Options()
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.service_name, "Service")
+        self.assertEqual(opt.debug, True)
 
     def test_token_is_missing(self):
         with self.assertRaisesRegex(

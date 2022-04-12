@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 import os
+from distutils.util import strtobool
 
 from . import consts
 
@@ -57,7 +58,7 @@ class Options:
             consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
         )
 
-        self.debug = debug or bool(os.environ.get(
+        self.debug = debug or strtobool(os.environ.get(
             consts.KEY_DEBUG_NAME, consts.DEFAULT_DEBUG
         ))
 

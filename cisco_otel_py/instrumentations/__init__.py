@@ -1,8 +1,4 @@
-from logging import getLogger
-
 from .. import consts, options
-
-logger = getLogger(__name__)
 
 
 class BaseInstrumentorWrapper:

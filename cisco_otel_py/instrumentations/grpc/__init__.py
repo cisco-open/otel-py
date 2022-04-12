@@ -1,7 +1,7 @@
 import grpc
 import json
+import logging
 from typing import Any
-from logging import getLogger
 from google.protobuf.json_format import MessageToDict
 from opentelemetry import trace
 from opentelemetry.instrumentation.grpc import (
@@ -16,8 +16,6 @@ from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
 from ..utils import Utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
-
-logger = getLogger(__name__)
 
 
 class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrapper):
@@ -117,7 +115,7 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
         self._gisw = gisw
 
     def intercept_service(self, continuation, handler_call_details):
-        logger.debug("Intercepting")
+        logging.debug("Intercepting")
 
         def telemetry_wrapper(behavior, request_streaming, response_streaming):
             def telemetry_interceptor(request_or_iterator, context) -> Any:
@@ -155,7 +153,7 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     # we handle in our context wrapper.
                     # Here, we're interested in uncaught exceptions.
                     # pylint:disable=unidiomatic-typecheck
-                    logger.exception("Exception in user context call")
+                    logging.exception("Exception in user context call")
                     if type(error) != Exception:
                         span.record_exception(error)
                         raise error
@@ -209,7 +207,7 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
             # TODO" find how to obtain trailing metadata here
             _ = invoker(request, metadata)
         except grpc.RpcError as err:
-            logger.exception(f"An error occurred in processing client request")
+            logging.exception(f"An error occurred in processing client request")
             raise err
 
     def intercept_stream(

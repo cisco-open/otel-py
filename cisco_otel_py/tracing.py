@@ -51,7 +51,7 @@ def _set_debug(opt: options.Options):
     if opt.debug:
         logging.basicConfig(
             level=logging.DEBUG,
-            format="%(asctime)s %(levelname)-8s %(filename)s- %(lineno)s - %(funcName)s: %(message)s",
+            format="%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)s - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
 

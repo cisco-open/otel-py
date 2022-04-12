@@ -48,7 +48,7 @@ class BaseInstrumentorWrapper:
             else:
                 body_str = body
 
-            request_body_str = self.grab_first_n_bytes(body_str)
+            request_body_str = utils.grab_first_n_bytes(body_str, self.max_payload_size)
             span.set_attribute(body_prefix, request_body_str)
 
         except:
@@ -102,7 +102,7 @@ class BaseInstrumentorWrapper:
 
             # Add rpc response body
             request_body_str = str(request_body)
-            request_body_str = self.grab_first_n_bytes(request_body_str)
+            request_body_str = utils.grab_first_n_bytes(request_body_str, self.max_payload_size)
             span.set_attribute(
                 SemanticAttributes.RPC_REQUEST_BODY.key, request_body_str
             )
@@ -137,7 +137,7 @@ class BaseInstrumentorWrapper:
             # Add rpc body
             response_body_str = str(response_body)
             print("Processing response body")
-            response_body_str = self.grab_first_n_bytes(response_body_str)
+            response_body_str = utils.grab_first_n_bytes(response_body_str, self.max_payload_size)
             span.set_attribute(
                 SemanticAttributes.RPC_RESPONSE_BODY.key, response_body_str
             )
@@ -149,21 +149,3 @@ class BaseInstrumentorWrapper:
             # Not rethrowing to avoid causing runtime errors
         finally:
             return span
-
-    # Check body size
-    def check_body_size(self, body: str) -> bool:
-        if body in (None, ""):
-            return False
-        body_len = len(body)
-        if self.max_payload_size and body_len > self.max_payload_size:
-            print(f"Truncating body to {self.max_payload_size} length")
-            return True
-        return False
-
-    def grab_first_n_bytes(self, body: str) -> str:
-        if body in (None, ""):
-            return ""
-        if self.check_body_size(body):
-            return body[0, self.max_payload_size]
-        else:
-            return body

@@ -25,6 +25,9 @@ from cisco_otel_py.instrumentations import BaseInstrumentorWrapper, utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 
+# code was taken from github commit sha: f7eb9673bca5d6fb4d16040e8ac28053225ad302
+# https://github.com/hypertrace/pythonagent/pull/262
+
 
 class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrapper):
     """wrapper around OTel grpc:server instrumentor class"""

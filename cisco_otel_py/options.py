@@ -43,6 +43,7 @@ class Options:
         self,
         service_name: str = None,
         cisco_token: str = None,
+        debug: bool = False,
         max_payload_size: int = None,
         exporters: [ExporterOptions] = None,
     ):
@@ -55,6 +56,11 @@ class Options:
         self.service_name = service_name or os.environ.get(
             consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
         )
+
+        self.debug = debug or bool(os.environ.get(
+            consts.KEY_DEBUG_NAME, consts.DEFAULT_DEBUG
+        ))
+
         self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
         self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
 

@@ -1,7 +1,7 @@
-import json
-import traceback
 import grpc
+import json
 from typing import Any
+from logging import getLogger
 from google.protobuf.json_format import MessageToDict
 from opentelemetry import trace
 from opentelemetry.instrumentation.grpc import (
@@ -17,35 +17,31 @@ from ..utils import Utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 
+logger = getLogger(__name__)
+
 
 class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrapper):
     """wrapper around OTel grpc:server instrumentor class"""
 
     def __init__(self):
-        print("Entering GrpcInstrumentorServerWrapper constructor.")
         super().__init__()
         self._original_wrapper_func = None
 
     def instrument(self, **kwargs) -> None:
         """instrument grpc:server"""
-        print("Entering GrpcInstrumentorServerWrapper.instrument().")
         super().instrument()
 
     def uninstrument(self, **kwargs) -> None:
         """disable grpc:server instrumentation."""
-        print("Entering GrpcInstrumentorServerWrapper.uninstrument()")
         super().uninstrument()
 
     # Internal enable wrapper instrumentation
     def _instrument(self, **kwargs) -> None:
         """Enable wrapper instrumentation internal call"""
-        print("Entering GrpcInstrumentorServerWrapper._instument().")
         super()._instrument(**kwargs)
         self._original_wrapper_func = grpc.server
 
         def server_wrapper(*args, **kwargs) -> None:
-            print("Entering wrapper interceptors set")
-            print("Setting server_interceptor_wrapper() as interceptor.")
             kwargs["interceptors"] = [server_interceptor_wrapper(self)]
             return self._original_wrapper_func(*args, **kwargs)
 
@@ -54,28 +50,22 @@ class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrap
     # Internal disable wrapper instrumentation
     def _uninstrument(self, **kwargs) -> None:
         """Disable wrapper instrumentation internal call"""
-        print("Entering GrpcInstrumentorServerWrapper._uninstrument()")
         super()._uninstrument(**kwargs)
 
 
 # The main entry point for a wrapper around the OTel grpc:client instrumentation module
 class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrapper):
     def __init__(self):
-        print("Entering GrpcInstrumentorClientWrapper constructor.")
         super().__init__()
 
-    # Internal initialize instrumentation
     def _instrument(self, **kwargs) -> None:
-        print("Entering GrpcInstrumentorClientWrapper._instrument().")
+        """Internal initialize instrumentation"""
         super()._instrument(**kwargs)
 
-    # Internal disable instrumentation
     def _uninstrument(self, **kwargs) -> None:
         """Internal disable instrumentation"""
-        print("Entering GrpcInstrumentorClientWrapper._uninstrument().")
         super()._uninstrument(**kwargs)
 
-    # Wrap function for initializing the request handler
     def wrapper_fn_wrapper(self, original_func, instance, args, kwargs) -> None:
         """Wrap function for initializing the request handler"""
         channel = original_func(*args, **kwargs)
@@ -86,35 +76,31 @@ class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrap
         )
 
 
-# Initialize the server handler
-def server_interceptor_wrapper(gisw, tracer_provider=None) -> None:
+def server_interceptor_wrapper(gisw, tracer_provider=None):
     """Helper function to set interceptor."""
-    print("Entering server_interceptor_wrapper().")
     tracer = trace.get_tracer(__name__, __version__, tracer_provider)
     return OpenTelemetryServerInterceptorWrapper(tracer, gisw)
 
 
-# Initialize the client handler
-def client_interceptor_wrapper(tracer_provider) -> None:
+def client_interceptor_wrapper(tracer_provider):
     """Helper function to set interceptor."""
-    print("Entering client_interceptor_wrapper().")
     tracer = trace.get_tracer(__name__, __version__, tracer_provider)
     return OpenTelemetryClientInterceptorWrapper(tracer)
 
 
-# Wrapper around Server-side telemetry context
 class _OpenTelemetryWrapperServicerContext(_server._OpenTelemetryServicerContext):
-    """grpc:server telemetry context"""
+    """
+    Wrapper around Server-side telemetry context
+    grpc:server telemetry context
+    """
 
     def __init__(self, servicer_context, active_span):
-        print("Entering _OpenTelemetryWrapperServicerContext.__init__().")
         super().__init__(servicer_context, active_span)
         self._response_headers = ()
 
     def set_trailing_metadata(self, *args, **kwargs) -> None:
         """Override trailing metadata(response headers) method.
         Allows us to capture the response headers"""
-        print("Entering _OpenTelemetryWrapperServicerContext.set_trailing_metadata().")
         self._response_headers = args
         return self._servicer_context.set_trailing_metadata(*args, **kwargs)
 
@@ -123,22 +109,18 @@ class _OpenTelemetryWrapperServicerContext(_server._OpenTelemetryServicerContext
         return self._response_headers
 
 
-# Wrapper around server-side interceptor
 class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerInterceptor):
+    """Wrapper around server-side interceptor"""
+
     def __init__(self, tracer, gisw):
         super().__init__(tracer)
         self._gisw = gisw
 
     def intercept_service(self, continuation, handler_call_details):
-        print("Entering OpenTelemetryServerInterceptorWrapper.intercept_service().")
+        logger.debug("Intercepting")
 
         def telemetry_wrapper(behavior, request_streaming, response_streaming):
-            print("Entering OpenTelemetryServerInterceptorWrapper.telemetry_wrapper().")
-
             def telemetry_interceptor(request_or_iterator, context) -> Any:
-                print(
-                    "Entering OpenTelemetryServerInterceptorWrapper.telemetry_interceptor()."
-                )
                 # handle streaming responses specially
                 if response_streaming:
                     return self._intercept_server_stream(
@@ -154,7 +136,7 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     span,
                     SemanticAttributes.RPC_REQUEST_BODY.key,
                     json.dumps(MessageToDict(request_or_iterator)),
-                    self._gisw.max_payload_size,
+                    self._gisw._max_payload_size,
                 )
 
                 Utils.add_flattened_dict(
@@ -173,6 +155,7 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     # we handle in our context wrapper.
                     # Here, we're interested in uncaught exceptions.
                     # pylint:disable=unidiomatic-typecheck
+                    logger.exception("Exception in user context call")
                     if type(error) != Exception:
                         span.record_exception(error)
                         raise error
@@ -190,7 +173,7 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                         span,
                         SemanticAttributes.RPC_RESPONSE_BODY.key,
                         json.dumps(response_dict),
-                        self._gisw.max_payload_size,
+                        self._gisw._max_payload_size,
                     )
 
                     Utils.add_flattened_dict(
@@ -211,33 +194,26 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
         self, behavior, handler_call_details, request_or_iterator, context
     ) -> None:
         """Setup interceptor helper for streaming requests."""
-        print(
-            "Entering OpenTelemetryServerInterceptorWrapper.intercept_server_stream()."
-        )
         # TODO: -- need to implement this
 
 
-# Wrapper around client-side interceptor
 class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientInterceptor):
+    """Wrapper around client-side interceptor"""
+
     def __init__(self, tracer):
-        print("Entering OpenTelemetryClientInterceptorWrapper.__init__().")
         super().__init__(tracer)
 
     def intercept_unary(self, request, metadata, client_info, invoker) -> None:
-        print("Entering OpenTelemetryClientInterceptorWrapper.intercept_unary().")
         try:
             # TODO: find how to obtain span object here
             # TODO" find how to obtain trailing metadata here
-            result = invoker(request, metadata)
+            _ = invoker(request, metadata)
         except grpc.RpcError as err:
-            print(
-                "An error occurred in %s: exception=%s, stacktrace=%s"
-                % ("processing client request", err, traceback.format_exc())
-            )
+            logger.exception(f"An error occurred in processing client request")
             raise err
 
     def intercept_stream(
         self, request_or_iterator, metadata, client_info, invoker
     ) -> None:
-        print("Entering OpenTelemetryClientInterceptorWrapper.intercept_stream().")
         # TODO: need to implement this
+        pass

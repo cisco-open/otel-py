@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+from logging import getLogger
+
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -25,17 +27,23 @@ from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
 from . import options
 from . import exporter_factory
 
+logger = getLogger(__name__)
+
 
 def init(
     service_name: str = None,
     cisco_token: str = None,
+    debug: bool = False,
     max_payload_size: int = None,
     exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
-    opt = options.Options(service_name, cisco_token, max_payload_size, exporters)
+    opt = options.Options(service_name, cisco_token, debug, max_payload_size, exporters)
+
+    if opt.debug:
+        logger.setLevel()
 
     provider = _set_tracing(opt)
-    _auto_instrument()
+    _auto_instrument(opt)
 
     return provider
 
@@ -59,17 +67,16 @@ def _set_tracing(opt: options.Options) -> TracerProvider:
     return provider
 
 
-def _auto_instrument():
+def _auto_instrument(opt: options.Options):
     for entry_point in iter_entry_points("opentelemetry_instrumentor"):
         try:
             wrapped_instrument = InstrumentationWrapper.get_instrumentation_wrapper(
-                entry_point.name
+                opt, entry_point.name
             )
             if wrapped_instrument:
                 wrapped_instrument.instrument()
-                print("Instrumented %s" % entry_point.name)
             else:
-                entry_point.load()().instrument()  # type: ignore
-                print("Instrumented %s" % entry_point.name)
+                entry_point.load()().instrument()
+            logger.debug(f"Instrumented {entry_point.name}")
         except Exception:
-            print("Instrumenting of %s failed" % entry_point.name)
+            logger.exception(f"Instrumenting of {entry_point.name} failed")

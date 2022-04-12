@@ -15,29 +15,39 @@ limitations under the License.
 """
 import typing
 
-import aiohttp.TraceRequestStartParams
+import aiohttp
 from opentelemetry.instrumentation.aiohttp_client import AioHttpClientInstrumentor
 from opentelemetry.trace import Span
 
 from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
+from ..utils import Utils
+
+from cisco_opentelemetry_specifications import SemanticAttributes
 
 
 def request_hook(span: Span, params: aiohttp.TraceRequestStartParams):
-    print("request params", params)
-    if span and span.is_recording():
-        span.set_attribute("custom_user_attribute_from_request_hook", "some-value")
+    if not span or not span.is_recording():
+        return
+
+    Utils.add_flattened_dict(
+        span,
+        SemanticAttributes.HTTP_REQUEST_HEADER,
+        getattr(params.headers, "headers", dict()),
+    )
 
 
 def response_hook(span: Span, params: typing.Union[
     aiohttp.TraceRequestEndParams,
     aiohttp.TraceRequestExceptionParams,
 ]):
-    print("response params", params)
-    if span and span.is_recording():
-        span.set_attribute("custom_user_attribute_from_response_hook", "some-value")
+    if not span or not span.is_recording():
+        return
 
-
-AioHttpClientInstrumentor().instrument(request_hook=request_hook, response_hook=response_hook)
+    Utils.add_flattened_dict(
+        span,
+        SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+        getattr(params.headers, "headers", dict()),
+    )
 
 
 class RequestsInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrapper):

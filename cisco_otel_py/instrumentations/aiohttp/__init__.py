@@ -36,10 +36,13 @@ def request_hook(span: Span, params: aiohttp.TraceRequestStartParams):
     )
 
 
-def response_hook(span: Span, params: typing.Union[
-    aiohttp.TraceRequestEndParams,
-    aiohttp.TraceRequestExceptionParams,
-]):
+def response_hook(
+    span: Span,
+    params: typing.Union[
+        aiohttp.TraceRequestEndParams,
+        aiohttp.TraceRequestExceptionParams,
+    ],
+):
     if not span or not span.is_recording():
         return
 

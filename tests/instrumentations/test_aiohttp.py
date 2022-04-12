@@ -38,7 +38,9 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
 
     async def test_get_request_sanity(self):
         async with aiohttp.ClientSession() as session:
-            async with session.get(self.http_url_sanity, headers=self.request_headers()):
+            async with session.get(
+                self.http_url_sanity, headers=self.request_headers()
+            ):
                 spans = self.memory_exporter.get_finished_spans()
                 self.assertEqual(len(spans), 1)
                 request_span = spans[0]
@@ -55,5 +57,5 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
                 )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -52,7 +52,7 @@ class TestOptions(unittest.TestCase):
             service_name="Service",
             max_payload_size=1023,
             exporters=exporters,
-            debug=True
+            debug=True,
         )
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
@@ -63,7 +63,11 @@ class TestOptions(unittest.TestCase):
 
     @mock.patch.dict(
         os.environ,
-        {consts.KEY_SERVICE_NAME: "Service", consts.KEY_TOKEN: utils.TEST_TOKEN, consts.KEY_DEBUG_NAME: "True"},
+        {
+            consts.KEY_SERVICE_NAME: "Service",
+            consts.KEY_TOKEN: utils.TEST_TOKEN,
+            consts.KEY_DEBUG_NAME: "True",
+        },
     )
     def test_parameters_from_env(self):
         opt = options.Options()

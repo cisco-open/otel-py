@@ -22,7 +22,7 @@ def get_active_span_for_call_wrapper(requests_wrapper):
                 span,
                 SemanticAttributes.HTTP_REQUEST_BODY.key,
                 getattr(response.request, "body", str()),
-                requests_wrapper._max_payload_size,
+                requests_wrapper.max_payload_size,
             )
 
         Utils.add_flattened_dict(
@@ -35,7 +35,7 @@ def get_active_span_for_call_wrapper(requests_wrapper):
             span,
             SemanticAttributes.HTTP_RESPONSE_BODY.key,
             getattr(response, "content", bytes()),
-            requests_wrapper._max_payload_size,
+            requests_wrapper.max_payload_size,
         )
 
     return get_active_span_for_call

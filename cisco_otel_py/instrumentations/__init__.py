@@ -10,3 +10,7 @@ class BaseInstrumentorWrapper:
 
     def set_options(self, opt: options.Options):
         self._max_payload_size = opt.max_payload_size
+
+    @property
+    def max_payload_size(self):
+        return self._max_payload_size

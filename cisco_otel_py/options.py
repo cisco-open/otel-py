@@ -58,9 +58,9 @@ class Options:
             consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
         )
 
-        self.debug = debug or strtobool(os.environ.get(
-            consts.KEY_DEBUG_NAME, consts.DEFAULT_DEBUG
-        ))
+        self.debug = debug or strtobool(
+            os.environ.get(consts.KEY_DEBUG_NAME, consts.DEFAULT_DEBUG)
+        )
 
         self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
         self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE

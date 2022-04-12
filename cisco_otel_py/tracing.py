@@ -51,11 +51,13 @@ def _set_debug(opt: options.Options):
     if opt.debug:
         logging.basicConfig(
             level=logging.DEBUG,
-            format='%(asctime)s %(levelname)-8s %(filename)s- %(lineno)s - %(funcName)s: %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            format="%(asctime)s %(levelname)-8s %(filename)s- %(lineno)s - %(funcName)s: %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
 
-        opt.exporters.append(options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE))
+        opt.exporters.append(
+            options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
+        )
 
 
 def _set_tracing(opt: options.Options) -> TracerProvider:

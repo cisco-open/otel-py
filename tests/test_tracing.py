@@ -23,7 +23,9 @@ from cisco_otel_py import tracing
 
 class TestTracing(unittest.TestCase):
     def test_init_defaults(self):
-        trace_provider = tracing.init(cisco_token="sometoken", service_name="service", debug=True)
+        trace_provider = tracing.init(
+            cisco_token="sometoken", service_name="service", debug=True
+        )
 
         resource = trace_provider.resource
 

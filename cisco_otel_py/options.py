@@ -38,6 +38,13 @@ class ExporterOptions:
             and self.collector_endpoint == other.collector_endpoint
         )
 
+    def __str__(self):
+        return (
+            f"{self.__class__.__name__}(\n\t"
+            f"exporter_type: {self.exporter_type},\n\t"
+            f"endpoint: {self.collector_endpoint})"
+        )
+
 
 class Options:
     def __init__(
@@ -67,3 +74,12 @@ class Options:
 
         if self.cisco_token is None:
             raise ValueError("Can not initiate cisco-otel launcher without token")
+
+    def __str__(self):
+        return (
+            f"\n{self.__class__.__name__}(\n\t"
+            f"token: {self.cisco_token},\n\t"
+            f"service_name:{self.service_name},\n\t"
+            f"max_payload_size: {self.max_payload_size},\n\t"
+            f"exporters: \n\t{', '.join(map(str, self.exporters))})"
+        )

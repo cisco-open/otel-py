@@ -38,6 +38,8 @@ def init(
     opt = options.Options(service_name, cisco_token, debug, max_payload_size, exporters)
     _set_debug(opt)
 
+    logging.debug(f"Configuration: {opt}")
+
     provider = _set_tracing(opt)
     _auto_instrument(opt)
 

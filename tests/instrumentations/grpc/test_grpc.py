@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import grpc
+import logging
 
 from opentelemetry.test.test_base import TestBase
 from opentelemetry.sdk.trace import ReadableSpan
@@ -46,11 +47,10 @@ class TestGrpcInstrumentationWrapper(TestBase):
                 hello_pb2.HelloRequest(name="Cisco"),
                 metadata=(("initial-metadata-1", "some str data"),),
             )
-            print("Greeter client received: " + response.message)
+            logging.debug(f"Greeter client received: {response.message}")
             for key, value in call.trailing_metadata():
-                print(
-                    "Greeter client received trailing metadata: key=%s value=%s"
-                    % (key, value)
+                logging.debug(
+                    f"Greeter client received trailing metadata: key={key} value={value}"
                 )
 
             # Get all the in memory spans that were recorded for this iteration

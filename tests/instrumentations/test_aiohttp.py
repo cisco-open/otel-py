@@ -56,6 +56,18 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
                     self.response_headers(),
                 )
 
+    @pytest.fixture
+    async def client(self, db_path: Path) -> _TestClient:
+        app = await init_app(db_path)
+        return await aiohttp_client(app)
+
+    async def test_list_empty(self) -> None:
+        resp = await client.get(self.http_url_sanity)
+        assert resp.status == 200, await resp.text()
+        data = await resp.json()
+        assert data == {"data": [], "status": "ok"}
+        assert 2 == 1
+
 
 if __name__ == "__main__":
     unittest.main()

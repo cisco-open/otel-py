@@ -11,9 +11,7 @@ from opentelemetry.sdk.trace import TracerProvider, export
 
 
 def make_message(message):
-    return bidirectional_pb2.Message(
-        message=message
-    )
+    return bidirectional_pb2.Message(message=message)
 
 
 def generate_messages():
@@ -45,12 +43,12 @@ def run():
     span_processor = export.SimpleSpanProcessor(memory_exporter)
     tracer_provider.add_span_processor(span_processor)
 
-    with grpc.insecure_channel('localhost:50051') as channel:
+    with grpc.insecure_channel("localhost:50051") as channel:
         stub = bidirectional_pb2_grpc.BidirectionalStub(channel)
         send_message(stub)
     spans = memory_exporter.get_finished_spans()
     print(len(spans))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

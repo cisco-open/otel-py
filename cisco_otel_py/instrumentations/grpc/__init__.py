@@ -22,8 +22,8 @@ from ..utils import Utils
 from opentelemetry.instrumentation.grpc._utilities import RpcInfo
 from opentelemetry.trace.status import Status, StatusCode
 from cisco_otel_py.instrumentations import BaseInstrumentorWrapper, utils
-
 from cisco_opentelemetry_specifications import SemanticAttributes
+from opentelemetry.semconv.trace import SpanAttributes
 
 # code was taken from github commit sha: f7eb9673bca5d6fb4d16040e8ac28053225ad302
 # https://github.com/hypertrace/pythonagent/pull/262
@@ -223,14 +223,24 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
             continuation(handler_call_details), telemetry_wrapper
         )  # pylint: disable=W0212
 
-    def _intercept_server_stream(
-        self, behavior, handler_call_details, request_or_iterator, context
-    ) -> None:
-        """Setup interceptor helper for streaming requests."""
-        print(
-            "Entering OpenTelemetryServerInterceptorWrapper.intercept_server_stream()."
-        )
-        # TODO: -- need to implement this
+    # def _intercept_server_stream(
+    #         self, behavior, handler_call_details, request_or_iterator, context
+    # ):
+    #     print("Entering OpenTelemetryServerInterceptorWrapper.intercept_server_stream().")
+    #     with self._set_remote_context(context):
+    #         with self._start_span(
+    #                 handler_call_details, context, set_status_on_exception=False
+    #         ) as span:
+    #             context = _OpenTelemetryWrapperServicerContext(context, span)
+    #
+    #             try:
+    #                 yield from behavior(request_or_iterator, context)
+    #
+    #             except Exception as error:
+    #                 # pylint:disable=unidiomatic-typecheck
+    #                 if type(error) != Exception:
+    #                     span.record_exception(error)
+    #                 raise error
 
 
 class _CarrierSetter(Setter):
@@ -252,6 +262,7 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
     def _intercept(self, request, metadata, client_info, invoker):
         # if context.get_value(_SUPPRESS_INSTRUMENTATION_KEY):
         #     return invoker(request, metadata)
+        print("Entering OpenTelemetryClientInterceptorWrapper._intercept().")
         if not metadata:
             mutable_metadata = OrderedDict()
         else:
@@ -294,7 +305,7 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
             except Exception as exc:
                 if isinstance(exc, grpc.RpcError):
                     span.set_attribute(
-                        "rpc.grpc.status_code",  # SpanAttributes.RPC_GRPC_STATUS_CODE
+                        SpanAttributes.RPC_GRPC_STATUS_CODE,
                         exc.code().value[0],
                     )
                 span.set_status(
@@ -311,8 +322,45 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
 
         return self._trace_result(span, rpc_info, result)
 
-    def intercept_stream(
-        self, request_or_iterator, metadata, client_info, invoker
-    ) -> None:
-        print("Entering OpenTelemetryClientInterceptorWrapper.intercept_stream().")
-        # TODO: need to implement this
+    # def _intercept_server_stream(
+    #         self, request_or_iterator, metadata, client_info, invoker
+    # ):
+    #     print("Entering OpenTelemetryClientInterceptorWrapper.intercept_server_stream().")
+    #     if not metadata:
+    #         mutable_metadata = OrderedDict()
+    #     else:
+    #         mutable_metadata = OrderedDict(metadata)
+    #
+    #     with self._start_span(client_info.full_method) as span:
+    #         inject(mutable_metadata, setter=_CarrierSetter())
+    #         metadata = tuple(mutable_metadata.items())
+    #         rpc_info = RpcInfo(
+    #             full_method=client_info.full_method,
+    #             metadata=metadata,
+    #             timeout=client_info.timeout,
+    #         )
+    #
+    #         if client_info.is_client_stream:
+    #             rpc_info.request = request_or_iterator
+    #
+    #         try:
+    #             yield from invoker(request_or_iterator, metadata)
+    #         except grpc.RpcError as err:
+    #             span.set_status(Status(StatusCode.ERROR))
+    #             span.set_attribute(
+    #                 SpanAttributes.RPC_GRPC_STATUS_CODE, err.code().value[0]
+    #             )
+    #             raise err
+
+    # def intercept_stream(
+    #     self, request_or_iterator, metadata, client_info, invoker
+    # ):
+    #     print("Entering OpenTelemetryClientInterceptorWrapper.intercept_stream().")
+    #     if client_info.is_server_stream:
+    #         return self._intercept_server_stream(
+    #             request_or_iterator, metadata, client_info, invoker
+    #         )
+    #
+    #     return self._intercept(
+    #         request_or_iterator, metadata, client_info, invoker
+    #     )

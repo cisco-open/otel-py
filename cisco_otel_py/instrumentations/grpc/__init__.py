@@ -3,7 +3,7 @@ import traceback
 import grpc
 from typing import MutableMapping
 from collections import OrderedDict
-
+import logging
 from wrapt import wrap_function_wrapper as _wrap
 from typing import Any
 from google.protobuf.json_format import MessageToDict
@@ -262,7 +262,7 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
     def _intercept(self, request, metadata, client_info, invoker):
         # if context.get_value(_SUPPRESS_INSTRUMENTATION_KEY):
         #     return invoker(request, metadata)
-        print("Entering OpenTelemetryClientInterceptorWrapper._intercept().")
+        logging.debug("Entering OpenTelemetryClientInterceptorWrapper._intercept().")
         if not metadata:
             mutable_metadata = OrderedDict()
         else:

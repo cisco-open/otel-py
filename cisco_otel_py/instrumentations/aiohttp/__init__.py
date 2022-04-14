@@ -32,7 +32,7 @@ def request_hook(span: Span, params: aiohttp.TraceRequestStartParams):
     Utils.add_flattened_dict(
         span,
         SemanticAttributes.HTTP_REQUEST_HEADER,
-        getattr(params.headers, "headers", dict()),
+        getattr(params, "headers", dict()),
     )
 
 
@@ -49,7 +49,7 @@ def response_hook(
     Utils.add_flattened_dict(
         span,
         SemanticAttributes.HTTP_RESPONSE_HEADER.key,
-        getattr(params.headers, "headers", dict()),
+        getattr(params, "headers", dict()),
     )
 
 

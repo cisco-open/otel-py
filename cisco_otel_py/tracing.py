@@ -49,7 +49,7 @@ def init(
 def _get_sdk_version():
     sdk_distribution = get_distribution(__package__)
 
-    if hasattr(sdk_distribution, 'version'):
+    if hasattr(sdk_distribution, "version"):
         return sdk_distribution.version
 
     return consts.DEFAULT_SDK_VERSION

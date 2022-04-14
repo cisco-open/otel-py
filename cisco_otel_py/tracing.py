@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import logging
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
@@ -30,13 +31,17 @@ from . import exporter_factory
 def init(
     service_name: str = None,
     cisco_token: str = None,
+    debug: bool = False,
     max_payload_size: int = None,
     exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
-    opt = options.Options(service_name, cisco_token, max_payload_size, exporters)
+    opt = options.Options(service_name, cisco_token, debug, max_payload_size, exporters)
+    _set_debug(opt)
+
+    logging.debug(f"Configuration: {opt}")
 
     provider = _set_tracing(opt)
-    _auto_instrument()
+    _auto_instrument(opt)
 
     return provider
 
@@ -50,6 +55,22 @@ def _get_sdk_version():
     return consts.DEFAULT_SDK_VERSION
 
 
+def _set_debug(opt: options.Options):
+    """
+    Sets the global logging to debug and add console exporter to options
+    """
+    if opt.debug:
+        logging.basicConfig(
+            level=logging.DEBUG,
+            format="%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
+
+        opt.exporters.append(
+            options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
+        )
+
+
 def _set_tracing(opt: options.Options) -> TracerProvider:
     provider = TracerProvider(
         resource=Resource.create(
@@ -60,27 +81,27 @@ def _set_tracing(opt: options.Options) -> TracerProvider:
             }
         )
     )
-    exporters = exporter_factory.init_exporters(opt)
 
+    trace.set_tracer_provider(provider)
+
+    exporters = exporter_factory.init_exporters(opt)
     for exporter in exporters:
         processor = BatchSpanProcessor(exporter)
-        trace.set_tracer_provider(provider)
         provider.add_span_processor(processor)
 
     return provider
 
 
-def _auto_instrument():
+def _auto_instrument(opt: options.Options):
     for entry_point in iter_entry_points("opentelemetry_instrumentor"):
         try:
             wrapped_instrument = InstrumentationWrapper.get_instrumentation_wrapper(
-                entry_point.name
+                opt, entry_point.name
             )
             if wrapped_instrument:
                 wrapped_instrument.instrument()
-                print("Instrumented %s" % entry_point.name)
             else:
-                entry_point.load()().instrument()  # type: ignore
-                print("Instrumented %s" % entry_point.name)
+                entry_point.load()().instrument()
+            logging.debug(f"Instrumented {entry_point.name}")
         except Exception:
-            print("Instrumenting of %s failed" % entry_point.name)
+            logging.exception(f"Instrumenting of {entry_point.name} failed")

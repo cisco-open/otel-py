@@ -29,6 +29,7 @@ test:
 .PHONY: proto
 proto:
 	python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. tests/instrumentations/grpc/hello.proto
+	python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. tests/instrumentations/streamed_grpc/bidirectional.proto
 
 .PHONY: pretty
 pretty:

@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 import os
+from pkg_resources import get_distribution
 
 from . import consts
 
@@ -56,6 +57,7 @@ class Options:
             consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
         )
         self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
+        self.cisco_otel_version = get_distribution(__package__).version
         self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
 
         if self.cisco_token is None:

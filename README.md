@@ -58,6 +58,8 @@ Exporter options
 | collector_endpoint | OTEL_COLLECTOR_ENDPOINT | string | `http://localhost:4317` | The address of the trace collector to send traces to|
 | exporter_type      | OTEL_EXPORTER_TYPE      | string | `otlp-grpc`             | The exporter type to use (Currently `otlp-grpc`, `otlp-http`, `console` are supported). Multiple exporter option available via init function see example bellow|
 
+Note: gRPC instrumentation includes currently only unray-unary calls, and not calls in which each of the sides (client or server) uses stream. 
+
 ## Multi-exporter initiation
 
 ```python

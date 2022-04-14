@@ -1,7 +1,8 @@
+import logging
 from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
 from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorServerWrapper
 from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorClientWrapper
-from cisco_otel_py import consts
+from .. import consts, options
 
 
 class InstrumentationWrapper:
@@ -22,7 +23,7 @@ class InstrumentationWrapper:
         return library_key in cls._INSTRUMENTATION_STATE.keys()
 
     @classmethod
-    def get_instrumentation_wrapper(cls, library_key):
+    def get_instrumentation_wrapper(cls, opt: options.Options, library_key):
         """load and initialize an instrumentation wrapper"""
         if cls.is_already_instrumented(library_key):
             return None
@@ -31,14 +32,15 @@ class InstrumentationWrapper:
             if library_key in inst_dict:
                 wrapper_object = inst_dict[library_key]
                 wrapper_instance = wrapper_object()
+                wrapper_instance.set_options(opt)
                 cls._mark_as_instrumented(library_key, wrapper_instance)
                 return wrapper_instance
             else:
-                print("No instrumentation wrapper for %s" % library_key)
-                return None
-        except Exception as err:
-            print("Error while attempting to load instrumentation wrapper for %s" % err)
-            return None
+                logging.info(f"No instrumentation wrapper for {library_key}")
+                return
+        except Exception:
+            logging.exception(f"Error while attempting to load instrumentation wrapper")
+            return
 
     @classmethod
     def uninstrument_all(cls):

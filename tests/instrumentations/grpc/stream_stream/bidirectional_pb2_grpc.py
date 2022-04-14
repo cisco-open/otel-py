@@ -2,7 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from tests.instrumentations.streamed_grpc import (
+from tests.instrumentations.grpc.stream_stream import (
     bidirectional_pb2 as tests_dot_instrumentations_dot_streamed__grpc_dot_bidirectional__pb2,
 )
 

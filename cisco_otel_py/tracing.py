@@ -45,6 +45,7 @@ def _set_tracing(opt: options.Options) -> TracerProvider:
         resource=Resource.create(
             {
                 "application": opt.service_name,
+                "library_version": opt.cisco_otel_version,
                 ResourceAttributes.SERVICE_NAME: opt.service_name,
             }
         )

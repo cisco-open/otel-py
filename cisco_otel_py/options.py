@@ -16,7 +16,6 @@ limitations under the License.
 
 import os
 from distutils.util import strtobool
-
 from . import consts
 
 

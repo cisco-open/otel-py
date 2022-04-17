@@ -27,6 +27,7 @@ TOKEN_HEADER = "x-epsagon-token"
 
 DEFAULT_SERVICE_NAME = "application"
 DEFAULT_DEBUG = "False"
+DEFAULT_SDK_VERSION = "version not supported"
 DEFAULT_COLLECTOR_ENDPOINT = "http://localhost:4317"
 DEFAULT_EXPORTER_TYPE = GRPC_EXPORTER_TYPE
 

@@ -20,7 +20,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
-from pkg_resources import iter_entry_points
+from pkg_resources import iter_entry_points, get_distribution
 
 from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
 from . import consts
@@ -46,6 +46,15 @@ def init(
     return provider
 
 
+def _get_sdk_version():
+    sdk_distribution = get_distribution(__package__)
+
+    if hasattr(sdk_distribution, "version"):
+        return sdk_distribution.version
+
+    return consts.DEFAULT_SDK_VERSION
+
+
 def _set_debug(opt: options.Options):
     """
     Sets the global logging to debug and add console exporter to options
@@ -67,6 +76,7 @@ def _set_tracing(opt: options.Options) -> TracerProvider:
         resource=Resource.create(
             {
                 "application": opt.service_name,
+                "cisco.sdk.version": _get_sdk_version(),
                 ResourceAttributes.SERVICE_NAME: opt.service_name,
             }
         )

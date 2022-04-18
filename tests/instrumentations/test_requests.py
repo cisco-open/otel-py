@@ -33,14 +33,6 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         super().tearDown()
         RequestsInstrumentorWrapper().uninstrument()
 
-    @classmethod
-    def request_headers(cls) -> dict[str, str]:
-        return {"test-header-key": "test-header-value"}
-
-    @classmethod
-    def request_body(cls) -> str:
-        return "The response body"
-
     def test_get_request_sanity(self):
         _ = requests.get(self.http_url_sanity, headers=self.request_headers())
         spans = self.memory_exporter.get_finished_spans()
@@ -104,7 +96,7 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         )
 
     def test_post_request_error_response(self):
-        _ = requests.post(
+        requests.post(
             self.http_url_error,
             headers=self.request_headers(),
             data=self.request_body(),
@@ -122,7 +114,3 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
             request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
             self.request_body(),
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

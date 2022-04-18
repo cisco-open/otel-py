@@ -122,7 +122,3 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
             request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
             self.request_body(),
         )
-
-
-if __name__ == "__main__":
-    unittest.main()

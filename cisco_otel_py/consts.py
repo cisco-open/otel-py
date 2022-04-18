@@ -42,5 +42,6 @@ ENCODING_UTF8 = "UTF8"
 DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
 
 REQUESTS_KEY = "requests"
+AIOHTTP_KEY = "aiohttp"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"

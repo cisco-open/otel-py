@@ -25,35 +25,45 @@ from ..utils import Utils
 from cisco_opentelemetry_specifications import SemanticAttributes
 
 
-def request_hook(span: Span, params: aiohttp.TraceRequestStartParams):
+def request_hook(span: Span, params: aiohttp.TraceRequestStartParams) -> None:
     if not span or not span.is_recording():
         return
 
     Utils.add_flattened_dict(
         span,
-        SemanticAttributes.HTTP_REQUEST_HEADER,
+        SemanticAttributes.HTTP_REQUEST_HEADER.key,
         getattr(params, "headers", dict()),
     )
 
 
-def response_hook(
-    span: Span,
-    params: typing.Union[
-        aiohttp.TraceRequestEndParams,
-        aiohttp.TraceRequestExceptionParams,
-    ],
-):
-    if not span or not span.is_recording():
-        return
+def response_hook_wrapper(self):
+    def response_hook(
+        span: Span,
+        params: typing.Union[
+            aiohttp.TraceRequestEndParams,
+            aiohttp.TraceRequestExceptionParams,
+        ],
+    ) -> None:
+        if not span or not span.is_recording():
+            return
 
-    Utils.add_flattened_dict(
-        span,
-        SemanticAttributes.HTTP_RESPONSE_HEADER.key,
-        getattr(params, "headers", dict()),
-    )
+        Utils.add_flattened_dict(
+            span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            getattr(params.response, "headers", dict()),
+        )
+
+        # Utils.set_payload(
+        #     span,
+        #     SemanticAttributes.HTTP_RESPONSE_BODY.key,
+        #     getattr(params.response, "content", str()),
+        #     self.max_payload_size,
+        # )
+
+    return response_hook
 
 
-class RequestsInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrapper):
+class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrapper):
     def __init__(self):
         super().__init__()
 
@@ -61,7 +71,7 @@ class RequestsInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWra
         super()._instrument(
             tracer_provider=kwargs.get("tracer_provider"),
             request_hook=request_hook,
-            response_hook=response_hook,
+            response_hook=response_hook_wrapper(self),
         )
 
     def _uninstrument(self, **kwargs) -> None:

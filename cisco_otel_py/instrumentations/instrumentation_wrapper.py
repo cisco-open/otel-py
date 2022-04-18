@@ -1,4 +1,5 @@
 from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
+from cisco_otel_py.instrumentations.aiohttp import AiohttpInstrumentorWrapper
 from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorServerWrapper
 from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorClientWrapper
 from cisco_otel_py import consts
@@ -12,6 +13,7 @@ class InstrumentationWrapper:
     def get_wrappers(cls):
         return {
             consts.REQUESTS_KEY: RequestsInstrumentorWrapper,
+            consts.AIOHTTP_KEY: AiohttpInstrumentorWrapper,
             consts.GRPC_SERVER_KEY: GrpcInstrumentorServerWrapper,
             consts.GRPC_CLIENT_KEY: GrpcInstrumentorClientWrapper,
         }

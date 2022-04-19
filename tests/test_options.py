@@ -30,7 +30,7 @@ class TestOptions(unittest.TestCase):
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
 
-        self.assertEqual(opt.service_name, consts.DEFAULT_SERVICE_NAME)
+        self.assertEqual(opt.service_name, None)
         self.assertEqual(opt.exporters, [options.ExporterOptions()])
         self.assertEqual(opt.debug, strtobool(consts.DEFAULT_DEBUG))
         self.assertEqual(opt.debug, False)
@@ -64,7 +64,6 @@ class TestOptions(unittest.TestCase):
     @mock.patch.dict(
         os.environ,
         {
-            consts.KEY_SERVICE_NAME: "Service",
             consts.KEY_TOKEN: utils.TEST_TOKEN,
             consts.KEY_DEBUG_NAME: "True",
         },
@@ -73,7 +72,6 @@ class TestOptions(unittest.TestCase):
         opt = options.Options()
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
-        self.assertEqual(opt.service_name, "Service")
         self.assertEqual(opt.debug, True)
 
     def test_token_is_missing(self):

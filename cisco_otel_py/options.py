@@ -60,9 +60,7 @@ class Options:
         else:
             self.exporters = exporters
 
-        self.service_name = service_name or os.environ.get(
-            consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
-        )
+        self.service_name = service_name
 
         self.debug = debug or strtobool(
             os.environ.get(consts.KEY_DEBUG_NAME, consts.DEFAULT_DEBUG)

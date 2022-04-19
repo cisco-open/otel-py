@@ -1,14 +1,16 @@
-from cisco_otel_py import consts
+from .. import consts, options
 
 
-# This is a base class for all Instrumentation wrapper classes
 class BaseInstrumentorWrapper:
-    def __init__(
-        self,
-    ):
-        super().__init__()
-        self.max_payload_size: int = consts.MAX_PAYLOAD_SIZE
+    """This is a base class for all Instrumentation wrapper classes"""
 
-    def set_payload_max_size(self, max_payload_size) -> None:
-        print("Setting self.max_payload_size to %s." % max_payload_size)
-        self.max_payload_size = max_payload_size
+    def __init__(self):
+        super().__init__()
+        self._max_payload_size: int = consts.MAX_PAYLOAD_SIZE
+
+    def set_options(self, opt: options.Options):
+        self._max_payload_size = opt.max_payload_size
+
+    @property
+    def max_payload_size(self):
+        return self._max_payload_size

@@ -24,11 +24,12 @@ build:
 
 .PHONY: test
 test:
-	poetry run pytest --forked --cov=cisco_otel_py tests/
+	poetry run pytest --forked --cov=cisco_otel_py
 
 .PHONY: proto
 proto:
 	python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. tests/instrumentations/grpc/hello.proto
+	python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. tests/instrumentations/streamed_grpc/bidirectional.proto
 
 .PHONY: pretty
 pretty:

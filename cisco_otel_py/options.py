@@ -15,8 +15,7 @@ limitations under the License.
 """
 
 import os
-from pkg_resources import get_distribution
-
+from distutils.util import strtobool
 from . import consts
 
 
@@ -38,12 +37,20 @@ class ExporterOptions:
             and self.collector_endpoint == other.collector_endpoint
         )
 
+    def __str__(self):
+        return (
+            f"{self.__class__.__name__}(\n\t"
+            f"exporter_type: {self.exporter_type},\n\t"
+            f"endpoint: {self.collector_endpoint})"
+        )
+
 
 class Options:
     def __init__(
         self,
         service_name: str = None,
         cisco_token: str = None,
+        debug: bool = False,
         max_payload_size: int = None,
         exporters: [ExporterOptions] = None,
     ):
@@ -56,9 +63,22 @@ class Options:
         self.service_name = service_name or os.environ.get(
             consts.KEY_SERVICE_NAME, consts.DEFAULT_SERVICE_NAME
         )
+
+        self.debug = debug or strtobool(
+            os.environ.get(consts.KEY_DEBUG_NAME, consts.DEFAULT_DEBUG)
+        )
+
         self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
-        self.cisco_otel_version = get_distribution(__package__).version
         self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
 
         if self.cisco_token is None:
             raise ValueError("Can not initiate cisco-otel launcher without token")
+
+    def __str__(self):
+        return (
+            f"\n{self.__class__.__name__}(\n\t"
+            f"token: {self.cisco_token},\n\t"
+            f"service_name:{self.service_name},\n\t"
+            f"max_payload_size: {self.max_payload_size},\n\t"
+            f"exporters: \n\t{', '.join(map(str, self.exporters))})"
+        )

@@ -19,11 +19,14 @@ import unittest
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.semconv.resource import ResourceAttributes
 from cisco_otel_py import tracing
+from pkg_resources import get_distribution
 
 
 class TestTracing(unittest.TestCase):
     def test_init_defaults(self):
-        trace_provider = tracing.init(cisco_token="sometoken", service_name="service")
+        trace_provider = tracing.init(
+            cisco_token="sometoken", service_name="service", debug=True
+        )
 
         resource = trace_provider.resource
 
@@ -32,3 +35,5 @@ class TestTracing(unittest.TestCase):
             resource.attributes[ResourceAttributes.SERVICE_NAME], "service"
         )
         self.assertEqual(resource.attributes["application"], "service")
+        sdk_version = get_distribution("cisco_otel_py").version
+        self.assertEqual(resource.attributes["cisco.sdk.version"], sdk_version)

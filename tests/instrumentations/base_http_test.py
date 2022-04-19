@@ -18,8 +18,16 @@ class BaseHttpTest(unittest.TestCase):
     server, server_thread = None, None
 
     @classmethod
+    def request_headers(cls) -> dict[str, str]:
+        return {"test-header-key": "test-header-value"}
+
+    @classmethod
     def response_headers(cls):
         return {"server-response-header": "the response", "another-header": "bruh"}
+
+    @classmethod
+    def request_body(cls) -> str:
+        return "The request body"
 
     @classmethod
     def response_body(cls):

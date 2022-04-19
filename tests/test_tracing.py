@@ -46,7 +46,9 @@ class TestTracing(unittest.TestCase):
         trace_provider = tracing.init(cisco_token="sometoken", debug=True)
 
         resource = trace_provider.resource
-        self.assertEqual(resource.attributes["service.name"], default_service_name)
+        self.assertEqual(
+            resource.attributes[ResourceAttributes.SERVICE_NAME], default_service_name
+        )
 
     def test_configuration_open_tel_variables(self):
         configuration_service_name = "service_name"
@@ -59,5 +61,6 @@ class TestTracing(unittest.TestCase):
 
         resource = trace_provider.resource
         self.assertEqual(
-            resource.attributes["service.name"], configuration_service_name
+            resource.attributes[ResourceAttributes.SERVICE_NAME],
+            configuration_service_name,
         )

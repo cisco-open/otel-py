@@ -14,9 +14,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+import os
 import unittest
 
 from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk import environment_variables
 from opentelemetry.semconv.resource import ResourceAttributes
 from cisco_otel_py import tracing
 from pkg_resources import get_distribution
@@ -34,6 +36,28 @@ class TestTracing(unittest.TestCase):
         self.assertEqual(
             resource.attributes[ResourceAttributes.SERVICE_NAME], "service"
         )
-        self.assertEqual(resource.attributes["application"], "service")
         sdk_version = get_distribution("cisco_otel_py").version
         self.assertEqual(resource.attributes["cisco.sdk.version"], sdk_version)
+
+    def test_default_open_tel_variables(self):
+        default_service_name = "default_service_name"
+        os.environ[environment_variables.OTEL_SERVICE_NAME] = default_service_name
+
+        trace_provider = tracing.init(cisco_token="sometoken", debug=True)
+
+        resource = trace_provider.resource
+        self.assertEqual(resource.attributes["service.name"], default_service_name)
+
+    def test_configuration_open_tel_variables(self):
+        configuration_service_name = "service_name"
+        default_service_name = "default_service_name"
+        os.environ[environment_variables.OTEL_SERVICE_NAME] = default_service_name
+
+        trace_provider = tracing.init(
+            cisco_token="sometoken", service_name=configuration_service_name, debug=True
+        )
+
+        resource = trace_provider.resource
+        self.assertEqual(
+            resource.attributes["service.name"], configuration_service_name
+        )

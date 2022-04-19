@@ -72,15 +72,11 @@ def _set_debug(opt: options.Options):
 
 
 def _set_tracing(opt: options.Options) -> TracerProvider:
-    provider = TracerProvider(
-        resource=Resource.create(
-            {
-                "application": opt.service_name,
-                "cisco.sdk.version": _get_sdk_version(),
-                ResourceAttributes.SERVICE_NAME: opt.service_name,
-            }
-        )
-    )
+    trace_attributes = {"cisco.sdk.version": _get_sdk_version()}
+    if opt.service_name:
+        trace_attributes.update({ResourceAttributes.SERVICE_NAME: opt.service_name})
+
+    provider = TracerProvider(resource=Resource.create(trace_attributes))
 
     trace.set_tracer_provider(provider)
 

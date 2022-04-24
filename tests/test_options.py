@@ -19,22 +19,22 @@ import unittest
 from unittest import mock
 
 from cisco_otel_py import options, consts
+from cisco_opentelemetry_specifications import Consts
 
 from . import utils
 
 
 class TestOptions(unittest.TestCase):
     def tearDown(self) -> None:
-        utils.clean_env_vars([consts.KEY_DEBUG_NAME])
+        utils.clean_env_vars([Consts.CISCO_DEBUG_ENV])
 
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
 
         self.assertEqual(opt.service_name, None)
         self.assertEqual(opt.exporters, [options.ExporterOptions()])
-        self.assertEqual(opt.debug, strtobool(consts.DEFAULT_DEBUG))
-        self.assertEqual(opt.debug, False)
-        self.assertEqual(opt.max_payload_size, consts.MAX_PAYLOAD_SIZE)
+        self.assertEqual(opt.debug, Consts.DEFAULT_CISCO_DEBUG)
+        self.assertEqual(opt.max_payload_size, Consts.DEFAULT_MAX_PAYLOAD_SIZE)
 
     def test_empty_exporter_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN, exporters=[])
@@ -64,8 +64,8 @@ class TestOptions(unittest.TestCase):
     @mock.patch.dict(
         os.environ,
         {
-            consts.KEY_TOKEN: utils.TEST_TOKEN,
-            consts.KEY_DEBUG_NAME: "True",
+            Consts.CISCO_TOKEN_ENV: utils.TEST_TOKEN,
+            Consts.CISCO_DEBUG_ENV: "True",
         },
     )
     def test_parameters_from_env(self):
@@ -85,16 +85,16 @@ class TestExporterOptions(unittest.TestCase):
     def test_defaults(self):
         exporter_opts = options.ExporterOptions()
 
-        self.assertEqual(exporter_opts.exporter_type, consts.DEFAULT_EXPORTER_TYPE)
+        self.assertEqual(exporter_opts.exporter_type, Consts.DEFAULT_EXPORTER_TYPE)
         self.assertEqual(
-            exporter_opts.collector_endpoint, consts.DEFAULT_COLLECTOR_ENDPOINT
+            exporter_opts.collector_endpoint, Consts.DEFAULT_COLLECTOR_ENDPOINT
         )
 
     @mock.patch.dict(
         os.environ,
         {
-            consts.KEY_COLLECTOR_ENDPOINT: "env_endpoint",
-            consts.KEY_EXPORTER_TYPE: consts.HTTP_EXPORTER_TYPE,
+            Consts.OTEL_COLLECTOR_ENDPOINT: "env_endpoint",
+            Consts.OTEL_EXPORTER_TYPE_ENV: consts.HTTP_EXPORTER_TYPE,
         },
     )
     def test_parameters_from_env(self):

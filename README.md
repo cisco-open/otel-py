@@ -5,7 +5,8 @@
 
 ![Trace](trace.png)
 
-This package provides OpenTelemetry-compliant tracing to Javascript applications for the collection of distributed tracing and performance metrics in [Cisco Telescope](https://console.telescope.app/?utm_source=github).
+This package provides OpenTelemetry-compliant tracing to Python
+applications for the collection of distributed tracing and performance metrics in [Cisco Telescope](https://console.telescope.app/?utm_source=github).
 
 ## Contents
 

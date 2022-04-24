@@ -16,6 +16,7 @@ limitations under the License.
 
 from . import options
 from . import consts
+from cisco_opentelemetry_specifications import Consts
 
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
@@ -30,13 +31,13 @@ def _set_exporter(exporter: options.ExporterOptions, opt: options.Options):
     if exporter.exporter_type == consts.GRPC_EXPORTER_TYPE:
         return OTLPGrpcExporter(
             endpoint=exporter.collector_endpoint,
-            headers=((consts.TOKEN_HEADER, opt.cisco_token),),
+            headers=((Consts.TOKEN_HEADER_KEY, opt.cisco_token),),
         )
 
     elif exporter.exporter_type == consts.HTTP_EXPORTER_TYPE:
         return OTLPHTTPExporter(
             endpoint=exporter.collector_endpoint,
-            headers={consts.TOKEN_HEADER: opt.cisco_token},
+            headers={Consts.TOKEN_HEADER_KEY: opt.cisco_token},
         )
     elif exporter.exporter_type == consts.CONSOLE_EXPORTER_TYPE:
         return ConsoleSpanExporter(service_name=opt.service_name)

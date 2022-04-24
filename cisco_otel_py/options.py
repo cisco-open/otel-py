@@ -17,17 +17,18 @@ limitations under the License.
 import os
 from distutils.util import strtobool
 from . import consts
+from cisco_opentelemetry_specifications import Consts
 
 
 class ExporterOptions:
     def __init__(self, exporter_type: str = None, collector_endpoint: str = None):
         self.exporter_type = exporter_type or os.environ.get(
-            consts.KEY_EXPORTER_TYPE, consts.DEFAULT_EXPORTER_TYPE
+            Consts.OTEL_EXPORTER_TYPE_ENV, Consts.DEFAULT_EXPORTER_TYPE
         )
         if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
             raise ValueError("Unsupported exported type")
         self.collector_endpoint = collector_endpoint or os.environ.get(
-            consts.KEY_COLLECTOR_ENDPOINT, consts.DEFAULT_COLLECTOR_ENDPOINT
+            Consts.OTEL_COLLECTOR_ENDPOINT, Consts.DEFAULT_COLLECTOR_ENDPOINT
         )
 
     def __eq__(self, other):
@@ -63,11 +64,11 @@ class Options:
         self.service_name = service_name
 
         self.debug = debug or strtobool(
-            os.environ.get(consts.KEY_DEBUG_NAME, consts.DEFAULT_DEBUG)
+            os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
         )
 
-        self.cisco_token = cisco_token or os.environ.get(consts.KEY_TOKEN)
-        self.max_payload_size = max_payload_size or consts.MAX_PAYLOAD_SIZE
+        self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
+        self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
 
         if self.cisco_token is None:
             raise ValueError("Can not initiate cisco-otel launcher without token")

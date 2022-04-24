@@ -14,20 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-KEY_DEBUG_NAME = "CISCO_DEBUG"
-KEY_COLLECTOR_ENDPOINT = "OTEL_COLLECTOR_ENDPOINT"
-KEY_EXPORTER_TYPE = "OTEL_EXPORTER_TYPE"
-KEY_TOKEN = "CISCO_TOKEN"
 
 HTTP_EXPORTER_TYPE = "otlp-http"
 GRPC_EXPORTER_TYPE = "otlp-grpc"
 CONSOLE_EXPORTER_TYPE = "console"
-TOKEN_HEADER = "x-epsagon-token"
 
-DEFAULT_DEBUG = "False"
 DEFAULT_SDK_VERSION = "version not supported"
-DEFAULT_COLLECTOR_ENDPOINT = "http://localhost:4317"
-DEFAULT_EXPORTER_TYPE = GRPC_EXPORTER_TYPE
 
 MAX_PAYLOAD_SIZE = 128 * 1024
 

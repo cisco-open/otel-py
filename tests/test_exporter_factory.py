@@ -9,6 +9,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 )
 
 from cisco_otel_py import consts, options, exporter_factory
+from cisco_opentelemetry_specifications import Consts
 
 from . import utils
 
@@ -31,7 +32,7 @@ class TestExporterFactory(unittest.TestCase):
         otlp_exporter = exporters[0]
         self.assertIsInstance(otlp_exporter, OTLPGrpcExporter)
         self.assertEqual(
-            otlp_exporter._headers, ((consts.TOKEN_HEADER, utils.TEST_TOKEN),)
+            otlp_exporter._headers, ((Consts.TOKEN_HEADER_KEY, utils.TEST_TOKEN),)
         )
 
     def test_otlp_http_exporter(self):
@@ -46,7 +47,7 @@ class TestExporterFactory(unittest.TestCase):
         otlp_exporter = exporters[0]
         self.assertIsInstance(otlp_exporter, OTLPHTTPExporter)
         self.assertEqual(
-            otlp_exporter._headers, {consts.TOKEN_HEADER: utils.TEST_TOKEN}
+            otlp_exporter._headers, {Consts.TOKEN_HEADER_KEY: utils.TEST_TOKEN}
         )
         self.assertEqual(otlp_exporter._endpoint, "my-end")
 

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cisco-otel-py"
-version = "0.1.11"
+version = "0.1.15"
 description = "a minimal python Cisco Launcher for OpenTelemetry"
 license = "Apache-2.0"
 authors = ["Cisco Epsagon Team <support@epsagon.com>"]
@@ -24,6 +24,7 @@ opentelemetry-instrumentation = "^0.29b0"
 opentelemetry-exporter-otlp = "^1.10.0"
 opentelemetry-instrumentation-requests = "^0.29b0"
 opentelemetry-instrumentation-aiohttp-client = "^0.29b0"
+Flask = "^2.1.1"
 
 [tool.poetry.dev-dependencies]
 ipdb = "^0.13.9"

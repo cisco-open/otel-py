@@ -44,14 +44,14 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             self.assertEqual(resp.status, 200)
             spans = self.memory_exporter.get_finished_spans()
             self.assertEqual(len(spans), 1)
-            request_span = spans[0]
+            span = spans[0]
             self.assert_captured_headers(
-                request_span,
+                span,
                 SemanticAttributes.HTTP_REQUEST_HEADER.key,
                 self.request_headers(),
             )
             self.assert_captured_headers(
-                request_span,
+                span,
                 SemanticAttributes.HTTP_RESPONSE_HEADER.key,
                 self.response_headers(),
             )
@@ -68,15 +68,23 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             spans = self.memory_exporter.get_finished_spans()
             self.assertEqual(len(spans), 1)
             span = spans[0]
-            # self.assert_captured_headers(
-            #     span,
-            #     SemanticAttributes.HTTP_REQUEST_HEADER.key,
-            #     self.request_headers(),
-            # )
+            self.assert_captured_headers(
+                span,
+                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                self.request_headers(),
+            )
             self.assert_captured_headers(
                 span,
                 SemanticAttributes.HTTP_RESPONSE_HEADER.key,
                 self.response_headers(),
+            )
+            self.assertEqual(
+                span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+                self.request_body(),
+            )
+            self.assertEqual(
+                span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+                self.response_body(),
             )
 
     async def test_get_request_error(self):
@@ -106,7 +114,3 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
                 SemanticAttributes.HTTP_REQUEST_HEADER.key,
                 self.request_headers(),
             )
-
-
-if __name__ == "__main__":
-    unittest.main()

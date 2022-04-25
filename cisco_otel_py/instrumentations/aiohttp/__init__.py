@@ -13,8 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import asyncio
 import types
-import typing
+from collections import deque
 
 import aiohttp
 import wrapt
@@ -45,8 +46,10 @@ from ..utils import Utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 
+from ... import consts
 
-def request_hook(span: Span, params: aiohttp.TraceRequestChunkSentParams) -> None:
+
+def request_hook(span: Span, params: aiohttp.TraceRequestStartParams) -> None:
     if not span or not span.is_recording():
         return
 
@@ -59,17 +62,16 @@ def request_hook(span: Span, params: aiohttp.TraceRequestChunkSentParams) -> Non
 
 def response_hook(
     span: Span,
-    params: aiohttp.TraceResponseChunkReceivedParams,
+    params: aiohttp.TraceRequestEndParams,
 ) -> None:
     if not span or not span.is_recording():
         return
 
-    if hasattr(params, "response") and params.response is not None:
-        Utils.add_flattened_dict(
-            span,
-            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
-            getattr(params.response, "headers", dict()),
-        )
+    Utils.add_flattened_dict(
+        span,
+        SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+        getattr(params.response, "headers", dict()),
+    )
 
 
 class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrapper):
@@ -77,13 +79,6 @@ class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrap
         super().__init__()
 
     def _instrument(self, **kwargs) -> None:
-        _tracer_provider = kwargs.get("tracer_provider")
-        # super()._instrument(
-        #     tracer_provider=_tracer_provider,
-        #     request_hook=request_hook,
-        #     response_hook=response_hook,
-        # )
-
         _instrument(
             tracer_provider=kwargs.get("tracer_provider"),
             request_hook=request_hook,
@@ -164,18 +159,36 @@ def create_trace_config(
                     trace_config_ctx.span,
                     SemanticAttributes.HTTP_REQUEST_BODY.key,
                     trace_config_ctx.request_body,
-                    1024,
+                    consts.MAX_PAYLOAD_SIZE,
                 )
+
+            response_body = b""
             if (
-                hasattr(trace_config_ctx, "response_body")
-                and trace_config_ctx.response_body is not None
+                hasattr(params.response, "content")
+                and params.response.content is not None
             ):
-                Utils.set_payload(
-                    trace_config_ctx.span,
-                    SemanticAttributes.HTTP_RESPONSE_BODY.key,
-                    trace_config_ctx.request_body,
-                    1024,
-                )
+                # copy response content into temporary queue
+                content_stream = params.response.content
+                tmp_deque = deque()
+                try:
+                    while not content_stream.at_eof():
+                        response_chunk = b""  # verify var has value
+                        response_chunk = await asyncio.wait_for(
+                            content_stream.read(), consts.MAX_WAIT_TIME
+                        )
+                        tmp_deque.append(response_chunk)
+                        response_body += response_chunk
+                finally:
+                    # retrieve response data from temporary queue
+                    content_stream._cursor = 0
+                    content_stream._buffer = tmp_deque
+
+            Utils.set_payload(
+                trace_config_ctx.span,
+                SemanticAttributes.HTTP_RESPONSE_BODY.key,
+                response_body,
+                consts.MAX_PAYLOAD_SIZE,
+            )
 
         _end_trace(trace_config_ctx)
 

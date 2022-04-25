@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+# Inner naming conventions
 KEY_DEBUG_NAME = "CISCO_DEBUG"
 KEY_COLLECTOR_ENDPOINT = "OTEL_COLLECTOR_ENDPOINT"
 KEY_EXPORTER_TYPE = "OTEL_EXPORTER_TYPE"
@@ -26,18 +27,6 @@ TOKEN_HEADER = "x-epsagon-token"
 
 DEFAULT_DEBUG = "False"
 DEFAULT_SDK_VERSION = "version not supported"
-DEFAULT_COLLECTOR_ENDPOINT = "http://localhost:4317"
-DEFAULT_EXPORTER_TYPE = GRPC_EXPORTER_TYPE
-
-MAX_PAYLOAD_SIZE = 128 * 1024
-
-ALLOWED_EXPORTER_TYPES = [HTTP_EXPORTER_TYPE, GRPC_EXPORTER_TYPE, CONSOLE_EXPORTER_TYPE]
-
-ALLOWED_CONTENT_TYPES = [
-    "application/json",
-    "application/graphql",
-    "application/x-www-form-urlencoded",
-]
 
 ENCODING_UTF8 = "UTF8"
 DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
@@ -46,3 +35,15 @@ REQUESTS_KEY = "requests"
 AIOHTTP_KEY = "aiohttp"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"
+
+# Configurations
+MAX_PAYLOAD_SIZE = 128 * 1024
+MAX_WAIT_TIME = 0.1  # seconds
+DEFAULT_COLLECTOR_ENDPOINT = "http://localhost:4317"
+DEFAULT_EXPORTER_TYPE = GRPC_EXPORTER_TYPE
+ALLOWED_EXPORTER_TYPES = [HTTP_EXPORTER_TYPE, GRPC_EXPORTER_TYPE, CONSOLE_EXPORTER_TYPE]
+ALLOWED_CONTENT_TYPES = [
+    "application/json",
+    "application/graphql",
+    "application/x-www-form-urlencoded",
+]

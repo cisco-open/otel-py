@@ -36,7 +36,9 @@ def init(
     max_payload_size: int = None,
     exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
-    opt = options.Options(service_name, cisco_token, debug, payloads_enabled, max_payload_size, exporters)
+    opt = options.Options(
+        service_name, cisco_token, debug, payloads_enabled, max_payload_size, exporters
+    )
     _set_debug(opt)
 
     logging.debug(f"Configuration: {opt}")

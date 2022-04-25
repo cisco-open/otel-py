@@ -66,8 +66,7 @@ class TestGrpcInstrumentationWrapper(TestBase):
             self.assert_captured_headers(
                 server_span,
                 SemanticAttributes.RPC_RESPONSE_METADATA.key,
-                {"key1": "val1",
-                 "key2": "val2"},
+                {"key1": "val1", "key2": "val2"},
             )
 
             self.assertEqual(

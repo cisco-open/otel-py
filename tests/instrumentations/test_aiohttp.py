@@ -127,5 +127,6 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
                 self.response_headers(),
             )
 
+
 if __name__ == "__main__":
     unittest.main()

@@ -139,6 +139,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
                 SemanticAttributes.HTTP_RESPONSE_HEADER.key,
                 self.response_headers(),
             )
+
     async def test_response_content_unharmed(self):
         async with aiohttp.client.request(
             method="POST",

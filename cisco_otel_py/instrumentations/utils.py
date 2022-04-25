@@ -14,16 +14,15 @@ class Utils(object):
         payloads_enabled: bool,
         max_payload_size: int,
     ):
-        if (payload is None) or (not payloads_enabled and not attr_sampling_relevant):
-            payload_decoded = ""
+        payload_decoded = ""
 
-        elif isinstance(payload, bytes):
-            payload_decoded = payload.decode(
-                consts.ENCODING_UTF8, consts.DECODE_PAYLOAD_IN_CASE_OF_ERROR
-            )
-
-        else:
-            payload_decoded = payload
+        if payloads_enabled or attr_sampling_relevant:
+            if isinstance(payload, bytes):
+                payload_decoded = payload.decode(
+                    consts.ENCODING_UTF8, consts.DECODE_PAYLOAD_IN_CASE_OF_ERROR
+                )
+            else:
+                payload_decoded = payload or ""
 
         span.set_attribute(attr_key, payload_decoded[:max_payload_size])
 

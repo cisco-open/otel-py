@@ -7,9 +7,10 @@ from .. import consts
 class Utils(object):
     @staticmethod
     def set_payload(
-        span: Span, attr_prefix: str, payload: AnyStr, max_payload_size: int
+        span: Span, attr_key: str, attr_sampling_relevant: bool,
+            payload: AnyStr, payloads_enabled: bool, max_payload_size: int
     ):
-        if payload is None:
+        if (payload is None) or (not payloads_enabled and not attr_sampling_relevant):
             payload_decoded = ""
 
         elif isinstance(payload, bytes):
@@ -20,7 +21,7 @@ class Utils(object):
         else:
             payload_decoded = payload
 
-        span.set_attribute(attr_prefix, payload_decoded[:max_payload_size])
+        span.set_attribute(attr_key, payload_decoded[:max_payload_size])
 
     @staticmethod
     def lowercase_items(items: dict):

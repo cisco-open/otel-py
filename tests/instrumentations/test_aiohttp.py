@@ -28,11 +28,12 @@ from .base_http_test import BaseHttpTest
 class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     def setUp(self) -> None:
         super().setUp()
-        AiohttpInstrumentorWrapper().instrument()
+        self._instrumentWrapper = AiohttpInstrumentorWrapper()
+        self._instrumentWrapper.instrument()
 
     def tearDown(self) -> None:
         super().tearDown()
-        AiohttpInstrumentorWrapper().uninstrument()
+        self._instrumentWrapper.uninstrument()
 
     async def test_get_request_sanity(self):
         async with aiohttp.client.request(
@@ -103,6 +104,28 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
                 self.request_headers(),
             )
 
+    async def test_post_request_payloads_not_enabled(self):
+        self._instrumentWrapper.payloads_enabled = False
+        async with aiohttp.client.request(
+            method="POST",
+            url=self.http_url_sanity,
+            headers=self.request_headers(),
+            data=self.request_body(),
+        ) as resp:
+            self.assertEqual(resp.status, 200)
+            spans = self.memory_exporter.get_finished_spans()
+            self.assertEqual(len(spans), 1)
+            request_span = spans[0]
+            self.assert_captured_headers(
+                request_span,
+                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                self.request_headers(),
+            )
+            self.assert_captured_headers(
+                request_span,
+                SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+                self.response_headers(),
+            )
 
 if __name__ == "__main__":
     unittest.main()

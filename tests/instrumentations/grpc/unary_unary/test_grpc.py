@@ -29,15 +29,20 @@ from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorServerWrapper
 class TestGrpcInstrumentationWrapper(TestBase):
     def setUp(self) -> None:
         super().setUp()
-        GrpcInstrumentorClientWrapper().instrument()
+        self._instrumentClientWrapper = GrpcInstrumentorClientWrapper()
+        self._instrumentClientWrapper.instrument()
         GrpcInstrumentorServerWrapper().instrument()
         self.server = server.create_server()
 
     def tearDown(self) -> None:
         super().tearDown()
         self.server.stop(None)
-        GrpcInstrumentorClientWrapper().uninstrument()
+        self._instrumentClientWrapper.uninstrument()
         GrpcInstrumentorServerWrapper().uninstrument()
+
+    def assert_captured_headers(self, span, prefix: str, headers: dict):
+        for key, val in headers.items():
+            self.assertEqual(span.attributes[f"{prefix}.{key}"], val)
 
     def test_grpc_instrumentation(self):
         with grpc.insecure_channel("localhost:50051") as channel:
@@ -58,18 +63,11 @@ class TestGrpcInstrumentationWrapper(TestBase):
             self.assertEqual(len(spans), 2)
             server_span: ReadableSpan = spans[0]
 
-            self.assertEqual(
-                server_span.attributes[
-                    f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key1"
-                ],
-                "val1",
-            )
-
-            self.assertEqual(
-                server_span.attributes[
-                    f"{SemanticAttributes.RPC_RESPONSE_METADATA.key}.key2"
-                ],
-                "val2",
+            self.assert_captured_headers(
+                server_span,
+                SemanticAttributes.RPC_RESPONSE_METADATA.key,
+                {"key1": "val1",
+                 "key2": "val2"},
             )
 
             self.assertEqual(
@@ -83,9 +81,40 @@ class TestGrpcInstrumentationWrapper(TestBase):
                 'name: "Cisco"\n',
             )
 
+            self.assert_captured_headers(
+                client_span,
+                SemanticAttributes.RPC_REQUEST_METADATA.key,
+                {"initial-metadata-1": "some str data"},
+            )
+
+    def test_grpc_instrumentation_payloads_not_enabled(self):
+        self._instrumentClientWrapper.payloads_enabled = False
+        with grpc.insecure_channel("localhost:50051") as channel:
+            stub = hello_pb2_grpc.GreeterStub(channel)
+            response, call = stub.SayHello.with_call(
+                hello_pb2.HelloRequest(name="Cisco"),
+                metadata=(("initial-metadata-1", "some str data"),),
+            )
+            logging.debug(f"Greeter client received: {response.message}")
+            for key, value in call.trailing_metadata():
+                logging.debug(
+                    f"Greeter client received trailing metadata: key={key} value={value}"
+                )
+
+            # Get all the in memory spans that were recorded for this iteration
+            spans = self.memory_exporter.get_finished_spans()
+            # Confirm something was returned.
+            self.assertEqual(len(spans), 2)
+            empty_payloads = ""
+
+            client_span: ReadableSpan = spans[1]
             self.assertEqual(
-                client_span.attributes[
-                    f"{SemanticAttributes.RPC_REQUEST_METADATA.key}.initial-metadata-1"
-                ],
-                "some str data",
+                client_span.attributes[SemanticAttributes.RPC_REQUEST_BODY.key],
+                empty_payloads,
+            )
+
+            self.assert_captured_headers(
+                client_span,
+                SemanticAttributes.RPC_REQUEST_METADATA.key,
+                {"initial-metadata-1": "some str data"},
             )

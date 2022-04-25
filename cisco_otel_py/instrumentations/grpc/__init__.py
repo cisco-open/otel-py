@@ -151,7 +151,9 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                 Utils.set_payload(
                     span,
                     SemanticAttributes.RPC_REQUEST_BODY.key,
+                    SemanticAttributes.RPC_REQUEST_BODY.sampling_relevant,
                     json.dumps(MessageToDict(request_or_iterator)),
+                    self._gisw.payloads_enabled,
                     self._gisw.max_payload_size,
                 )
 
@@ -188,7 +190,9 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     Utils.set_payload(
                         span,
                         SemanticAttributes.RPC_RESPONSE_BODY.key,
+                        SemanticAttributes.RPC_RESPONSE_BODY.sampling_relevant,
                         json.dumps(response_dict),
+                        self._gisw.payloads_enabled,
                         self._gisw.max_payload_size,
                     )
 
@@ -281,7 +285,9 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
                 Utils.set_payload(
                     span,
                     SemanticAttributes.RPC_REQUEST_BODY.key,
+                    SemanticAttributes.RPC_REQUEST_BODY.sampling_relevant,
                     str(request),  # body
+                    self._gicw.payloads_enabled,
                     self._gicw.max_payload_size,
                 )
 

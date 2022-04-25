@@ -16,7 +16,6 @@ limitations under the License.
 import unittest
 import requests
 
-
 from opentelemetry.test.test_base import TestBase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
@@ -27,11 +26,12 @@ from .base_http_test import BaseHttpTest
 class TestRequestsWrapper(BaseHttpTest, TestBase):
     def setUp(self) -> None:
         super().setUp()
-        RequestsInstrumentorWrapper().instrument()
+        self._instrumentWrapper = RequestsInstrumentorWrapper()
+        self._instrumentWrapper.instrument()
 
     def tearDown(self) -> None:
         super().tearDown()
-        RequestsInstrumentorWrapper().uninstrument()
+        self._instrumentWrapper.uninstrument()
 
     def test_get_request_sanity(self):
         _ = requests.get(self.http_url_sanity, headers=self.request_headers())
@@ -113,4 +113,35 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         self.assertEqual(
             request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
             self.request_body(),
+        )
+
+    def test_post_request_attribute_payloads_not_enabled(self):
+        self._instrumentWrapper.payloads_enabled = False
+        requests.get(
+            self.http_url_sanity,
+            headers=self.request_headers(),
+            data=self.request_body(),
+        ).close()
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+        empty_payloads = ""
+
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            self.request_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            empty_payloads,
+        )
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            self.response_headers(),
+        )
+        self.assertEqual(
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            empty_payloads,
         )

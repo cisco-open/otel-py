@@ -21,7 +21,9 @@ def get_active_span_for_call_wrapper(requests_wrapper):
             Utils.set_payload(
                 span,
                 SemanticAttributes.HTTP_REQUEST_BODY.key,
+                SemanticAttributes.HTTP_REQUEST_BODY.sampling_relevant,
                 getattr(response.request, "body", str()),
+                requests_wrapper.payloads_enabled,
                 requests_wrapper.max_payload_size,
             )
 
@@ -34,7 +36,9 @@ def get_active_span_for_call_wrapper(requests_wrapper):
         Utils.set_payload(
             span,
             SemanticAttributes.HTTP_RESPONSE_BODY.key,
+            SemanticAttributes.HTTP_RESPONSE_BODY.sampling_relevant,
             getattr(response, "content", bytes()),
+            requests_wrapper.payloads_enabled,
             requests_wrapper.max_payload_size,
         )
 

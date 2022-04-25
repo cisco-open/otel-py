@@ -43,16 +43,22 @@ class TestUtils(unittest.TestCase):
             )
 
     def test_set_payload_sanity(self):
-        utils.Utils.set_payload(self._test_span, "test.payload", "test payload", 1000)
+        utils.Utils.set_payload(
+            self._test_span, "test.payload", True, "test payload", False, 1000
+        )
         self.assertEqual(self._test_span.attributes.get("test.payload"), "test payload")
 
     def test_set_payload_none(self):
-        utils.Utils.set_payload(self._test_span, "test.payload", None, 1000)
+        utils.Utils.set_payload(
+            self._test_span, "test.payload", True, None, False, 1000
+        )
         self.assertEqual(self._test_span.attributes.get("test.payload"), "")
 
     def test_set_payload_bytes_sanity(self):
         payload = bytes("test bytes", "utf8")
-        utils.Utils.set_payload(self._test_span, "test.payload", payload, 1000)
+        utils.Utils.set_payload(
+            self._test_span, "test.payload", True, payload, False, 1000
+        )
 
         self.assertIsInstance(self._test_span.attributes.get("test.payload"), str)
         self.assertEqual(
@@ -61,7 +67,9 @@ class TestUtils(unittest.TestCase):
 
     def test_set_payload_bytes_non_utf8(self):
         payload = bytes("🙀", "utf16")
-        utils.Utils.set_payload(self._test_span, "test.payload", payload, 1000)
+        utils.Utils.set_payload(
+            self._test_span, "test.payload", True, payload, False, 1000
+        )
 
         self.assertIsInstance(self._test_span.attributes.get("test.payload"), str)
         self.assertEqual(
@@ -73,7 +81,9 @@ class TestUtils(unittest.TestCase):
 
     def test_set_payload_above_max_payload_size(self):
         payload = bytes("test bytes", "utf8")
-        utils.Utils.set_payload(self._test_span, "test.payload", payload, 5)
+        utils.Utils.set_payload(
+            self._test_span, "test.payload", True, payload, False, 5
+        )
 
         self.assertIsInstance(self._test_span.attributes.get("test.payload"), str)
         self.assertEqual(

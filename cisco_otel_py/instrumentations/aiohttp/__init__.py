@@ -151,44 +151,9 @@ def create_trace_config(
             trace_config_ctx.span.set_attribute(
                 SpanAttributes.HTTP_STATUS_CODE, params.response.status
             )
-            if (
-                hasattr(trace_config_ctx, "request_body")
-                and trace_config_ctx.request_body is not None
-            ):
-                Utils.set_payload(
-                    trace_config_ctx.span,
-                    SemanticAttributes.HTTP_REQUEST_BODY.key,
-                    trace_config_ctx.request_body,
-                    consts.MAX_PAYLOAD_SIZE,
-                )
-
-            response_body = b""
-            if (
-                hasattr(params.response, "content")
-                and params.response.content is not None
-            ):
-                # copy response content into temporary queue
-                content_stream = params.response.content
-                tmp_deque = deque()
-                try:
-                    while not content_stream.at_eof():
-                        response_chunk = b""  # verify var has value
-                        response_chunk = await asyncio.wait_for(
-                            content_stream.read(), consts.MAX_WAIT_TIME
-                        )
-                        tmp_deque.append(response_chunk)
-                        response_body += response_chunk
-                finally:
-                    # retrieve response data from temporary queue
-                    content_stream._cursor = 0
-                    content_stream._buffer = tmp_deque
-
-            Utils.set_payload(
-                trace_config_ctx.span,
-                SemanticAttributes.HTTP_RESPONSE_BODY.key,
-                response_body,
-                consts.MAX_PAYLOAD_SIZE,
-            )
+            # Expand opentelemetry implementations
+            handle_request_body(trace_config_ctx)
+            await handle_response_body(trace_config_ctx, params)
 
         _end_trace(trace_config_ctx)
 
@@ -265,3 +230,45 @@ def _instrument(
         return wrapped(*args, **kwargs)
 
     wrapt.wrap_function_wrapper(aiohttp.ClientSession, "__init__", instrumented_init)
+
+
+def handle_request_body(trace_config_ctx: types.SimpleNamespace):
+    if (
+        hasattr(trace_config_ctx, "request_body")
+        and trace_config_ctx.request_body is not None
+    ):
+        Utils.set_payload(
+            trace_config_ctx.span,
+            SemanticAttributes.HTTP_REQUEST_BODY.key,
+            trace_config_ctx.request_body,
+            consts.MAX_PAYLOAD_SIZE,
+        )
+
+
+async def handle_response_body(
+    trace_config_ctx: types.SimpleNamespace, params: aiohttp.TraceRequestEndParams
+):
+    response_body = b""
+    if hasattr(params.response, "content") and params.response.content is not None:
+        # copy response content into temporary queue
+        content_stream = params.response.content
+    tmp_deque = deque()
+    try:
+        while not content_stream.at_eof():
+            response_chunk = b""  # verify var has value
+            response_chunk = await asyncio.wait_for(
+                content_stream.read(), consts.MAX_WAIT_TIME
+            )
+            tmp_deque.append(response_chunk)
+            response_body += response_chunk
+    finally:
+        # retrieve response data from temporary queue
+        content_stream._cursor = 0
+        content_stream._buffer = tmp_deque
+
+    Utils.set_payload(
+        trace_config_ctx.span,
+        SemanticAttributes.HTTP_RESPONSE_BODY.key,
+        response_body,
+        consts.MAX_PAYLOAD_SIZE,
+    )

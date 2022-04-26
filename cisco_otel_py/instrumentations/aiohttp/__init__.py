@@ -67,11 +67,12 @@ def response_hook(
     if not span or not span.is_recording():
         return
 
-    Utils.add_flattened_dict(
-        span,
-        SemanticAttributes.HTTP_RESPONSE_HEADER.key,
-        getattr(params.response, "headers", dict()),
-    )
+    if hasattr(params, "response"):
+        Utils.add_flattened_dict(
+            span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            getattr(params.response, "headers", dict()),
+        )
 
 
 class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrapper):
@@ -178,7 +179,7 @@ def create_trace_config(
         trace_config_ctx: types.SimpleNamespace,
         params: aiohttp.TraceRequestChunkSentParams,
     ):
-        if hasattr(params, "chunk") and params.chunk is not None:
+        if getattr(params, "chunk"):
             decoded_chunk = params.chunk.decode()
             trace_config_ctx.request_body += decoded_chunk
 
@@ -187,7 +188,7 @@ def create_trace_config(
         trace_config_ctx: types.SimpleNamespace,
         params: aiohttp.TraceRequestChunkSentParams,
     ):
-        if hasattr(params, "chunk") and params.chunk is not None:
+        if getattr(params, "chunk"):
             decoded_chunk = params.chunk.decode()
             trace_config_ctx.response_body += decoded_chunk
 
@@ -233,14 +234,13 @@ def _instrument(
 
 
 def handle_request_body(trace_config_ctx: types.SimpleNamespace):
-    if (
-        hasattr(trace_config_ctx, "request_body")
-        and trace_config_ctx.request_body is not None
-    ):
+    if getattr(trace_config_ctx, "request_body"):
         Utils.set_payload(
             trace_config_ctx.span,
             SemanticAttributes.HTTP_REQUEST_BODY.key,
+            True,
             trace_config_ctx.request_body,
+            True,
             consts.MAX_PAYLOAD_SIZE,
         )
 
@@ -249,26 +249,30 @@ async def handle_response_body(
     trace_config_ctx: types.SimpleNamespace, params: aiohttp.TraceRequestEndParams
 ):
     response_body = b""
-    if hasattr(params.response, "content") and params.response.content is not None:
+    if getattr(params.response, "content"):
         # copy response content into temporary queue
         content_stream = params.response.content
-    tmp_deque = deque()
-    try:
-        while not content_stream.at_eof():
-            response_chunk = b""  # verify var has value
-            response_chunk = await asyncio.wait_for(
-                content_stream.read(), consts.MAX_WAIT_TIME
-            )
-            tmp_deque.append(response_chunk)
-            response_body += response_chunk
-    finally:
-        # retrieve response data from temporary queue
-        content_stream._cursor = 0
-        content_stream._buffer = tmp_deque
+        tmp_deque = deque()
+        try:
+            while not content_stream.at_eof():
+                response_chunk = b""  # verify var has value
+                response_chunk = await asyncio.wait_for(
+                    content_stream.read(), consts.MAX_WAIT_TIME
+                )
+                tmp_deque.append(response_chunk)
+                response_body += response_chunk
 
-    Utils.set_payload(
-        trace_config_ctx.span,
-        SemanticAttributes.HTTP_RESPONSE_BODY.key,
-        response_body,
-        consts.MAX_PAYLOAD_SIZE,
-    )
+        finally:
+            # retrieve response data from temporary queue
+            content_stream._cursor = 0
+
+            content_stream._buffer = tmp_deque
+
+            Utils.set_payload(
+                trace_config_ctx.span,
+                SemanticAttributes.HTTP_RESPONSE_BODY.key,
+                True,
+                response_body,
+                True,
+                consts.MAX_PAYLOAD_SIZE,
+            )

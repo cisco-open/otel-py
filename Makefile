@@ -35,6 +35,11 @@ proto:
 pretty:
 	black .
 
+.PHONY: prep
+prep:
+	make pretty
+	make test
+
 .PHONY: bootstrap
 bootstrap:
 	pip install opentelemetry-distro==0.29b0

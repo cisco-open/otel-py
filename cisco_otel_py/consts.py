@@ -14,23 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-
+# Inner naming conventions
 HTTP_EXPORTER_TYPE = "otlp-http"
 GRPC_EXPORTER_TYPE = "otlp-grpc"
 CONSOLE_EXPORTER_TYPE = "console"
 
 DEFAULT_SDK_VERSION = "version not supported"
-
-DEFAULT_PAYLOADS_ENABLED = True
-MAX_PAYLOAD_SIZE = 128 * 1024
-
-ALLOWED_EXPORTER_TYPES = [HTTP_EXPORTER_TYPE, GRPC_EXPORTER_TYPE, CONSOLE_EXPORTER_TYPE]
-
-ALLOWED_CONTENT_TYPES = [
-    "application/json",
-    "application/graphql",
-    "application/x-www-form-urlencoded",
-]
 
 ENCODING_UTF8 = "UTF8"
 DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
@@ -39,3 +28,14 @@ REQUESTS_KEY = "requests"
 AIOHTTP_KEY = "aiohttp"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"
+
+# Configurations
+DEFAULT_PAYLOADS_ENABLED = True
+MAX_PAYLOAD_SIZE = 128 * 1024
+MAX_WAIT_TIME = 0.1  # seconds
+ALLOWED_EXPORTER_TYPES = [HTTP_EXPORTER_TYPE, GRPC_EXPORTER_TYPE, CONSOLE_EXPORTER_TYPE]
+ALLOWED_CONTENT_TYPES = [
+    "application/json",
+    "application/graphql",
+    "application/x-www-form-urlencoded",
+]

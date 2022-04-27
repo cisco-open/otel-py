@@ -49,12 +49,12 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             span = spans[0]
             self.assert_captured_headers(
                 span,
-                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                SemanticAttributes.HTTP_REQUEST_HEADER,
                 self.request_headers(),
             )
             self.assert_captured_headers(
                 span,
-                SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+                SemanticAttributes.HTTP_RESPONSE_HEADER,
                 self.response_headers(),
             )
 
@@ -72,20 +72,20 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             span = spans[0]
             self.assert_captured_headers(
                 span,
-                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                SemanticAttributes.HTTP_REQUEST_HEADER,
                 self.request_headers(),
             )
             self.assert_captured_headers(
                 span,
-                SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+                SemanticAttributes.HTTP_RESPONSE_HEADER,
                 self.response_headers(),
             )
             self.assertEqual(
-                span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+                span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
                 self.request_body(),
             )
             self.assertEqual(
-                span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+                span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
                 self.response_body(),
             )
 
@@ -99,7 +99,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             request_span = spans[0]
             self.assert_captured_headers(
                 request_span,
-                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                SemanticAttributes.HTTP_REQUEST_HEADER,
                 self.request_headers(),
             )
 
@@ -113,7 +113,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             request_span = spans[0]
             self.assert_captured_headers(
                 request_span,
-                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                SemanticAttributes.HTTP_REQUEST_HEADER,
                 self.request_headers(),
             )
 
@@ -131,12 +131,12 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             request_span = spans[0]
             self.assert_captured_headers(
                 request_span,
-                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                SemanticAttributes.HTTP_REQUEST_HEADER,
                 self.request_headers(),
             )
             self.assert_captured_headers(
                 request_span,
-                SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+                SemanticAttributes.HTTP_RESPONSE_HEADER,
                 self.response_headers(),
             )
 
@@ -161,6 +161,6 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
                 resp_body += response_chunk.decode()
             self.assertEqual(self.response_body(), resp_body)
             self.assertEqual(
-                span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+                span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
                 resp_body,
             )

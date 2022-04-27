@@ -41,16 +41,16 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
 
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            SemanticAttributes.HTTP_REQUEST_HEADER,
             self.request_headers(),
         )
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            SemanticAttributes.HTTP_RESPONSE_HEADER,
             self.response_headers(),
         )
         self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
             self.response_body(),
         )
 
@@ -66,20 +66,20 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
 
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            SemanticAttributes.HTTP_REQUEST_HEADER,
             self.request_headers(),
         )
         self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
             self.request_body(),
         )
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            SemanticAttributes.HTTP_RESPONSE_HEADER,
             self.response_headers(),
         )
         self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
             self.response_body(),
         )
 
@@ -91,7 +91,7 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
 
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            SemanticAttributes.HTTP_REQUEST_HEADER,
             self.request_headers(),
         )
 
@@ -107,11 +107,11 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
 
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            SemanticAttributes.HTTP_REQUEST_HEADER,
             self.request_headers(),
         )
         self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
             self.request_body(),
         )
 
@@ -129,19 +129,19 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
 
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_REQUEST_HEADER.key,
+            SemanticAttributes.HTTP_REQUEST_HEADER,
             self.request_headers(),
         )
         self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY.key],
+            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
             empty_payloads,
         )
         self.assert_captured_headers(
             request_span,
-            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            SemanticAttributes.HTTP_RESPONSE_HEADER,
             self.response_headers(),
         )
         self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY.key],
+            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
             empty_payloads,
         )

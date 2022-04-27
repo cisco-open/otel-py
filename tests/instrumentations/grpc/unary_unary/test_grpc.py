@@ -65,24 +65,24 @@ class TestGrpcInstrumentationWrapper(TestBase):
 
             self.assert_captured_headers(
                 server_span,
-                SemanticAttributes.RPC_RESPONSE_METADATA.key,
+                SemanticAttributes.RPC_RESPONSE_METADATA,
                 {"key1": "val1", "key2": "val2"},
             )
 
             self.assertEqual(
-                server_span.attributes[SemanticAttributes.RPC_RESPONSE_BODY.key],
+                server_span.attributes[SemanticAttributes.RPC_RESPONSE_BODY],
                 '{"message": "Hello, Cisco!"}',
             )
 
             client_span: ReadableSpan = spans[1]
             self.assertEqual(
-                client_span.attributes[SemanticAttributes.RPC_REQUEST_BODY.key],
+                client_span.attributes[SemanticAttributes.RPC_REQUEST_BODY],
                 'name: "Cisco"\n',
             )
 
             self.assert_captured_headers(
                 client_span,
-                SemanticAttributes.RPC_REQUEST_METADATA.key,
+                SemanticAttributes.RPC_REQUEST_METADATA,
                 {"initial-metadata-1": "some str data"},
             )
 
@@ -108,12 +108,12 @@ class TestGrpcInstrumentationWrapper(TestBase):
 
             client_span: ReadableSpan = spans[1]
             self.assertEqual(
-                client_span.attributes[SemanticAttributes.RPC_REQUEST_BODY.key],
+                client_span.attributes[SemanticAttributes.RPC_REQUEST_BODY],
                 empty_payloads,
             )
 
             self.assert_captured_headers(
                 client_span,
-                SemanticAttributes.RPC_REQUEST_METADATA.key,
+                SemanticAttributes.RPC_REQUEST_METADATA,
                 {"initial-metadata-1": "some str data"},
             )

@@ -14,14 +14,13 @@ def get_active_span_for_call_wrapper(requests_wrapper):
         if hasattr(response, "request"):
             Utils.add_flattened_dict(
                 span,
-                SemanticAttributes.HTTP_REQUEST_HEADER.key,
+                SemanticAttributes.HTTP_REQUEST_HEADER,
                 getattr(response.request, "headers", dict()),
             )
 
             Utils.set_payload(
                 span,
-                SemanticAttributes.HTTP_REQUEST_BODY.key,
-                SemanticAttributes.HTTP_REQUEST_BODY.sampling_relevant,
+                SemanticAttributes.HTTP_REQUEST_BODY,
                 getattr(response.request, "body", str()),
                 requests_wrapper.payloads_enabled,
                 requests_wrapper.max_payload_size,
@@ -29,14 +28,13 @@ def get_active_span_for_call_wrapper(requests_wrapper):
 
         Utils.add_flattened_dict(
             span,
-            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            SemanticAttributes.HTTP_RESPONSE_HEADER,
             getattr(response, "headers", dict()),
         )
 
         Utils.set_payload(
             span,
-            SemanticAttributes.HTTP_RESPONSE_BODY.key,
-            SemanticAttributes.HTTP_RESPONSE_BODY.sampling_relevant,
+            SemanticAttributes.HTTP_RESPONSE_BODY,
             getattr(response, "content", bytes()),
             requests_wrapper.payloads_enabled,
             requests_wrapper.max_payload_size,

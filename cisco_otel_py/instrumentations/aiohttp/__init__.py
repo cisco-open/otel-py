@@ -55,7 +55,7 @@ def request_hook(span: Span, params: aiohttp.TraceRequestStartParams) -> None:
 
     Utils.add_flattened_dict(
         span,
-        SemanticAttributes.HTTP_REQUEST_HEADER.key,
+        SemanticAttributes.HTTP_REQUEST_HEADER,
         getattr(params, "headers", dict()),
     )
 
@@ -70,7 +70,7 @@ def response_hook(
     if hasattr(params, "response"):
         Utils.add_flattened_dict(
             span,
-            SemanticAttributes.HTTP_RESPONSE_HEADER.key,
+            SemanticAttributes.HTTP_RESPONSE_HEADER,
             getattr(params.response, "headers", dict()),
         )
 
@@ -237,11 +237,8 @@ def handle_request_body(trace_config_ctx: types.SimpleNamespace):
     if getattr(trace_config_ctx, "request_body"):
         Utils.set_payload(
             trace_config_ctx.span,
-            SemanticAttributes.HTTP_REQUEST_BODY.key,
-            True,
+            SemanticAttributes.HTTP_REQUEST_BODY,
             trace_config_ctx.request_body,
-            True,
-            consts.MAX_PAYLOAD_SIZE,
         )
 
 
@@ -270,9 +267,6 @@ async def handle_response_body(
 
             Utils.set_payload(
                 trace_config_ctx.span,
-                SemanticAttributes.HTTP_RESPONSE_BODY.key,
-                True,
+                SemanticAttributes.HTTP_RESPONSE_BODY,
                 response_body,
-                True,
-                consts.MAX_PAYLOAD_SIZE,
             )

@@ -14,8 +14,8 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Build and publish
-      run: |
-        poetry build
-        poetry publish --username ${{ secrets.PYPI_USERNAME }} --password ${{ secrets.PYPI_PASSWORD }}        
-        
+    - name: Build and publish to pypi
+      uses: JRubics/poetry-publish@v1.10
+      with:
+        repository_username: ${{ secrets.PYPI_USERNAME }}
+        repository_password: ${{ secrets.PYPI_PASSWORD }}

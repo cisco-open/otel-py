@@ -42,8 +42,9 @@ otel-py-bootstrap
 
 ### Library initialization
 > Cisco OpenTelemetry Distribution is activated and instruments the supported libraries once the `tracing.init()` has returned.
+
 ```python
-from cisco_otel_py import tracing
+from cisco_telescope import tracing
 
 tracing.init(
   service_name="<your-service-name>",
@@ -62,7 +63,7 @@ tracing.init(
 > Example for create OtlpGrpc Span exporter to local OpenTelemetry collector:
 
 ```python
-from cisco_otel_py import tracing, options
+from cisco_telescope import tracing, options
 
 tracing.init(
   service_name="<your-service-name>",

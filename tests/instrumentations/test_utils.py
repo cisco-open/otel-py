@@ -3,8 +3,8 @@ import unittest
 from opentelemetry.sdk import trace
 from opentelemetry import trace as trace_api
 
-from cisco_otel_py import consts
-from cisco_otel_py.instrumentations import utils
+from cisco_telescope import consts
+from cisco_telescope.instrumentations import utils
 
 
 class TestUtils(unittest.TestCase):

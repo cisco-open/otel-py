@@ -8,7 +8,7 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
     OTLPSpanExporter as OTLPHTTPExporter,
 )
 
-from cisco_otel_py import consts, options, exporter_factory
+from cisco_telescope import consts, options, exporter_factory
 from cisco_opentelemetry_specifications import Consts
 
 from . import utils

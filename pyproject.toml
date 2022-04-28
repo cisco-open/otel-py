@@ -8,8 +8,8 @@ readme = "README.md"
 repository = "https://github.com/epsagon/otel-py"
 
 [tool.poetry.scripts]
-otel-py = 'cisco_telescope.cmd.trace:run'
-otel-py-bootstrap = 'cisco_telescope.cmd.bootstrap:run'
+telescope = 'cisco_telescope.cmd.trace:run'
+telescope-bootstrap = 'cisco_telescope.cmd.bootstrap:run'
 
 [tool.poetry.dependencies]
 python = "^3.8"

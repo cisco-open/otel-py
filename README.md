@@ -30,13 +30,13 @@ applications for the collection of distributed tracing and performance metrics i
 > To install Cisco OpenTelemetry Distribution simply run:
 
 ```sh
-pip install cisco-otel-py
+pip install cisco-telescope
 ```
 
 ### Install dependencies
 > To install all supported instrumentation frameworks run:
 ```sh
-otel-py-bootstrap
+telescope-bootstrap
 ```
 
 

@@ -15,6 +15,6 @@ jobs:
         python-version: '3.x'
     - name: Build and publish
       run: |
-        poetry build4
+        poetry build
         poetry publish --username ${{ secrets.PYPI_USERNAME }} --password ${{ secrets.PYPI_PASSWORD }}        
         

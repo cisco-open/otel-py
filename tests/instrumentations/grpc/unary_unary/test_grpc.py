@@ -22,8 +22,8 @@ from cisco_opentelemetry_specifications import SemanticAttributes
 
 from tests.instrumentations.grpc.unary_unary import hello_pb2_grpc, hello_pb2, server
 
-from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorClientWrapper
-from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorServerWrapper
+from cisco_telescope.instrumentations.grpc import GrpcInstrumentorClientWrapper
+from cisco_telescope.instrumentations.grpc import GrpcInstrumentorServerWrapper
 
 
 class TestGrpcInstrumentationWrapper(TestBase):

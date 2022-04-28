@@ -7,8 +7,8 @@
 #     bidirectional_pb2,
 #     bidirectional_server,
 # )
-# from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorClientWrapper
-# from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorServerWrapper
+# from cisco_telescope.instrumentations.grpc import GrpcInstrumentorClientWrapper
+# from cisco_telescope.instrumentations.grpc import GrpcInstrumentorServerWrapper
 #
 # from opentelemetry.test.test_base import TestBase
 #

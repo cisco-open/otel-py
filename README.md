@@ -30,20 +30,21 @@ applications for the collection of distributed tracing and performance metrics i
 > To install Cisco OpenTelemetry Distribution simply run:
 
 ```sh
-pip install cisco-otel-py
+pip install cisco-telescope
 ```
 
 ### Install dependencies
 > To install all supported instrumentation frameworks run:
 ```sh
-otel-py-bootstrap
+telescope-bootstrap
 ```
 
 
 ### Library initialization
 > Cisco OpenTelemetry Distribution is activated and instruments the supported libraries once the `tracing.init()` has returned.
+
 ```python
-from cisco_otel_py import tracing
+from cisco_telescope import tracing
 
 tracing.init(
   service_name="<your-service-name>",
@@ -62,7 +63,7 @@ tracing.init(
 > Example for create OtlpGrpc Span exporter to local OpenTelemetry collector:
 
 ```python
-from cisco_otel_py import tracing, options
+from cisco_telescope import tracing, options
 
 tracing.init(
   service_name="<your-service-name>",

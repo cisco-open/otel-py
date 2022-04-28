@@ -18,7 +18,7 @@ from distutils.util import strtobool
 import unittest
 from unittest import mock
 
-from cisco_otel_py import options, consts
+from cisco_telescope import options, consts
 from cisco_opentelemetry_specifications import Consts
 
 from . import utils

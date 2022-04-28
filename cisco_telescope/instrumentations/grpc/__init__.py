@@ -21,7 +21,7 @@ from opentelemetry.instrumentation.grpc.grpcext import intercept_channel
 from ..utils import Utils
 from opentelemetry.instrumentation.grpc._utilities import RpcInfo
 from opentelemetry.trace.status import Status, StatusCode
-from cisco_otel_py.instrumentations import BaseInstrumentorWrapper, utils
+from cisco_telescope.instrumentations import BaseInstrumentorWrapper, utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes

@@ -19,7 +19,7 @@ import requests
 from opentelemetry.test.test_base import TestBase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
-from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
+from cisco_telescope.instrumentations.requests import RequestsInstrumentorWrapper
 from .base_http_test import BaseHttpTest
 
 

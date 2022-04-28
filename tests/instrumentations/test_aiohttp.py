@@ -22,7 +22,7 @@ from opentelemetry.test.test_base import TestBase
 from unittest import IsolatedAsyncioTestCase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
-from cisco_otel_py.instrumentations.aiohttp import AiohttpInstrumentorWrapper
+from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
 from .base_http_test import BaseHttpTest
 
 

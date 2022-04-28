@@ -1,8 +1,8 @@
 import logging
-from cisco_otel_py.instrumentations.requests import RequestsInstrumentorWrapper
-from cisco_otel_py.instrumentations.aiohttp import AiohttpInstrumentorWrapper
-from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorServerWrapper
-from cisco_otel_py.instrumentations.grpc import GrpcInstrumentorClientWrapper
+from cisco_telescope.instrumentations.requests import RequestsInstrumentorWrapper
+from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
+from cisco_telescope.instrumentations.grpc import GrpcInstrumentorServerWrapper
+from cisco_telescope.instrumentations.grpc import GrpcInstrumentorClientWrapper
 from .. import consts, options
 
 

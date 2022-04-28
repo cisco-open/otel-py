@@ -41,7 +41,7 @@ from opentelemetry.trace import (
 )
 from opentelemetry import trace
 
-from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
+from cisco_telescope.instrumentations import BaseInstrumentorWrapper
 from ..utils import Utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes

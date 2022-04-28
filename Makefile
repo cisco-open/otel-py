@@ -24,7 +24,7 @@ build:
 
 .PHONY: test
 test:
-	poetry run pytest --forked --cov=cisco_otel_py
+	poetry run pytest --forked --cov=cisco_telescope
 
 .PHONY: proto
 proto:

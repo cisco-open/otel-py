@@ -1,5 +1,5 @@
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
-from cisco_otel_py.instrumentations import BaseInstrumentorWrapper
+from cisco_telescope.instrumentations import BaseInstrumentorWrapper
 
 from ..utils import Utils
 

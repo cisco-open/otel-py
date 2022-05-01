@@ -9,9 +9,6 @@ repository = "https://github.com/epsagon/otel-py"
 
 [tool.semantic_release]
 version_variable = "pyproject.toml:version"
-version_pattern = [
-    "README.md"
-]
 branch = "main"
 upload_to_PyPI = true
 upload_to_release = true

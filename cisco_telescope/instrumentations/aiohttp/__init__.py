@@ -20,26 +20,21 @@ from collections import deque
 import aiohttp
 import wrapt
 
-from opentelemetry.context import create_key
 from opentelemetry import context as context_api
 from opentelemetry.instrumentation.aiohttp_client import (
     AioHttpClientInstrumentor,
     _ResponseHookT,
     _RequestHookT,
 )
-from opentelemetry.instrumentation.aiohttp_client.version import __version__
 from opentelemetry.instrumentation.utils import http_status_to_status_code
-from opentelemetry.propagate import inject
 from opentelemetry.semconv.trace import SpanAttributes
+from opentelemetry.instrumentation.aiohttp_client.version import __version__
 from opentelemetry.trace import (
     Span,
     TracerProvider,
     get_tracer,
     Status,
-    SpanKind,
-    StatusCode,
 )
-from opentelemetry import trace
 
 from cisco_telescope.instrumentations import BaseInstrumentorWrapper
 from ..utils import Utils
@@ -80,10 +75,11 @@ class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrap
         super().__init__()
 
     def _instrument(self, **kwargs) -> None:
-        _instrument(
+        super()._instrument(
             tracer_provider=kwargs.get("tracer_provider"),
             request_hook=request_hook,
             response_hook=response_hook,
+            trace_config=[create_trace_config()]
         )
 
     def _uninstrument(self, **kwargs) -> None:
@@ -101,43 +97,10 @@ def create_trace_config(
         context_api.detach(trace_config_ctx.token)
         trace_config_ctx.span.end()
 
-    async def on_request_start(
-        unused_session: aiohttp.ClientSession,
-        trace_config_ctx: types.SimpleNamespace,
-        params: aiohttp.TraceRequestStartParams,
-    ):
-        if context_api.get_value(create_key("suppress_instrumentation")):
-            trace_config_ctx.span = None
-            return
-
-        http_method = params.method.upper()
-        request_span_name = f"HTTP {http_method}"
-
-        trace_config_ctx.span = trace_config_ctx.tracer.start_span(
-            request_span_name,
-            kind=SpanKind.CLIENT,
-        )
-
-        if callable(request_hook):
-            request_hook(trace_config_ctx.span, params)
-
-        if trace_config_ctx.span.is_recording():
-            attributes = {
-                SpanAttributes.HTTP_METHOD: http_method,
-            }
-            for key, value in attributes.items():
-                trace_config_ctx.span.set_attribute(key, value)
-
-        trace_config_ctx.token = context_api.attach(
-            trace.set_span_in_context(trace_config_ctx.span)
-        )
-
-        inject(params.headers)
-
     async def on_request_end(
-        unused_session: aiohttp.ClientSession,
-        trace_config_ctx: types.SimpleNamespace,
-        params: aiohttp.TraceRequestEndParams,
+            unused_session: aiohttp.ClientSession,
+            trace_config_ctx: types.SimpleNamespace,
+            params: aiohttp.TraceRequestEndParams,
     ):
         if trace_config_ctx.span is None:
             return
@@ -158,22 +121,6 @@ def create_trace_config(
 
         _end_trace(trace_config_ctx)
 
-    async def on_request_exception(
-        unused_session: aiohttp.ClientSession,
-        trace_config_ctx: types.SimpleNamespace,
-        params: aiohttp.TraceRequestExceptionParams,
-    ):
-        if trace_config_ctx.span is None:
-            return
-
-        if callable(response_hook):
-            response_hook(trace_config_ctx.span, params)
-
-        if trace_config_ctx.span.is_recording() and params.exception:
-            trace_config_ctx.span.set_status(Status(StatusCode.ERROR))
-            trace_config_ctx.span.record_exception(params.exception)
-        _end_trace(trace_config_ctx)
-
     async def on_request_chunk_sent(
         unused_session: aiohttp.ClientSession,
         trace_config_ctx: types.SimpleNamespace,
@@ -183,7 +130,7 @@ def create_trace_config(
             decoded_chunk = params.chunk.decode()
             trace_config_ctx.request_body += decoded_chunk
 
-    async def on_responde_chunk_received(
+    async def on_response_chunk_received(
         unused_session: aiohttp.ClientSession,
         trace_config_ctx: types.SimpleNamespace,
         params: aiohttp.TraceRequestChunkSentParams,
@@ -202,10 +149,8 @@ def create_trace_config(
         trace_config_ctx_factory=_trace_config_ctx_factory
     )
 
-    trace_config.on_request_start.append(on_request_start)
     trace_config.on_request_chunk_sent.append(on_request_chunk_sent)
-    trace_config.on_response_chunk_received.append(on_responde_chunk_received)
-    trace_config.on_request_exception.append(on_request_exception)
+    trace_config.on_response_chunk_received.append(on_response_chunk_received)
     trace_config.on_request_end.append(on_request_end)
 
     return trace_config

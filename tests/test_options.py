@@ -30,9 +30,8 @@ class TestOptions(unittest.TestCase):
 
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
-        defexporter = [options.ExporterOptions()]
         self.assertEqual(opt.service_name, None)
-        self.assertEqual(opt.exporters, defexporter)
+        self.assertEqual(opt.exporters, [options.ExporterOptions()])
         self.assertEqual(opt.debug, Consts.DEFAULT_CISCO_DEBUG)
         self.assertEqual(opt.max_payload_size, Consts.DEFAULT_MAX_PAYLOAD_SIZE)
 

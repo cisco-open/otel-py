@@ -168,7 +168,7 @@ Provided under the Apache 2.0. See LICENSE for details.
 
 Copyright 2022, Cisco
 
-[pip-url]: https://pypi.org/project/cisco-otel-py/
+[pip-url]: https://pypi.org/project/cisco-telescope/
 [pip-image]: https://img.shields.io/github/v/release/cisco-open/otel-py?include_prereleases&style=for-the-badge
 [license-url]: https://github.com/https://github.com/cisco-open/otel-py/blob/main/LICENSE
 [license-image]: https://img.shields.io/badge/license-Apache_2.0-green.svg?style=for-the-badge

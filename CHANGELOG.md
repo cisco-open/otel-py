@@ -2,6 +2,18 @@
 
 <!--next-version-placeholder-->
 
+## v0.3.0 (2022-05-03)
+### Feature
+* **semantic-release:** Added semantic-release ([`8c3d9ec`](https://github.com/cisco-open/otel-py/commit/8c3d9ecec48068b24e06ff835a53049d90037f48))
+
+### Fix
+* **semantic-release-config:** Using semantic-release command ([`f66616e`](https://github.com/cisco-open/otel-py/commit/f66616eaee1094041c606eaf45206c87ae2645d2))
+* **semantic-release-config:** Fixed typo ([`b5a673e`](https://github.com/cisco-open/otel-py/commit/b5a673ea8c8f29448ade33e1d2cfaac43b3ba3fb))
+* **semantic-release-config:** Changes in semantic release ([`822dda4`](https://github.com/cisco-open/otel-py/commit/822dda4999961ddc7b639fbaacaeea6a52122107))
+* **semantic-release-config:** Removed git configuration ([`0dc61e8`](https://github.com/cisco-open/otel-py/commit/0dc61e841fe1eab17bd66db903575790e71546f6))
+* **semantic-release-config:** Removed unnecessary configuration ([`419a5b8`](https://github.com/cisco-open/otel-py/commit/419a5b8b3514eaca7c2961ca618e7e8d31f44c0a))
+* **add-missing-dep:** Added python-semantic-release dev dep ([`fbabbb2`](https://github.com/cisco-open/otel-py/commit/fbabbb26cff9a55340c6ed9d6e86a18171eba8d4))
+
 ## v0.2.0 (2022-05-03)
 ### Feature
 * **publish-telescope:** Renamed poetry scripts ([`5610c9f`](https://github.com/cisco-open/otel-py/commit/5610c9f93b0665f6040f638b6c5fc2c937b90aeb))

@@ -22,11 +22,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Semantic Release
-        run: |
-          pip install python-semantic-release
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          semantic-release publish -v DEBUG
-        env:
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          PyPI_TOKEN: ${{secrets.PYPI_TOKEN}}
+        uses: relekang/python-semantic-release@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository_username: __token__
+          repository_password: ${{ secrets.PYPI_TOKEN }}

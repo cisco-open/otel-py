@@ -11,8 +11,8 @@ class Utils(object):
         span: Span,
         attr: str,
         payload: AnyStr,
-        payloads_enabled: bool = True,
-        max_payload_size: int = consts.MAX_PAYLOAD_SIZE,
+        payloads_enabled: bool,
+        max_payload_size: int,
     ):
         payload_decoded = ""
 

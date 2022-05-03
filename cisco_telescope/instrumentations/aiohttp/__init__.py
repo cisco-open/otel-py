@@ -41,10 +41,10 @@ from opentelemetry.trace import (
 )
 from opentelemetry import trace
 
-from cisco_telescope.instrumentations import BaseInstrumentorWrapper
 from ..utils import Utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
+from cisco_telescope.configuration import Configuration
 
 from ... import consts
 
@@ -75,7 +75,7 @@ def response_hook(
         )
 
 
-class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrapper):
+class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor):
     def __init__(self):
         super().__init__()
 
@@ -239,6 +239,8 @@ def handle_request_body(trace_config_ctx: types.SimpleNamespace):
             trace_config_ctx.span,
             SemanticAttributes.HTTP_REQUEST_BODY,
             trace_config_ctx.request_body,
+            Configuration().payloads_enabled,
+            Configuration().max_payload_size,
         )
 
 
@@ -269,4 +271,6 @@ async def handle_response_body(
                 trace_config_ctx.span,
                 SemanticAttributes.HTTP_RESPONSE_BODY,
                 response_body,
+                Configuration().payloads_enabled,
+                Configuration().max_payload_size,
             )

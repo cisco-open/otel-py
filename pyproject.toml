@@ -5,7 +5,7 @@ description = "a Cisco Distribution for OpenTelemetry"
 license = "Apache-2.0"
 authors = ["Cisco Epsagon Team <support@epsagon.com>"]
 readme = "README.md"
-repository = "https://github.com/epsagon/otel-py"
+repository = "https://github.com/cisco-open/otel-py"
 
 [tool.semantic_release]
 version_variable = "pyproject.toml:version"

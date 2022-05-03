@@ -30,9 +30,9 @@ class TestOptions(unittest.TestCase):
 
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
-
+        defexporter = [options.ExporterOptions()]
         self.assertEqual(opt.service_name, None)
-        self.assertEqual(opt.exporters, [options.ExporterOptions()])
+        self.assertEqual(opt.exporters, defexporter)
         self.assertEqual(opt.debug, Consts.DEFAULT_CISCO_DEBUG)
         self.assertEqual(opt.max_payload_size, Consts.DEFAULT_MAX_PAYLOAD_SIZE)
 
@@ -44,7 +44,9 @@ class TestOptions(unittest.TestCase):
     def test_parameters(self):
         exporters = [
             options.ExporterOptions(
-                exporter_type=consts.HTTP_EXPORTER_TYPE, collector_endpoint="endpoint"
+                exporter_type=consts.HTTP_EXPORTER_TYPE,
+                collector_endpoint="endpoint",
+                custom_headers={"custom_header_key": "custom_header_value"},
             )
         ]
         opt = options.Options(
@@ -61,6 +63,22 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(opt.max_payload_size, 1023)
         self.assertEqual(opt.exporters, exporters)
 
+    def test_redundant_token_warning(self):
+        with self.assertLogs() as captured:
+            exporters = [
+                options.ExporterOptions(
+                    exporter_type=consts.HTTP_EXPORTER_TYPE,
+                    collector_endpoint="endpoint",
+                    custom_headers={"custom_header_key": "custom_header_value"},
+                )
+            ]
+            _ = options.Options(cisco_token=utils.TEST_TOKEN, exporters=exporters)
+            self.assertEqual(len(captured.records), 1)
+            self.assertEqual(
+                captured.records[0].getMessage(),
+                "Warning: Custom exporters do not use cisco token, it can be passed as a custom header",
+            )
+
     @mock.patch.dict(
         os.environ,
         {
@@ -76,7 +94,7 @@ class TestOptions(unittest.TestCase):
 
     def test_token_is_missing(self):
         with self.assertRaisesRegex(
-            ValueError, "Can not initiate cisco-otel launcher without token"
+            ValueError, "Can not initiate cisco-telescope without token"
         ):
             _ = options.Options()
 

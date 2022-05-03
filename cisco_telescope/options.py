@@ -15,34 +15,45 @@ limitations under the License.
 """
 
 import os
+import logging
 from distutils.util import strtobool
-from . import consts
+from typing import Optional, Dict
+
+from . import consts as project_consts
 from cisco_opentelemetry_specifications import Consts
 
 
 class ExporterOptions:
-    def __init__(self, exporter_type: str = None, collector_endpoint: str = None):
+    def __init__(
+        self,
+        exporter_type: str = None,
+        collector_endpoint: str = None,
+        custom_headers: Optional[Dict[str, str]] = None,
+    ):
         self.exporter_type = exporter_type or os.environ.get(
             Consts.OTEL_EXPORTER_TYPE_ENV, Consts.DEFAULT_EXPORTER_TYPE
         )
-        if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
+        if self.exporter_type not in project_consts.ALLOWED_EXPORTER_TYPES:
             raise ValueError("Unsupported exported type")
         self.collector_endpoint = collector_endpoint or os.environ.get(
             Consts.OTEL_COLLECTOR_ENDPOINT, Consts.DEFAULT_COLLECTOR_ENDPOINT
         )
+        self.custom_headers = custom_headers
 
     def __eq__(self, other):
         return (
             type(other) == ExporterOptions
             and self.exporter_type == other.exporter_type
             and self.collector_endpoint == other.collector_endpoint
+            and self.custom_headers == other.custom_headers
         )
 
     def __str__(self):
         return (
             f"{self.__class__.__name__}(\n\t"
             f"exporter_type: {self.exporter_type},\n\t"
-            f"endpoint: {self.collector_endpoint})"
+            f"endpoint: {self.collector_endpoint},\n\t"
+            f"custom_headers: {self.custom_headers})"
         )
 
 
@@ -57,6 +68,15 @@ class Options:
         exporters: [ExporterOptions] = None,
     ):
 
+        self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
+        if self.cisco_token is None and exporters is None:
+            raise ValueError("Can not initiate cisco-telescope without token")
+
+        if self.cisco_token is not None and exporters is not None:
+            logging.warning(
+                "Warning: Custom exporters do not use cisco token, it can be passed as a custom header"
+            )
+
         if not exporters or len(exporters) == 0:
             self.exporters = [ExporterOptions()]
         else:
@@ -69,11 +89,7 @@ class Options:
             os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
         )
 
-        self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
         self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
-
-        if self.cisco_token is None:
-            raise ValueError("Can not initiate cisco-otel launcher without token")
 
     def __str__(self):
         return (

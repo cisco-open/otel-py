@@ -26,6 +26,7 @@ from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
 from . import consts
 from . import options
 from . import exporter_factory
+from . import configuration
 
 
 def init(
@@ -39,6 +40,7 @@ def init(
     opt = options.Options(
         service_name, cisco_token, debug, payloads_enabled, max_payload_size, exporters
     )
+    configuration.Configuration().set_options(opt)
     _set_debug(opt)
 
     logging.debug(f"Configuration: {opt}")

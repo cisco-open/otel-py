@@ -24,27 +24,29 @@ from tests.instrumentations.grpc.unary_unary import hello_pb2_grpc, hello_pb2, s
 
 from cisco_telescope.instrumentations.grpc import GrpcInstrumentorClientWrapper
 from cisco_telescope.instrumentations.grpc import GrpcInstrumentorServerWrapper
+from cisco_telescope.configuration import Configuration
 
 
 class TestGrpcInstrumentationWrapper(TestBase):
     def setUp(self) -> None:
         super().setUp()
-        self._instrumentClientWrapper = GrpcInstrumentorClientWrapper()
-        self._instrumentClientWrapper.instrument()
+        GrpcInstrumentorClientWrapper().instrument()
         GrpcInstrumentorServerWrapper().instrument()
         self.server = server.create_server()
 
     def tearDown(self) -> None:
         super().tearDown()
         self.server.stop(None)
-        self._instrumentClientWrapper.uninstrument()
+        GrpcInstrumentorClientWrapper().uninstrument()
         GrpcInstrumentorServerWrapper().uninstrument()
+        Configuration().reset_to_default()
 
     def assert_captured_headers(self, span, prefix: str, headers: dict):
         for key, val in headers.items():
             self.assertEqual(span.attributes[f"{prefix}.{key}"], val)
 
     def test_grpc_instrumentation(self):
+        Configuration().payloads_enabled = True
         with grpc.insecure_channel("localhost:50051") as channel:
             stub = hello_pb2_grpc.GreeterStub(channel)
             response, call = stub.SayHello.with_call(
@@ -87,7 +89,7 @@ class TestGrpcInstrumentationWrapper(TestBase):
             )
 
     def test_grpc_instrumentation_payloads_not_enabled(self):
-        self._instrumentClientWrapper.payloads_enabled = False
+        Configuration().payloads_enabled = False
         with grpc.insecure_channel("localhost:50051") as channel:
             stub = hello_pb2_grpc.GreeterStub(channel)
             response, call = stub.SayHello.with_call(

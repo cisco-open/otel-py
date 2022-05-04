@@ -1,6 +1,7 @@
 from typing import AnyStr
 from opentelemetry.trace.span import Span
 from cisco_opentelemetry_specifications.payload_attributes import PAYLOAD_ATTRIBUTES
+from cisco_telescope.configuration import Configuration
 
 from .. import consts
 
@@ -11,10 +12,10 @@ class Utils(object):
         span: Span,
         attr: str,
         payload: AnyStr,
-        payloads_enabled: bool = True,
-        max_payload_size: int = consts.MAX_PAYLOAD_SIZE,
     ):
         payload_decoded = ""
+        payloads_enabled = Configuration().payloads_enabled
+        max_payload_size = Configuration().max_payload_size
 
         if payloads_enabled or (attr not in PAYLOAD_ATTRIBUTES):
             if isinstance(payload, bytes):

@@ -21,16 +21,17 @@ from opentelemetry.instrumentation.grpc.grpcext import intercept_channel
 from ..utils import Utils
 from opentelemetry.instrumentation.grpc._utilities import RpcInfo
 from opentelemetry.trace.status import Status, StatusCode
-from cisco_telescope.instrumentations import BaseInstrumentorWrapper, utils
+from cisco_telescope.instrumentations import utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
+
 
 # code was taken from github commit sha: f7eb9673bca5d6fb4d16040e8ac28053225ad302
 # https://github.com/hypertrace/pythonagent/pull/262
 
 
-class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrapper):
+class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer):
     """wrapper around OTel grpc:server instrumentor class"""
 
     def __init__(self):
@@ -64,7 +65,7 @@ class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer, BaseInstrumentorWrap
 
 
 # The main entry point for a wrapper around the OTel grpc:client instrumentation module
-class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient, BaseInstrumentorWrapper):
+class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient):
     def __init__(self):
         super().__init__()
 
@@ -152,8 +153,6 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     span,
                     SemanticAttributes.RPC_REQUEST_BODY,
                     json.dumps(MessageToDict(request_or_iterator)),
-                    self._gisw.payloads_enabled,
-                    self._gisw.max_payload_size,
                 )
 
                 Utils.add_flattened_dict(
@@ -190,8 +189,6 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                         span,
                         SemanticAttributes.RPC_RESPONSE_BODY,
                         json.dumps(response_dict),
-                        self._gisw.payloads_enabled,
-                        self._gisw.max_payload_size,
                     )
 
                     Utils.add_flattened_dict(
@@ -284,8 +281,6 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
                     span,
                     SemanticAttributes.RPC_REQUEST_BODY,
                     str(request),  # body
-                    self._gicw.payloads_enabled,
-                    self._gicw.max_payload_size,
                 )
 
             except Exception as exc:

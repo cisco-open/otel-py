@@ -22,7 +22,6 @@ from ..utils import Utils
 from opentelemetry.instrumentation.grpc._utilities import RpcInfo
 from opentelemetry.trace.status import Status, StatusCode
 from cisco_telescope.instrumentations import utils
-from cisco_telescope.configuration import Configuration
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
@@ -154,8 +153,6 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                     span,
                     SemanticAttributes.RPC_REQUEST_BODY,
                     json.dumps(MessageToDict(request_or_iterator)),
-                    Configuration().payloads_enabled,
-                    Configuration().max_payload_size,
                 )
 
                 Utils.add_flattened_dict(
@@ -192,8 +189,6 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
                         span,
                         SemanticAttributes.RPC_RESPONSE_BODY,
                         json.dumps(response_dict),
-                        Configuration().payloads_enabled,
-                        Configuration().max_payload_size,
                     )
 
                     Utils.add_flattened_dict(
@@ -286,8 +281,6 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
                     span,
                     SemanticAttributes.RPC_REQUEST_BODY,
                     str(request),  # body
-                    Configuration().payloads_enabled,
-                    Configuration().max_payload_size,
                 )
 
             except Exception as exc:

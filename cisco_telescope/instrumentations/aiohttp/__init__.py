@@ -40,12 +40,9 @@ from opentelemetry.trace import (
     StatusCode,
 )
 from opentelemetry import trace
+from cisco_opentelemetry_specifications import SemanticAttributes
 
 from ..utils import Utils
-
-from cisco_opentelemetry_specifications import SemanticAttributes
-from cisco_telescope.configuration import Configuration
-
 from ... import consts
 
 
@@ -239,8 +236,6 @@ def handle_request_body(trace_config_ctx: types.SimpleNamespace):
             trace_config_ctx.span,
             SemanticAttributes.HTTP_REQUEST_BODY,
             trace_config_ctx.request_body,
-            Configuration().payloads_enabled,
-            Configuration().max_payload_size,
         )
 
 
@@ -271,6 +266,4 @@ async def handle_response_body(
                 trace_config_ctx.span,
                 SemanticAttributes.HTTP_RESPONSE_BODY,
                 response_body,
-                Configuration().payloads_enabled,
-                Configuration().max_payload_size,
             )

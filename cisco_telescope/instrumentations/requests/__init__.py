@@ -4,8 +4,6 @@ from ..utils import Utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 
-from ...configuration import Configuration
-
 
 def get_active_span_for_call_wrapper():
     def get_active_span_for_call(span, response) -> None:
@@ -23,8 +21,6 @@ def get_active_span_for_call_wrapper():
                 span,
                 SemanticAttributes.HTTP_REQUEST_BODY,
                 getattr(response.request, "body", str()),
-                Configuration().payloads_enabled,
-                Configuration().max_payload_size,
             )
 
         Utils.add_flattened_dict(
@@ -37,8 +33,6 @@ def get_active_span_for_call_wrapper():
             span,
             SemanticAttributes.HTTP_RESPONSE_BODY,
             getattr(response, "content", bytes()),
-            Configuration().payloads_enabled,
-            Configuration().max_payload_size,
         )
 
     return get_active_span_for_call

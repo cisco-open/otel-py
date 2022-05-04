@@ -17,8 +17,7 @@ def singleton(class_):
 @singleton
 class Configuration(object):
     def __init__(self):
-        self._max_payload_size: int = Consts.DEFAULT_MAX_PAYLOAD_SIZE
-        self._payloads_enabled: bool = Consts.DEFAULT_PAYLOADS_ENABLED
+        self.reset_to_default()
 
     def reset_to_default(self):
         self._max_payload_size: int = Consts.DEFAULT_MAX_PAYLOAD_SIZE

@@ -39,7 +39,7 @@ opentelemetry-test-utils = "0.29b0"
 pytest-cov = "^3.0.0"
 virtualenv = "^20.14.0"
 black = "^22.3.0"
-python-semantic-release = "^7.28.1"
+python-semantic-release = "^7.28.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

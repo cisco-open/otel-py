@@ -34,6 +34,7 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(opt.exporters, [options.ExporterOptions()])
         self.assertEqual(opt.debug, Consts.DEFAULT_CISCO_DEBUG)
         self.assertEqual(opt.max_payload_size, Consts.DEFAULT_MAX_PAYLOAD_SIZE)
+        self.assertEqual(opt.payloads_enabled, Consts.DEFAULT_PAYLOADS_ENABLED)
 
     def test_empty_exporter_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN, exporters=[])
@@ -54,11 +55,13 @@ class TestOptions(unittest.TestCase):
             max_payload_size=1023,
             exporters=exporters,
             debug=True,
+            payloads_enabled=True,
         )
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.service_name, "Service")
         self.assertEqual(opt.debug, True)
+        self.assertEqual(opt.payloads_enabled, True)
         self.assertEqual(opt.max_payload_size, 1023)
         self.assertEqual(opt.exporters, exporters)
 

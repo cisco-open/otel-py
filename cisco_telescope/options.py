@@ -63,7 +63,7 @@ class Options:
         service_name: str = None,
         cisco_token: str = None,
         debug: bool = False,
-        payloads_enabled: bool = True,
+        payloads_enabled: bool = False,
         max_payload_size: int = None,
         exporters: [ExporterOptions] = None,
     ):

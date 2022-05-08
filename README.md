@@ -174,4 +174,3 @@ Copyright 2022, Cisco
 [license-image]: https://img.shields.io/badge/license-Apache_2.0-green.svg?style=for-the-badge
 [coverage-url]: https://codecov.io/gh/cisco-open/otel-py/branch/main/
 [coverage-image]: https://img.shields.io/codecov/c/github/cisco-open/otel-py?style=for-the-badge
-

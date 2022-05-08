@@ -23,7 +23,8 @@ class TestExporterFactory(unittest.TestCase):
     def test_otlp_grpc_exporter(self):
         self.test_options.exporters = [
             options.ExporterOptions(
-                exporter_type=consts.GRPC_EXPORTER_TYPE, collector_endpoint="my-end"
+                exporter_type=consts.GRPC_EXPORTER_TYPE,
+                collector_endpoint="my-end",
             )
         ]
         exporters = exporter_factory.init_exporters(self.test_options)
@@ -38,7 +39,8 @@ class TestExporterFactory(unittest.TestCase):
     def test_otlp_http_exporter(self):
         self.test_options.exporters = [
             options.ExporterOptions(
-                exporter_type=consts.HTTP_EXPORTER_TYPE, collector_endpoint="my-end"
+                exporter_type=consts.HTTP_EXPORTER_TYPE,
+                collector_endpoint="my-end",
             )
         ]
         exporters = exporter_factory.init_exporters(self.test_options)

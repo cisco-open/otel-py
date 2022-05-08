@@ -31,7 +31,15 @@ class TestOptions(unittest.TestCase):
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
         self.assertEqual(opt.service_name, None)
-        self.assertEqual(opt.exporters, [options.ExporterOptions()])
+        self.assertEqual(
+            opt.exporters,
+            [
+                options.ExporterOptions(
+                    exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
+                    collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+                )
+            ],
+        )
         self.assertEqual(opt.debug, Consts.DEFAULT_CISCO_DEBUG)
         self.assertEqual(opt.max_payload_size, Consts.DEFAULT_MAX_PAYLOAD_SIZE)
         self.assertEqual(opt.payloads_enabled, Consts.DEFAULT_PAYLOADS_ENABLED)
@@ -39,7 +47,15 @@ class TestOptions(unittest.TestCase):
     def test_empty_exporter_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN, exporters=[])
 
-        self.assertEqual(opt.exporters, [options.ExporterOptions()])
+        self.assertEqual(
+            opt.exporters,
+            [
+                options.ExporterOptions(
+                    exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
+                    collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+                )
+            ],
+        )
 
     def test_parameters(self):
         exporters = [
@@ -103,12 +119,24 @@ class TestOptions(unittest.TestCase):
 
 class TestExporterOptions(unittest.TestCase):
     def test_defaults(self):
-        exporter_opts = options.ExporterOptions()
+        exporter_opts = options.ExporterOptions(
+            collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+            exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
+        )
 
         self.assertEqual(exporter_opts.exporter_type, Consts.DEFAULT_EXPORTER_TYPE)
         self.assertEqual(
             exporter_opts.collector_endpoint, Consts.DEFAULT_COLLECTOR_ENDPOINT
         )
+
+    def test_missing_collector_url_warning(self):
+        with self.assertLogs() as captured:
+            _ = options.ExporterOptions(exporter_type=Consts.DEFAULT_EXPORTER_TYPE)
+            self.assertEqual(len(captured.records), 1)
+            self.assertEqual(
+                captured.records[0].getMessage(),
+                "Warning: Custom exporter is set without collector endpoint",
+            )
 
     @mock.patch.dict(
         os.environ,

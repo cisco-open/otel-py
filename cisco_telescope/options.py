@@ -84,6 +84,7 @@ class Options:
             )
 
         if not exporters or len(exporters) == 0:
+            self.is_cisco_exporter = True
             self.exporters = [
                 ExporterOptions(
                     collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
@@ -91,6 +92,7 @@ class Options:
                 )
             ]
         else:
+            self.is_cisco_exporter = False
             self.exporters = exporters
 
         self.service_name = service_name

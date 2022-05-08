@@ -28,27 +28,32 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
 
 
 def _set_exporter(exporter: options.ExporterOptions, opt: options.Options):
-    if exporter.exporter_type == consts.GRPC_EXPORTER_TYPE:
+    if opt.is_cisco_exporter:
+        return OTLPHTTPExporter(
+            endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+            headers={Consts.TOKEN_HEADER_KEY: verify_token(opt.cisco_token)},
+        )
+    elif exporter.exporter_type == consts.GRPC_EXPORTER_TYPE:
         return OTLPGrpcExporter(
-            endpoint=exporter.collector_endpoint,
-            headers=exporter.custom_headers
-            if exporter.custom_headers
-            else ((Consts.TOKEN_HEADER_KEY, opt.cisco_token),),
+            endpoint=exporter.collector_endpoint, headers=exporter.custom_headers
         )
 
     elif exporter.exporter_type == consts.HTTP_EXPORTER_TYPE:
         return OTLPHTTPExporter(
-            endpoint=exporter.collector_endpoint,
-            headers=exporter.custom_headers
-            if exporter.custom_headers
-            else {
-                Consts.TOKEN_HEADER_KEY: opt.cisco_token,
-            },
+            endpoint=exporter.collector_endpoint, headers=exporter.custom_headers
         )
     elif exporter.exporter_type == consts.CONSOLE_EXPORTER_TYPE:
         return ConsoleSpanExporter(service_name=opt.service_name)
     else:
         raise ValueError("Unsupported exported type")
+
+
+def verify_token(token: str) -> str:
+    auth_prefix = "Bearer "
+    if token.startswith(auth_prefix):
+        return token
+    else:
+        return auth_prefix + token
 
 
 def init_exporters(opt: options.Options):

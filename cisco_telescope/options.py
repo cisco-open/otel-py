@@ -85,12 +85,7 @@ class Options:
 
         if not exporters or len(exporters) == 0:
             self.is_cisco_exporter = True
-            self.exporters = [
-                ExporterOptions(
-                    collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
-                    exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
-                )
-            ]
+            self.exporters = [None]  # A placeholder for exporter_factory for loop
         else:
             self.is_cisco_exporter = False
             self.exporters = exporters

@@ -20,7 +20,8 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
-from pkg_resources import iter_entry_points, get_distribution
+from pkg_resources import iter_entry_points
+from importlib_metadata import version, PackageNotFoundError
 
 from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
 from . import consts
@@ -52,12 +53,12 @@ def init(
 
 
 def _get_sdk_version():
-    sdk_distribution = get_distribution(__package__)
+    try:
+        sdk_version = version(__package__)
+    except PackageNotFoundError:
+        sdk_version = consts.DEFAULT_SDK_VERSION
 
-    if hasattr(sdk_distribution, "version"):
-        return sdk_distribution.version
-
-    return consts.DEFAULT_SDK_VERSION
+    return sdk_version
 
 
 def _set_debug(opt: options.Options):

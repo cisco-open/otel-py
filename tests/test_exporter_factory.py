@@ -42,11 +42,13 @@ class TestExporterFactory(unittest.TestCase):
             {Consts.TOKEN_HEADER_KEY: "Bearer " + utils.TEST_TOKEN},
         )
 
-    def test_otlp_grpc_exporter(self):
+    def test_custom_otlp_grpc_exporter(self):
         opt = options.Options(
             exporters=[
                 options.ExporterOptions(
-                    exporter_type=consts.GRPC_EXPORTER_TYPE, collector_endpoint="my-end"
+                    exporter_type=consts.GRPC_EXPORTER_TYPE,
+                    collector_endpoint=utils.COLLECTOR_ENDPOINT,
+                    custom_headers={utils.CUSTOM_HEADER_KEY: utils.CUSTOM_HEADER_VALUE},
                 )
             ]
         )
@@ -55,12 +57,18 @@ class TestExporterFactory(unittest.TestCase):
 
         otlp_exporter = exporters[0]
         self.assertIsInstance(otlp_exporter, OTLPGrpcExporter)
+        self.assertEqual(
+            otlp_exporter._headers,
+            ((utils.CUSTOM_HEADER_KEY, utils.CUSTOM_HEADER_VALUE),),
+        )
 
-    def test_otlp_http_exporter(self):
+    def test_custom_otlp_http_exporter(self):
         opt = options.Options(
             exporters=[
                 options.ExporterOptions(
-                    exporter_type=consts.HTTP_EXPORTER_TYPE, collector_endpoint="my-end"
+                    exporter_type=consts.HTTP_EXPORTER_TYPE,
+                    collector_endpoint=utils.COLLECTOR_ENDPOINT,
+                    custom_headers={utils.CUSTOM_HEADER_KEY: utils.CUSTOM_HEADER_VALUE},
                 )
             ]
         )
@@ -69,7 +77,11 @@ class TestExporterFactory(unittest.TestCase):
 
         otlp_exporter = exporters[0]
         self.assertIsInstance(otlp_exporter, OTLPHTTPExporter)
-        self.assertEqual(otlp_exporter._endpoint, "my-end")
+        self.assertEqual(otlp_exporter._endpoint, utils.COLLECTOR_ENDPOINT)
+        self.assertEqual(
+            otlp_exporter._headers,
+            {utils.CUSTOM_HEADER_KEY: utils.CUSTOM_HEADER_VALUE},
+        )
 
     def test_console_exporter(self):
         opt = options.Options(

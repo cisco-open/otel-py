@@ -83,11 +83,17 @@ class Options:
                 "Warning: Custom exporters do not use cisco token, it can be passed as a custom header"
             )
 
-        if not exporters or len(exporters) == 0:
-            self.is_cisco_exporter = True
-            self.exporters = [None]  # A placeholder for exporter_factory for loop
+        if not exporters or len(exporters) == 0:  # Set default exporter
+            self.exporters = [
+                ExporterOptions(
+                    exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
+                    collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+                    custom_headers={
+                        Consts.TOKEN_HEADER_KEY: verify_token(self.cisco_token)
+                    },
+                )
+            ]
         else:
-            self.is_cisco_exporter = False
             self.exporters = exporters
 
         self.service_name = service_name
@@ -107,3 +113,11 @@ class Options:
             f"max_payload_size: {self.max_payload_size},\n\t"
             f"exporters: \n\t{', '.join(map(str, self.exporters))})"
         )
+
+
+def verify_token(token: str) -> str:
+    auth_prefix = "Bearer "
+    if token.startswith(auth_prefix):
+        return token
+    else:
+        return auth_prefix + token

@@ -18,6 +18,9 @@ from os import environ
 
 LOCAL_COLLECTOR = "localhost:4317"
 TEST_TOKEN = "test_token"
+COLLECTOR_ENDPOINT = "www.mock-random-endpoint.com"
+CUSTOM_HEADER_KEY = "custom-header-key"
+CUSTOM_HEADER_VALUE = "custom-header-value"
 
 
 def clean_env_vars(env_var_names):

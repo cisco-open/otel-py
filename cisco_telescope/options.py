@@ -31,13 +31,19 @@ class ExporterOptions:
         custom_headers: Optional[Dict[str, str]] = None,
     ):
         self.exporter_type = exporter_type or os.environ.get(
-            Consts.OTEL_EXPORTER_TYPE_ENV, Consts.DEFAULT_EXPORTER_TYPE
+            Consts.OTEL_EXPORTER_TYPE_ENV
+        )
+        self.collector_endpoint = collector_endpoint or os.environ.get(
+            Consts.OTEL_COLLECTOR_ENDPOINT
         )
         if self.exporter_type not in project_consts.ALLOWED_EXPORTER_TYPES:
             raise ValueError("Unsupported exported type")
-        self.collector_endpoint = collector_endpoint or os.environ.get(
-            Consts.OTEL_COLLECTOR_ENDPOINT, Consts.DEFAULT_COLLECTOR_ENDPOINT
-        )
+
+        if not self.collector_endpoint:
+            logging.warning(
+                "Warning: Custom exporter is set without collector endpoint"
+            )
+
         self.custom_headers = custom_headers
 
     def __eq__(self, other):
@@ -77,8 +83,16 @@ class Options:
                 "Warning: Custom exporters do not use cisco token, it can be passed as a custom header"
             )
 
-        if not exporters or len(exporters) == 0:
-            self.exporters = [ExporterOptions()]
+        if not exporters or len(exporters) == 0:  # Set default exporter
+            self.exporters = [
+                ExporterOptions(
+                    exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
+                    collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+                    custom_headers={
+                        Consts.TOKEN_HEADER_KEY: verify_token(self.cisco_token)
+                    },
+                )
+            ]
         else:
             self.exporters = exporters
 
@@ -99,3 +113,11 @@ class Options:
             f"max_payload_size: {self.max_payload_size},\n\t"
             f"exporters: \n\t{', '.join(map(str, self.exporters))})"
         )
+
+
+def verify_token(token: str) -> str:
+    auth_prefix = "Bearer "
+    if token.startswith(auth_prefix):
+        return token
+    else:
+        return auth_prefix + token

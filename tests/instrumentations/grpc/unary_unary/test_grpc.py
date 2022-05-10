@@ -114,8 +114,7 @@ class TestGrpcInstrumentationWrapper(TestBase):
                 empty_payloads,
             )
 
-            self.assert_captured_headers(
-                client_span,
-                SemanticAttributes.RPC_REQUEST_METADATA,
-                {"initial-metadata-1": "some str data"},
+            self.assertNotIn(  # payloads_enabled=False
+                f"{SemanticAttributes.RPC_REQUEST_METADATA}.initial-metadata-1",
+                client_span.attributes,
             )

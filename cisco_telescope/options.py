@@ -68,8 +68,8 @@ class Options:
         self,
         service_name: str = None,
         cisco_token: str = None,
-        debug: bool = False,
-        payloads_enabled: bool = False,
+        debug: bool = None,
+        payloads_enabled: bool = None,
         max_payload_size: int = None,
         exporters: [ExporterOptions] = None,
     ):
@@ -97,7 +97,7 @@ class Options:
             self.exporters = exporters
 
         self.service_name = service_name
-        self.payloads_enabled = payloads_enabled
+        self.payloads_enabled = payloads_enabled or Consts.DEFAULT_PAYLOADS_ENABLED
 
         self.debug = debug or strtobool(
             os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))

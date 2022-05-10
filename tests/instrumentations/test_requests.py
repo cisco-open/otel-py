@@ -34,11 +34,11 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         Configuration().reset_to_default()
 
     def test_get_request_sanity(self):
+        Configuration().payloads_enabled = True
         _ = requests.get(self.http_url_sanity, headers=self.request_headers())
         spans = self.memory_exporter.get_finished_spans()
         self.assertEqual(len(spans), 1)
         request_span = spans[0]
-        empty_payload = ""
 
         self.assert_captured_headers(
             request_span,
@@ -52,10 +52,11 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         )
         self.assertEqual(
             request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
-            empty_payload,
+            self.response_body(),
         )
 
     def test_post_request_sanity(self):
+        Configuration().payloads_enabled = True
         requests.get(
             self.http_url_sanity,
             headers=self.request_headers(),
@@ -73,7 +74,7 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         )
         self.assertEqual(
             request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
-            empty_payload,
+            self.request_body(),
         )
         self.assert_captured_headers(
             request_span,
@@ -82,10 +83,11 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         )
         self.assertEqual(
             request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
-            empty_payload,
+            self.response_body(),
         )
 
     def test_get_request_error_response(self):
+        Configuration().payloads_enabled = True
         _ = requests.get(self.http_url_error, headers=self.request_headers())
         spans = self.memory_exporter.get_finished_spans()
         self.assertEqual(len(spans), 1)
@@ -98,6 +100,7 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         )
 
     def test_post_request_error_response(self):
+        Configuration().payloads_enabled = True
         requests.post(
             self.http_url_error,
             headers=self.request_headers(),
@@ -115,7 +118,7 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         )
         self.assertEqual(
             request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
-            empty_payload,
+            self.request_body(),
         )
 
     def test_post_request_attribute_payloads_enabled(self):
@@ -151,19 +154,17 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
         request_span = spans[0]
         empty_payloads = ""
 
-        self.assert_captured_headers(
-            request_span,
-            SemanticAttributes.HTTP_REQUEST_HEADER,
-            self.request_headers(),
+        self.assertNotIn(
+            f"{SemanticAttributes.HTTP_REQUEST_HEADER}.test-header-key",
+            request_span.attributes,
         )
         self.assertEqual(
             request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
             empty_payloads,
         )
-        self.assert_captured_headers(
-            request_span,
-            SemanticAttributes.HTTP_RESPONSE_HEADER,
-            self.response_headers(),
+        self.assertNotIn(
+            f"{SemanticAttributes.HTTP_RESPONSE_HEADER}.server-response-header",
+            request_span.attributes,
         )
         self.assertEqual(
             request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],

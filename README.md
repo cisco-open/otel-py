@@ -162,6 +162,14 @@ Exporter options
 | collector_endpoint | OTEL_COLLECTOR_ENDPOINT | string              | `https://production.cisco-udp.com/trace-collector:80` | The address of the trace collector to send traces to                                                                                        |
 | type               | OTEL_EXPORTER_TYPE      | string              | `otlp-http`                                           | The exporter type to use (Currently only `otlp-http` are supported). Multiple exporter option available via init function see example below |
 
+## Getting Help
+
+If you have any issue around using the library or the product, please don't hesitate to:
+
+- Use the [documentation](https://docs.telescope.app).
+- Use the help widget inside the product.
+- Open an issue in GitHub.
+
 ## License
 
 Provided under the Apache 2.0. See LICENSE for details.

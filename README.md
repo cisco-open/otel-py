@@ -148,12 +148,12 @@ Cisco OpenTelemetry Python Distribution provides out-of-the-box instrumentation 
 
 Advanced options can be configured as a parameter to the init() method:
 
-| Parameter        | Env                    | Type    | Default                | Description                                                       |
-|------------------|------------------------| ------- |------------------------| ----------------------------------------------------------------- |
-| cisco_token      | CISCO_TOKEN            | string  | -                      | Cisco account token                                               |
-| service_name     | OTEL_SERVICE_NAME      | string  | `application`          | Application name that will be set for traces                      |
-| debug            | CISCO_DEBUG            | string  | `False`                | Debug logs                                                        |
-| payloads_enabled | CISCO_PAYLOADS_ENABLED | string  | `False`                | Debug logs                                                        |
+| Parameter        | Env                    | Type    | Default       | Description                                                       |
+|------------------|------------------------| ------- |---------------| ----------------------------------------------------------------- |
+| cisco_token      | CISCO_TOKEN            | string  | -             | Cisco account token                                               |
+| service_name     | OTEL_SERVICE_NAME      | string  | `application` | Application name that will be set for traces                      |
+| debug            | CISCO_DEBUG            | string  | `False`       | Debug logs                                                        |
+| payloads_enabled | CISCO_PAYLOADS_ENABLED | string  | `True`        | Debug logs                                                        |
 
 Exporter options
 

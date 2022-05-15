@@ -166,7 +166,7 @@ Exporter options
 
 If you have any issue around using the library or the product, please don't hesitate to:
 
-- Use the [documentation](https://doc.telescope.app).
+- Use the [documentation](https://docs.telescope.app).
 - Use the help widget inside the product.
 - Open an issue in GitHub.
 

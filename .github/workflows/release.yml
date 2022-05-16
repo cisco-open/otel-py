@@ -1,6 +1,9 @@
 name: Semantic Release
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   release:
@@ -20,4 +23,4 @@ jobs:
       - name: Semantic Release
         run: |
           pip install python-semantic-release
-          semantic-release publish --noop --verbosity=debug -D version_variable="pyproject.toml:version" -D upload_to_release=true
+          semantic-release publish --verbosity=debug -D version_variable="pyproject.toml:version" -D upload_to_release=true

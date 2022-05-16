@@ -25,6 +25,5 @@ jobs:
         uses: relekang/python-semantic-release@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          debug: *
           repository_username: __token__
           repository_password: ${{ secrets.PYPI_TOKEN }}

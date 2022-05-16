@@ -21,10 +21,6 @@ jobs:
           python-version: 3.x
 
       - name: Semantic Release
-        uses: relekang/python-semantic-release@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          repository_username: __token__
-          repository_password: ${{ secrets.PYPI_TOKEN }}
-        env:
-          GITHUB_REPOSITORY: cisco-open/otel-py
+        run: |
+          pip install python-semantic-release
+          semantic-release publish --verbosity=debug -D version_variable="pyproject.toml:version" -D upload_to_release=true

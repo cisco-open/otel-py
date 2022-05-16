@@ -34,7 +34,6 @@ class InstrumentationWrapper:
             if library_key in inst_dict:
                 wrapper_object = inst_dict[library_key]
                 wrapper_instance = wrapper_object()
-                wrapper_instance.set_options(opt)
                 cls._mark_as_instrumented(library_key, wrapper_instance)
                 return wrapper_instance
             else:

@@ -22,7 +22,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Semantic Release
-        uses: relekang/python-semantic-release@v7.28.0
+        uses: relekang/python-semantic-release@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pypi_token: ${{ secrets.PYPI_TOKEN }}
+          repository_username: __token__
+          repository_password: ${{ secrets.PYPI_TOKEN }}

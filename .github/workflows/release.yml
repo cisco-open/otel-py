@@ -19,8 +19,7 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.x
-      - name: Checkout code
-        uses: actions/checkout@v2
+
       - name: Semantic Release
         uses: relekang/python-semantic-release@master
         with:

@@ -27,4 +27,4 @@ jobs:
           git config user.email github-actions@github.com
           semantic-release publish --verbosity=debug -D version_variable="pyproject.toml:version" -D upload_to_release=true
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PUBLISH_TOKEN }}

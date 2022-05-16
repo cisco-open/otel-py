@@ -7,13 +7,6 @@ authors = ["Cisco Epsagon Team <support@epsagon.com>"]
 readme = "README.md"
 repository = "https://github.com/cisco-open/otel-py"
 
-[tool.semantic_release]
-version_variable = "pyproject.toml:version"
-branch = "main"
-upload_to_repository = true
-upload_to_release = true
-build_command = "pip install poetry && poetry build"
-
 [tool.poetry.scripts]
 telescope = 'cisco_telescope.cmd.trace:run'
 telescope-bootstrap = 'cisco_telescope.cmd.bootstrap:run'

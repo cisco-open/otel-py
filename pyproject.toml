@@ -10,7 +10,6 @@ repository = "https://github.com/cisco-open/otel-py"
 [tool.semantic_release]
 version_variable = "pyproject.toml:version"
 branch = "main"
-major_on_zero = false
 version_source = "tag"
 upload_to_repository = true
 upload_to_release = true

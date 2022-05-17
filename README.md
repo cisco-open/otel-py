@@ -86,9 +86,9 @@ collector.yaml ...
 
 exporters:
   otlphttp:
-    traces_endpoint: https://production.cisco-udp.com/trace-collector:80
+    traces_endpoint: https://production.cisco-udp.com/trace-collector
     headers:
-      authorization: <Your Telescope Token>
+      authorization: Bearer <Your Telescope Token>
     compression: gzip
 
 
@@ -116,9 +116,9 @@ provider = TracerProvider(resource=Resource.create())
 trace.set_tracer_provider(provider)
 
 http_exporter = OTLPHTTPExporter(
-  endpoint="https://production.cisco-udp.com/trace-collector:80",
+  endpoint="https://production.cisco-udp.com/trace-collector",
   headers= {
-    "authorization": "<Your Telescope Token>",
+    "authorization": "Bearer <Your Telescope Token>",
   },
 )
 

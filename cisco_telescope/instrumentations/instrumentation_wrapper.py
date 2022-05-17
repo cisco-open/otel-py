@@ -40,7 +40,9 @@ class InstrumentationWrapper:
                 logging.info(f"No instrumentation wrapper for {library_key}")
                 return
         except Exception:
-            logging.exception(f"Error while attempting to load instrumentation wrapper")
+            logging.exception(
+                f"Error while attempting to load instrumentation wrapper for {library_key}"
+            )
             return
 
     @classmethod

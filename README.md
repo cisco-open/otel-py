@@ -17,7 +17,6 @@ applications for the collection of distributed tracing and performance metrics i
   - [OpenTelemetry Collector Configuration](#opentelemetry-collector-configuration)
   - [Existing OpenTelemetry Instrumentation](#existing-opentelemetry-instrumentation)
 - [Supported Runtimes](#supported-runtimes)
-- [Frameworks](#frameworks)
 - [Supported Libraries](#supported-libraries)
 - [Configuration](#configuration)
 - [Getting Help](#getting-help)
@@ -34,40 +33,42 @@ pip install cisco-telescope
 ```
 
 ### Install dependencies
-> To install all supported instrumentation frameworks run:
+To install all supported instrumentation frameworks run:
 ```sh
 telescope-bootstrap
 ```
 
 
 ### Library initialization
-> Cisco OpenTelemetry Distribution is activated and instruments the supported libraries once the `tracing.init()` has returned.
+Cisco OpenTelemetry Distribution is activated and instruments the supported libraries once the `ciscoTracing.init()` has returned.
+
+To initialize the library, you'll need a cisco-token, which is taken from your [Account tab on the Telescope console Settings page](https://console.telescope.app/settings/account).
+
 
 ```python
 from cisco_telescope import tracing
 
 tracing.init(
   service_name="<your-service-name>",
-  cisco_token="<your-telescope-token>"
+  cisco_token="<your-cisco-token>"
 )
 ```
 
 ### OpenTelemetry Collector Configuration
 
-> By default, Cisco OpenTelemetry Distribution exports data directly to [Cisco Telescope's](https://console.telescope.app/?utm_source=github) infrastructure backend.
-> **Existing** OpenTelemetery Collector is supported, the following configuration can be applied
+By default, Cisco OpenTelemetry Distribution exports data directly to [Cisco Telescope's](https://console.telescope.app/?utm_source=github) infrastructure backend.
+**Existing** OpenTelemetery Collector is supported, the following configuration can be applied
 
 #### Configure custom trace exporter
 
-> Cisco OpenTelemetry Distribution supports configure multiple custom exporters.
-> Example for create OtlpGrpc Span exporter to local OpenTelemetry collector:
+Cisco OpenTelemetry Distribution supports the configuration of multiple custom exporters. Note that you will need to handle your exporter authorization.
+Example for creating OtlpGrpc Span exporter to local OpenTelemetry collector:
 
 ```python
 from cisco_telescope import tracing, options
 
 tracing.init(
   service_name="<your-service-name>",
-  cisco_token="<your-telescope-token>",
   exporters=[
     options.ExporterOptions(
       exporter_type="otlp-grpc",
@@ -128,13 +129,9 @@ provider.add_span_processor(processor)
 ## Supported Runtimes
 Cisco OpenTelemetry Distribution supports Python 3.6+
 
-## Frameworks
-
-> Cisco OpenTelemetry Python Distribution is extending Native OpenTelemetry, supported frameworks [available here](https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/instrumentation).
-
 ## Supported Libraries
 
-> Cisco OpenTelemetry Python Distribution is extending Native OpenTelemetry, supported libraries [available here](https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/metapackages/auto-instrumentations-node#supported-instrumentations).
+> Cisco OpenTelemetry Python Distribution is extending Native OpenTelemetry, supported libraries [available here](https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/instrumentation).
 
 Cisco OpenTelemetry Python Distribution provides out-of-the-box instrumentation (tracing) and advanced **payload collections** for many popular frameworks and libraries.
 
@@ -157,10 +154,10 @@ Advanced options can be configured as a parameter to the init() method:
 
 Exporter options
 
-| Parameter          | Env                     | Type                | Default                                               | Description                                                                                                                                 |
-|--------------------| ----------------------- | ------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| collector_endpoint | OTEL_COLLECTOR_ENDPOINT | string              | `https://production.cisco-udp.com/trace-collector:80` | The address of the trace collector to send traces to                                                                                        |
-| type               | OTEL_EXPORTER_TYPE      | string              | `otlp-http`                                           | The exporter type to use (Currently only `otlp-http` are supported). Multiple exporter option available via init function see example below |
+| Parameter          | Env                     | Type                | Default                                               | Description                                                                                                                                |
+|--------------------| ----------------------- | ------------------- | ----------------------------------------------------- |--------------------------------------------------------------------------------------------------------------------------------------------|
+| collector_endpoint | OTEL_COLLECTOR_ENDPOINT | string              | `https://production.cisco-udp.com/trace-collector:80` | The address of the trace collector to send traces to                                                                                       |
+| type               | OTEL_EXPORTER_TYPE      | string              | `otlp-http`                                           | The exporter type to use (Currently only `otlp-http` is supported). Multiple exporter option available via init function see example below |
 
 ## Getting Help
 

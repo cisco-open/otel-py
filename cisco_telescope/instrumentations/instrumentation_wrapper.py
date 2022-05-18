@@ -34,14 +34,15 @@ class InstrumentationWrapper:
             if library_key in inst_dict:
                 wrapper_object = inst_dict[library_key]
                 wrapper_instance = wrapper_object()
-                wrapper_instance.set_options(opt)
                 cls._mark_as_instrumented(library_key, wrapper_instance)
                 return wrapper_instance
             else:
                 logging.info(f"No instrumentation wrapper for {library_key}")
                 return
         except Exception:
-            logging.exception(f"Error while attempting to load instrumentation wrapper")
+            logging.exception(
+                f"Error while attempting to load instrumentation wrapper for {library_key}"
+            )
             return
 
     @classmethod

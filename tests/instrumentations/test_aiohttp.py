@@ -36,6 +36,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
         Configuration().reset_to_default()
 
     async def test_get_request_sanity(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="GET",
             url=self.http_url_sanity,
@@ -58,6 +59,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             )
 
     async def test_post_request_sanity(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="POST",
             url=self.http_url_sanity,
@@ -69,7 +71,6 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             spans = self.memory_exporter.get_finished_spans()
             self.assertEqual(len(spans), 1)
             span = spans[0]
-            empty_payload = ""
 
             self.assert_captured_headers(
                 span,
@@ -83,14 +84,15 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             )
             self.assertEqual(
                 span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
-                empty_payload,
+                self.request_body(),
             )
             self.assertEqual(
                 span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
-                empty_payload,
+                self.response_body(),
             )
 
     async def test_get_request_error(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="GET", url=self.http_url_error, headers=self.request_headers()
         ) as resp:
@@ -105,6 +107,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             )
 
     async def test_post_request_error(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="POST", url=self.http_url_error, headers=self.request_headers()
         ) as resp:
@@ -130,15 +133,13 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             spans = self.memory_exporter.get_finished_spans()
             self.assertEqual(len(spans), 1)
             request_span = spans[0]
-            self.assert_captured_headers(
-                request_span,
-                SemanticAttributes.HTTP_REQUEST_HEADER,
-                self.request_headers(),
+            self.assertNotIn(
+                f"{SemanticAttributes.HTTP_REQUEST_HEADER}.test-header-key",
+                request_span.attributes,
             )
-            self.assert_captured_headers(
-                request_span,
-                SemanticAttributes.HTTP_RESPONSE_HEADER,
-                self.response_headers(),
+            self.assertNotIn(
+                f"{SemanticAttributes.HTTP_RESPONSE_HEADER}.server-response-header",
+                request_span.attributes,
             )
 
     async def test_response_content_unharmed(self):

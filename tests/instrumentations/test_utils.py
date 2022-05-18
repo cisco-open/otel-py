@@ -49,7 +49,7 @@ class TestUtils(unittest.TestCase):
 
     def test_set_payload_none(self):
         utils.Utils.set_payload(self._test_span, "test.payload", None)
-        self.assertEqual(self._test_span.attributes.get("test.payload"), "")
+        self.assertNotIn("test.payload", self._test_span.attributes)
 
     def test_set_payload_bytes_sanity(self):
         payload = bytes("test bytes", "utf8")

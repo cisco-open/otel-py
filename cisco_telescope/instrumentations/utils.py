@@ -23,9 +23,10 @@ class Utils(object):
                     consts.ENCODING_UTF8, consts.DECODE_PAYLOAD_IN_CASE_OF_ERROR
                 )
             else:
-                payload_decoded = payload or ""
+                payload_decoded = payload
 
-        span.set_attribute(attr, payload_decoded[:max_payload_size])
+            if payload_decoded:
+                span.set_attribute(attr, payload_decoded[:max_payload_size])
 
     @staticmethod
     def lowercase_items(items: dict):
@@ -39,4 +40,5 @@ class Utils(object):
             for attribute_key, attribute_value in Utils.lowercase_items(
                 attributes
             ).items():
-                span.set_attribute(f"{prefix}.{attribute_key}", attribute_value)
+                if attribute_value:
+                    span.set_attribute(f"{prefix}.{attribute_key}", attribute_value)

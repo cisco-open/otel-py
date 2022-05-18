@@ -158,15 +158,15 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
             f"{SemanticAttributes.HTTP_REQUEST_HEADER}.test-header-key",
             request_span.attributes,
         )
-        self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
-            empty_payloads,
+        self.assertNotIn(
+            SemanticAttributes.HTTP_REQUEST_BODY,
+            request_span.attributes,
         )
         self.assertNotIn(
             f"{SemanticAttributes.HTTP_RESPONSE_HEADER}.server-response-header",
             request_span.attributes,
         )
-        self.assertEqual(
-            request_span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
-            empty_payloads,
+        self.assertNotIn(
+            SemanticAttributes.HTTP_RESPONSE_BODY,
+            request_span.attributes,
         )

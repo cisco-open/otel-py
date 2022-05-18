@@ -109,9 +109,9 @@ class TestGrpcInstrumentationWrapper(TestBase):
             empty_payloads = ""
 
             client_span: ReadableSpan = spans[1]
-            self.assertEqual(
-                client_span.attributes[SemanticAttributes.RPC_REQUEST_BODY],
-                empty_payloads,
+            self.assertNotIn(
+                SemanticAttributes.RPC_REQUEST_BODY,
+                client_span.attributes,
             )
 
             self.assertNotIn(  # payloads_enabled=False

@@ -80,6 +80,7 @@ class TestOptions(unittest.TestCase):
         {
             Consts.CISCO_TOKEN_ENV: utils.TEST_TOKEN,
             Consts.CISCO_DEBUG_ENV: "True",
+            Consts.CISCO_PAYLOADS_ENABLED_ENV: "True",
         },
     )
     def test_parameters_from_env(self):
@@ -87,6 +88,7 @@ class TestOptions(unittest.TestCase):
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.debug, True)
+        self.assertEqual(opt.payloads_enabled, True)
 
     def test_token_is_missing(self):
         with self.assertRaisesRegex(

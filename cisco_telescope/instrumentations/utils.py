@@ -13,7 +13,7 @@ class Utils(object):
         attr: str,
         payload: AnyStr,
     ):
-        payload_decoded = ""
+        payload_decoded = payload or ""
         payloads_enabled = Configuration().payloads_enabled
         max_payload_size = Configuration().max_payload_size
 
@@ -22,10 +22,8 @@ class Utils(object):
                 payload_decoded = payload.decode(
                     consts.ENCODING_UTF8, consts.DECODE_PAYLOAD_IN_CASE_OF_ERROR
                 )
-            else:
-                payload_decoded = payload or ""
 
-        span.set_attribute(attr, payload_decoded[:max_payload_size])
+            span.set_attribute(attr, payload_decoded[:max_payload_size])
 
     @staticmethod
     def lowercase_items(items: dict):

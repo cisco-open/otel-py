@@ -98,17 +98,22 @@ class Options:
 
         self.service_name = service_name
 
-        if payloads_enabled is not None:
+        if payloads_enabled is None:
+            self.payloads_enabled = strtobool(
+                os.environ.get(
+                    Consts.CISCO_PAYLOADS_ENABLED_ENV,
+                    str(Consts.DEFAULT_PAYLOADS_ENABLED),
+                )
+            )
+        else:
             self.payloads_enabled = payloads_enabled
-        else:
-            self.payloads_enabled = Consts.DEFAULT_PAYLOADS_ENABLED
 
-        if debug is not None:
-            self.debug = debug
-        else:
+        if debug is None:
             self.debug = strtobool(
                 os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
             )
+        else:
+            self.debug = debug
 
         self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
 

@@ -52,6 +52,11 @@ tracing.init(
   service_name="<your-service-name>",
   cisco_token="<your-cisco-token>"
 )
+
+# The import of your instrumented library should go here, after the tracing.init()
+# For example:
+import requests
+requests.get("https://www.google.com")
 ```
 
 ### OpenTelemetry Collector Configuration

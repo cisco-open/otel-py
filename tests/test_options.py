@@ -119,7 +119,9 @@ class TestExporterOptions(unittest.TestCase):
 
     def test_rm_collector_url_warning_on_console_exporter(self):
         with self.assertLogs() as captured:
-            captured.records.append("dummy record to ensure no real record was generated")
+            captured.records.append(
+                "dummy record to ensure no real record was generated"
+            )
             _ = options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
             self.assertEqual(len(captured.records), 1)
             self.assertEqual(

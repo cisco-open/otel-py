@@ -14,7 +14,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import os
-from distutils.util import strtobool
 import unittest
 from unittest import mock
 
@@ -116,6 +115,16 @@ class TestExporterOptions(unittest.TestCase):
             self.assertEqual(
                 captured.records[0].getMessage(),
                 "Warning: Custom exporter is set without collector endpoint",
+            )
+
+    def test_rm_collector_url_warning_on_console_exporter(self):
+        with self.assertLogs() as captured:
+            captured.records.append("dummy record to ensure no real record was generated")
+            _ = options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
+            self.assertEqual(len(captured.records), 1)
+            self.assertEqual(
+                captured.records[0],
+                "dummy record to ensure no real record was generated",
             )
 
     @mock.patch.dict(

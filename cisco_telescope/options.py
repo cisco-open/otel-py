@@ -25,10 +25,10 @@ from cisco_opentelemetry_specifications import Consts
 
 class ExporterOptions:
     def __init__(
-        self,
-        exporter_type: str = None,
-        collector_endpoint: str = None,
-        custom_headers: Optional[Dict[str, str]] = None,
+            self,
+            exporter_type: str = None,
+            collector_endpoint: str = None,
+            custom_headers: Optional[Dict[str, str]] = None,
     ):
         self.exporter_type = exporter_type or os.environ.get(
             Consts.OTEL_EXPORTER_TYPE_ENV
@@ -39,7 +39,7 @@ class ExporterOptions:
         if self.exporter_type not in project_consts.ALLOWED_EXPORTER_TYPES:
             raise ValueError("Unsupported exported type")
 
-        if not self.collector_endpoint:
+        if self.exporter_type is not project_consts.CONSOLE_EXPORTER_TYPE and not self.collector_endpoint:
             logging.warning(
                 "Warning: Custom exporter is set without collector endpoint"
             )
@@ -48,10 +48,10 @@ class ExporterOptions:
 
     def __eq__(self, other):
         return (
-            type(other) == ExporterOptions
-            and self.exporter_type == other.exporter_type
-            and self.collector_endpoint == other.collector_endpoint
-            and self.custom_headers == other.custom_headers
+                type(other) == ExporterOptions
+                and self.exporter_type == other.exporter_type
+                and self.collector_endpoint == other.collector_endpoint
+                and self.custom_headers == other.custom_headers
         )
 
     def __str__(self):
@@ -65,13 +65,13 @@ class ExporterOptions:
 
 class Options:
     def __init__(
-        self,
-        service_name: str = None,
-        cisco_token: str = None,
-        debug: bool = None,
-        payloads_enabled: bool = None,
-        max_payload_size: int = None,
-        exporters: [ExporterOptions] = None,
+            self,
+            service_name: str = None,
+            cisco_token: str = None,
+            debug: bool = None,
+            payloads_enabled: bool = None,
+            max_payload_size: int = None,
+            exporters: [ExporterOptions] = None,
     ):
 
         self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)

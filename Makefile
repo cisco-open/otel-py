@@ -50,4 +50,4 @@ bootstrap:
 	opentelemetry-bootstrap --action=install
 
 .PHONY: all
-all: install-poetry deps bootstrap build export-dependencies
+all: install-poetry deps bootstrap export-dependencies build

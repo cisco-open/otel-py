@@ -25,6 +25,11 @@ applications for the collection of distributed tracing and performance metrics i
 
 ## Installation
 
+### Requirements
+
+`Python >=3.8, <4.0`
+`pip3 >= 22.0` 
+
 ### Install packages
 > To install Cisco OpenTelemetry Distribution simply run:
 

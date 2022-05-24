@@ -35,6 +35,10 @@ proto:
 pretty:
 	black .
 
+.PHONY: export-dependencies
+export-dependencies:
+	poetry export -f requirements.txt > requirements.txt
+
 .PHONY: prep
 prep:
 	make pretty
@@ -46,4 +50,4 @@ bootstrap:
 	opentelemetry-bootstrap --action=install
 
 .PHONY: all
-all: install-poetry deps bootstrap build
+all: install-poetry deps bootstrap export-dependencies build

@@ -39,7 +39,10 @@ class ExporterOptions:
         if self.exporter_type not in project_consts.ALLOWED_EXPORTER_TYPES:
             raise ValueError("Unsupported exported type")
 
-        if not self.collector_endpoint:
+        if (
+            self.exporter_type is not project_consts.CONSOLE_EXPORTER_TYPE
+            and not self.collector_endpoint
+        ):
             logging.warning(
                 "Warning: Custom exporter is set without collector endpoint"
             )

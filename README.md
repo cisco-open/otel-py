@@ -37,13 +37,6 @@ applications for the collection of distributed tracing and performance metrics i
 pip install cisco-telescope
 ```
 
-### Install dependencies
-To install all supported instrumentation frameworks run:
-```sh
-telescope-bootstrap
-```
-
-
 ### Library initialization
 Cisco OpenTelemetry Distribution is activated and instruments the supported libraries once the `ciscoTracing.init()` has returned.
 

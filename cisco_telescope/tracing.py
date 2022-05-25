@@ -22,6 +22,7 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
 from pkg_resources import iter_entry_points
 from importlib_metadata import version, PackageNotFoundError
+from cisco_opentelemetry_specifications import Consts
 
 from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
 from . import consts
@@ -78,7 +79,7 @@ def _set_debug(opt: options.Options):
 
 
 def _set_tracing(opt: options.Options) -> TracerProvider:
-    trace_attributes = {"cisco.sdk.version": _get_sdk_version()}
+    trace_attributes = {Consts.CISCO_SDK_VERSION: _get_sdk_version()}
     if opt.service_name:
         trace_attributes.update({ResourceAttributes.SERVICE_NAME: opt.service_name})
 

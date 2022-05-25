@@ -25,19 +25,17 @@ applications for the collection of distributed tracing and performance metrics i
 
 ## Installation
 
+### Requirements
+
+`Python >=3.8, <4.0`
+`pip3 >= 22.0` 
+
 ### Install packages
 > To install Cisco OpenTelemetry Distribution simply run:
 
 ```sh
 pip install cisco-telescope
 ```
-
-### Install dependencies
-To install all supported instrumentation frameworks run:
-```sh
-telescope-bootstrap
-```
-
 
 ### Library initialization
 Cisco OpenTelemetry Distribution is activated and instruments the supported libraries once the `ciscoTracing.init()` has returned.

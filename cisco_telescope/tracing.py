@@ -107,4 +107,4 @@ def _auto_instrument(opt: options.Options):
                 entry_point.load()().instrument()
             logging.debug(f"Instrumented {entry_point.name}")
         except Exception:
-            logging.exception(f"Instrumenting of {entry_point.name} failed")
+            logging.debug(f"Could not instrument {entry_point.name}")

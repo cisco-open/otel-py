@@ -20,7 +20,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
-from pkg_resources import iter_entry_points
+from pkg_resources import iter_entry_points, require, resource_exists
 from importlib_metadata import version, PackageNotFoundError
 
 from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
@@ -106,4 +106,4 @@ def _auto_instrument(opt: options.Options):
                 entry_point.load()().instrument()
             logging.debug(f"Instrumented {entry_point.name}")
         except Exception:
-            logging.exception(f"Instrumenting of {entry_point.name} failed")
+            logging.debug(f"Could not instrument {entry_point.name}")

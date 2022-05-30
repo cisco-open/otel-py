@@ -37,6 +37,14 @@ applications for the collection of distributed tracing and performance metrics i
 pip install cisco-telescope
 ```
 
+### Full instrumentation support
+
+To install the required dependencies for all relevant supported instrumentation frameworks run:
+```sh
+telescope-bootstrap
+```
+
+
 ### Library initialization
 Cisco OpenTelemetry Distribution is activated and instruments the supported libraries once the `ciscoTracing.init()` has returned.
 
@@ -139,6 +147,7 @@ Cisco OpenTelemetry Python Distribution provides out-of-the-box instrumentation 
 | aiohttp  | Fully supported             |
 | grpc     | Client/Server Unary support |
 
+
 ## Configuration
 
 Advanced options can be configured as a parameter to the init() method:
@@ -154,7 +163,7 @@ Exporter options
 
 | Parameter          | Env                     | Type                | Default                                               | Description                                                                                                                                |
 |--------------------| ----------------------- | ------------------- | ----------------------------------------------------- |--------------------------------------------------------------------------------------------------------------------------------------------|
-| collector_endpoint | OTEL_COLLECTOR_ENDPOINT | string              | `https://production.cisco-udp.com/trace-collector` | The address of the trace collector to send traces to                                                                                       |
+| collector_endpoint | OTEL_COLLECTOR_ENDPOINT | string              | `https://production.cisco-udp.com/trace-collector`    | The address of the trace collector to send traces to                                                                                       |
 | type               | OTEL_EXPORTER_TYPE      | string              | `otlp-http`                                           | The exporter type to use (Currently only `otlp-http` is supported). Multiple exporter option available via init function see example below |
 
 ## Getting Help

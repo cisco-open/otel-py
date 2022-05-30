@@ -26,6 +26,7 @@ DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
 
 REQUESTS_KEY = "requests"
 AIOHTTP_KEY = "aiohttp"
+AIOHTTP_CLIENT_KEY = "aiohttp-client"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"
 

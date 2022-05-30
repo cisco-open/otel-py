@@ -15,6 +15,7 @@ class InstrumentationWrapper:
         return {
             consts.REQUESTS_KEY: RequestsInstrumentorWrapper,
             consts.AIOHTTP_KEY: AiohttpInstrumentorWrapper,
+            consts.AIOHTTP_CLIENT_KEY: AiohttpInstrumentorWrapper,
             consts.GRPC_SERVER_KEY: GrpcInstrumentorServerWrapper,
             consts.GRPC_CLIENT_KEY: GrpcInstrumentorClientWrapper,
         }

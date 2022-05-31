@@ -15,6 +15,7 @@ limitations under the License.
 """
 
 import os
+import json
 import logging
 from distutils.util import strtobool
 from typing import Optional, Dict
@@ -75,6 +76,7 @@ class Options:
         payloads_enabled: bool = None,
         max_payload_size: int = None,
         exporters: [ExporterOptions] = None,
+        instrumentations_whitelist: [str] = None,
     ):
 
         self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
@@ -120,6 +122,14 @@ class Options:
 
         self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
 
+        if instrumentations_whitelist is None:
+            self.instrumentations_whitelist = read_list_from_env("instrumentations_whitelist")
+        else:
+            self.instrumentations_whitelist = instrumentations_whitelist
+
+    def should_instrument(self, instrument_name):
+        return self.instrumentations_whitelist is None or instrument_name in self.instrumentations_whitelist
+
     def __str__(self):
         return (
             f"\n{self.__class__.__name__}(\n\t"
@@ -129,6 +139,18 @@ class Options:
             f"exporters: \n\t{', '.join(map(str, self.exporters))})"
         )
 
+#move to utils
+def read_list_from_env(env_key):
+    value = os.environ.get(env_key)
+    try:
+        if value:
+            return json.loads(value,)
+    except json.JSONDecodeError:
+        logging.warning(
+            f"Warning:Can not parse {{env_key}} to json"
+        )
+
+    return None
 
 def verify_token(token: str) -> str:
     auth_prefix = "Bearer "

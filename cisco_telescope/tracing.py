@@ -42,6 +42,10 @@ def init(
     opt = options.Options(
         service_name, cisco_token, debug, payloads_enabled, max_payload_size, exporters
     )
+    return create_trace_provider(opt)
+
+
+def create_trace_provider(opt: options.Options) -> TracerProvider:
     configuration.Configuration().set_options(opt)
     _set_debug(opt)
 
@@ -98,6 +102,9 @@ def _set_tracing(opt: options.Options) -> TracerProvider:
 def _auto_instrument(opt: options.Options):
     for entry_point in iter_entry_points("opentelemetry_instrumentor"):
         try:
+            if not opt.should_instrument(entry_point.name):
+                continue
+
             wrapped_instrument = InstrumentationWrapper.get_instrumentation_wrapper(
                 opt, entry_point.name
             )

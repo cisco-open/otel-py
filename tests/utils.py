@@ -18,6 +18,7 @@ from os import environ
 
 LOCAL_COLLECTOR = "localhost:4317"
 TEST_TOKEN = "test_token"
+TEST_SERVICE_NAME = "test_service_name"
 COLLECTOR_ENDPOINT = "www.mock-random-endpoint.com"
 CUSTOM_HEADER_KEY = "custom-header-key"
 CUSTOM_HEADER_VALUE = "custom-header-value"

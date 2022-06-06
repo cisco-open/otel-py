@@ -35,6 +35,7 @@ pretty:
 .PHONY: prep
 prep:
 	make pretty
+	make deps
 	make test
 
 .PHONY: bootstrap

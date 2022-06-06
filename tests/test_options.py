@@ -29,7 +29,7 @@ class TestOptions(unittest.TestCase):
 
     def test_defaults(self):
         opt = options.Options(cisco_token=utils.TEST_TOKEN)
-        self.assertEqual(opt.service_name, None)
+        self.assertEqual(opt.service_name, Consts.DEFAULT_SERVICE_NAME)
         self.assertEqual(opt.debug, Consts.DEFAULT_CISCO_DEBUG)
         self.assertEqual(opt.max_payload_size, Consts.DEFAULT_MAX_PAYLOAD_SIZE)
         self.assertEqual(opt.payloads_enabled, Consts.DEFAULT_PAYLOADS_ENABLED)
@@ -77,6 +77,7 @@ class TestOptions(unittest.TestCase):
     @mock.patch.dict(
         os.environ,
         {
+            Consts.SERVICE_NAME_KEY: utils.TEST_SERVICE_NAME,
             Consts.CISCO_TOKEN_ENV: utils.TEST_TOKEN,
             Consts.CISCO_DEBUG_ENV: "True",
             Consts.CISCO_PAYLOADS_ENABLED_ENV: "True",
@@ -84,7 +85,7 @@ class TestOptions(unittest.TestCase):
     )
     def test_parameters_from_env(self):
         opt = options.Options()
-
+        self.assertEqual(opt.service_name, utils.TEST_SERVICE_NAME)
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.debug, True)
         self.assertEqual(opt.payloads_enabled, True)

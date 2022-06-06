@@ -77,48 +77,43 @@ class Options:
         exporters: [ExporterOptions] = None,
     ):
 
+        # Set options parameters
+        self.service_name = service_name or os.environ.get(
+            Consts.SERVICE_NAME_KEY, Consts.DEFAULT_SERVICE_NAME
+        )
         self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
+
+        self.debug = debug or strtobool(
+            os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
+        )
+
+        self.payloads_enabled = payloads_enabled or strtobool(
+            os.environ.get(
+                Consts.CISCO_PAYLOADS_ENABLED_ENV,
+                str(Consts.DEFAULT_PAYLOADS_ENABLED),
+            )
+        )
+
+        self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
+
+        self.exporters = exporters or [
+            ExporterOptions(
+                exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
+                collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+                custom_headers={
+                    Consts.TOKEN_HEADER_KEY: verify_token(self.cisco_token)
+                },
+            )
+        ]
+
+        # Validate parameters
         if self.cisco_token is None and exporters is None:
             raise ValueError("Can not initiate cisco-telescope without token")
 
-        if self.cisco_token is not None and exporters is not None:
+        if self.cisco_token and exporters is not None:
             logging.warning(
                 "Warning: Custom exporters do not use cisco token, it can be passed as a custom header"
             )
-
-        if not exporters or len(exporters) == 0:  # Set default exporter
-            self.exporters = [
-                ExporterOptions(
-                    exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
-                    collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
-                    custom_headers={
-                        Consts.TOKEN_HEADER_KEY: verify_token(self.cisco_token)
-                    },
-                )
-            ]
-        else:
-            self.exporters = exporters
-
-        self.service_name = service_name
-
-        if payloads_enabled is None:
-            self.payloads_enabled = strtobool(
-                os.environ.get(
-                    Consts.CISCO_PAYLOADS_ENABLED_ENV,
-                    str(Consts.DEFAULT_PAYLOADS_ENABLED),
-                )
-            )
-        else:
-            self.payloads_enabled = payloads_enabled
-
-        if debug is None:
-            self.debug = strtobool(
-                os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
-            )
-        else:
-            self.debug = debug
-
-        self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
 
     def __str__(self):
         return (
@@ -132,7 +127,9 @@ class Options:
 
 def verify_token(token: str) -> str:
     auth_prefix = "Bearer "
-    if token.startswith(auth_prefix):
+    if not token:
+        return ""
+    if token and token.startswith(auth_prefix):
         return token
     else:
         return auth_prefix + token

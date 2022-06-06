@@ -83,14 +83,22 @@ class Options:
         )
         self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
 
-        self.debug = debug or strtobool(
-            os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
+        self.debug = (
+            debug
+            if debug is not None
+            else strtobool(
+                os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
+            )
         )
 
-        self.payloads_enabled = payloads_enabled or strtobool(
-            os.environ.get(
-                Consts.CISCO_PAYLOADS_ENABLED_ENV,
-                str(Consts.DEFAULT_PAYLOADS_ENABLED),
+        self.payloads_enabled = (
+            payloads_enabled
+            if payloads_enabled is not None
+            else strtobool(
+                os.environ.get(
+                    Consts.CISCO_PAYLOADS_ENABLED_ENV,
+                    str(Consts.DEFAULT_PAYLOADS_ENABLED),
+                )
             )
         )
 

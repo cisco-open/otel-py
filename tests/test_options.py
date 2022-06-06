@@ -90,6 +90,28 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(opt.debug, True)
         self.assertEqual(opt.payloads_enabled, True)
 
+    @mock.patch.dict(
+        os.environ,
+        {
+            Consts.SERVICE_NAME_KEY: "env-var-service-name",
+            Consts.CISCO_TOKEN_ENV: "env-var-token",
+            Consts.CISCO_DEBUG_ENV: "True",
+            Consts.CISCO_PAYLOADS_ENABLED_ENV: "True",
+        },
+    )
+    def test_parameter_hierarchy(self):
+        opt = options.Options(
+            service_name=utils.TEST_SERVICE_NAME,
+            cisco_token=utils.TEST_TOKEN,
+            debug=False,
+            payloads_enabled=False,
+        )
+
+        self.assertEqual(opt.service_name, utils.TEST_SERVICE_NAME)
+        self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
+        self.assertEqual(opt.debug, False)
+        self.assertEqual(opt.payloads_enabled, False)
+
     def test_token_is_missing(self):
         with self.assertRaisesRegex(
             ValueError, "Can not initiate cisco-telescope without token"

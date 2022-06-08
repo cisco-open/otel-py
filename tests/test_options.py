@@ -153,3 +153,5 @@ class TestExporterOptions(unittest.TestCase):
     def test_token_is_missing(self):
         with self.assertRaisesRegex(ValueError, "Unsupported exported type"):
             _ = options.ExporterOptions(exporter_type="unsupported-type")
+
+# Add test that instrumentsions env not in json format, and expect warning

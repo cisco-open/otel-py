@@ -170,3 +170,16 @@ class TestRequestsWrapper(BaseHttpTest, TestBase):
             SemanticAttributes.HTTP_RESPONSE_BODY,
             request_span.attributes,
         )
+
+    def test_get_request_white_list_instrumentation(self):
+
+        _ = requests.get(self.http_url_sanity, headers=self.request_headers())
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        request_span = spans[0]
+
+        self.assert_captured_headers(
+            request_span,
+            SemanticAttributes.HTTP_REQUEST_HEADER,
+            self.request_headers(),
+        )

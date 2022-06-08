@@ -21,6 +21,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk import environment_variables
 from opentelemetry.semconv.resource import ResourceAttributes
 from cisco_telescope import tracing
+from cisco_telescope import options
 from cisco_opentelemetry_specifications import Consts
 from pkg_resources import get_distribution
 
@@ -64,3 +65,22 @@ class TestTracing(unittest.TestCase):
             resource.attributes[ResourceAttributes.SERVICE_NAME],
             configuration_service_name,
         )
+
+    def test_configuration_open_tel_variables(self):
+        configuration_service_name = "service_name"
+        default_service_name = "default_service_name"
+        os.environ[environment_variables.OTEL_SERVICE_NAME] = default_service_name
+
+        opt = options.Options(
+            cisco_token="sometoken",
+            service_name=configuration_service_name,
+            debug=True,
+            instrumentations=["aiopg", "flask", "sqlite3"],
+        )
+
+        trace_provider = tracing.create_trace_provider(opt)
+
+        resource = trace_provider.resource
+
+
+

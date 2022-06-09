@@ -37,10 +37,11 @@ def init(
     debug: bool = None,
     payloads_enabled: bool = None,
     max_payload_size: int = None,
+    disable_instrumentations: bool = None,
     exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
     opt = options.Options(
-        service_name, cisco_token, debug, payloads_enabled, max_payload_size, exporters
+        service_name, cisco_token, debug, payloads_enabled, max_payload_size, disable_instrumentations, exporters
     )
     configuration.Configuration().set_options(opt)
     _set_debug(opt)
@@ -48,7 +49,9 @@ def init(
     logging.debug(f"Configuration: {opt}")
 
     provider = _set_tracing(opt)
-    _auto_instrument(opt)
+
+    if not opt.disable_instrumentations:
+        _auto_instrument(opt)
 
     return provider
 
@@ -57,7 +60,7 @@ def _get_sdk_version():
     try:
         sdk_version = version(__package__)
     except PackageNotFoundError:
-        sdk_version = consts.DEFAULT_SDK_VERSION
+        sdk_version = Consts.CISCO_SDK_VERSION_NOT_SUPPORTED
 
     return sdk_version
 

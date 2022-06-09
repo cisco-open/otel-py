@@ -33,6 +33,9 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(opt.debug, Consts.DEFAULT_CISCO_DEBUG)
         self.assertEqual(opt.max_payload_size, Consts.DEFAULT_MAX_PAYLOAD_SIZE)
         self.assertEqual(opt.payloads_enabled, Consts.DEFAULT_PAYLOADS_ENABLED)
+        self.assertEqual(
+            opt.disable_instrumentations, Consts.DEFAULT_DISABLE_INSTRUMENTATIONS
+        )
 
     def test_parameters(self):
         exporters = [
@@ -49,12 +52,14 @@ class TestOptions(unittest.TestCase):
             exporters=exporters,
             debug=True,
             payloads_enabled=True,
+            disable_instrumentations=True,
         )
 
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.service_name, "Service")
         self.assertEqual(opt.debug, True)
         self.assertEqual(opt.payloads_enabled, True)
+        self.assertEqual(opt.disable_instrumentations, True)
         self.assertEqual(opt.max_payload_size, 1023)
         self.assertEqual(opt.exporters, exporters)
 
@@ -81,6 +86,7 @@ class TestOptions(unittest.TestCase):
             Consts.CISCO_TOKEN_ENV: utils.TEST_TOKEN,
             Consts.CISCO_DEBUG_ENV: "True",
             Consts.CISCO_PAYLOADS_ENABLED_ENV: "True",
+            Consts.CISCO_DISABLE_INSTRUMENTATIONS_ENV: "True",
         },
     )
     def test_parameters_from_env(self):
@@ -89,6 +95,7 @@ class TestOptions(unittest.TestCase):
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.debug, True)
         self.assertEqual(opt.payloads_enabled, True)
+        self.assertEqual(opt.disable_instrumentations, True)
 
     @mock.patch.dict(
         os.environ,
@@ -97,6 +104,7 @@ class TestOptions(unittest.TestCase):
             Consts.CISCO_TOKEN_ENV: "env-var-token",
             Consts.CISCO_DEBUG_ENV: "True",
             Consts.CISCO_PAYLOADS_ENABLED_ENV: "True",
+            Consts.CISCO_DISABLE_INSTRUMENTATIONS_ENV: "True",
         },
     )
     def test_parameter_hierarchy(self):
@@ -105,12 +113,14 @@ class TestOptions(unittest.TestCase):
             cisco_token=utils.TEST_TOKEN,
             debug=False,
             payloads_enabled=False,
+            disable_instrumentations=False,
         )
 
         self.assertEqual(opt.service_name, utils.TEST_SERVICE_NAME)
         self.assertEqual(opt.cisco_token, utils.TEST_TOKEN)
         self.assertEqual(opt.debug, False)
         self.assertEqual(opt.payloads_enabled, False)
+        self.assertEqual(opt.disable_instrumentations, False)
 
     def test_token_is_missing(self):
         with self.assertRaisesRegex(

@@ -74,6 +74,7 @@ class Options:
         debug: bool = None,
         payloads_enabled: bool = None,
         max_payload_size: int = None,
+        disable_instrumentations: bool = None,
         exporters: [ExporterOptions] = None,
     ):
 
@@ -98,6 +99,17 @@ class Options:
                 os.environ.get(
                     Consts.CISCO_PAYLOADS_ENABLED_ENV,
                     str(Consts.DEFAULT_PAYLOADS_ENABLED),
+                )
+            )
+        )
+
+        self.disable_instrumentations = (
+            disable_instrumentations
+            if disable_instrumentations is not None
+            else strtobool(
+                os.environ.get(
+                    Consts.CISCO_DISABLE_INSTRUMENTATIONS_ENV,
+                    str(Consts.DEFAULT_DISABLE_INSTRUMENTATIONS),
                 )
             )
         )

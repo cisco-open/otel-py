@@ -150,7 +150,7 @@ class Options:
             )
 
         if self.disable_instrumentations:
-            logging.info("Info: All instrumentations are disabled")
+            logging.warning("Warning: All Telescope instrumentations are disabled")
 
     def _set_debug(self):
         """

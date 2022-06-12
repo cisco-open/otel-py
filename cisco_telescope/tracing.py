@@ -51,9 +51,10 @@ def init(
     configuration.Configuration().set_options(opt)
     logging.debug(f"Configuration: {opt}")
 
-    provider = _set_tracing(opt)
-
-    if not opt.disable_instrumentations:
+    if opt.disable_instrumentations:
+        provider = None
+    else:
+        provider = _set_tracing(opt)
         _auto_instrument(opt)
 
     return provider

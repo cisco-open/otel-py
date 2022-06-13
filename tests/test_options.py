@@ -186,3 +186,15 @@ class TestExporterOptions(unittest.TestCase):
     def test_token_is_missing(self):
         with self.assertRaisesRegex(ValueError, "Unsupported exported type"):
             _ = options.ExporterOptions(exporter_type="unsupported-type")
+
+    def test_disable_instrumentations_warning(self):
+        with self.assertLogs() as captured:
+            _ = options.Options(
+                cisco_token=utils.TEST_TOKEN,
+                disable_instrumentations=True,
+            )
+
+            messages = [record.getMessage() for record in captured.records]
+            self.assertIn(
+                "Warning: All Telescope instrumentations are disabled", messages
+            )

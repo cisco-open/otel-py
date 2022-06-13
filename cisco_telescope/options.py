@@ -154,7 +154,7 @@ class Options:
 
     def _set_debug(self):
         """
-        Sets the global logging to debug and add console exporter to options
+        Log spans to console, set global logging to debug level
         """
         if self.debug:
             logging.basicConfig(

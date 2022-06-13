@@ -25,7 +25,6 @@ from importlib_metadata import version, PackageNotFoundError
 from cisco_opentelemetry_specifications import Consts
 
 from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
-from . import consts
 from . import options
 from . import exporter_factory
 from . import configuration
@@ -37,18 +36,26 @@ def init(
     debug: bool = None,
     payloads_enabled: bool = None,
     max_payload_size: int = None,
+    disable_instrumentations: bool = None,
     exporters: [options.ExporterOptions] = None,
 ) -> TracerProvider:
     opt = options.Options(
-        service_name, cisco_token, debug, payloads_enabled, max_payload_size, exporters
+        service_name,
+        cisco_token,
+        debug,
+        payloads_enabled,
+        max_payload_size,
+        disable_instrumentations,
+        exporters,
     )
     configuration.Configuration().set_options(opt)
-    _set_debug(opt)
-
     logging.debug(f"Configuration: {opt}")
 
-    provider = _set_tracing(opt)
-    _auto_instrument(opt)
+    if opt.disable_instrumentations:
+        provider = None
+    else:
+        provider = _set_tracing(opt)
+        _auto_instrument(opt)
 
     return provider
 
@@ -57,25 +64,9 @@ def _get_sdk_version():
     try:
         sdk_version = version(__package__)
     except PackageNotFoundError:
-        sdk_version = consts.DEFAULT_SDK_VERSION
+        sdk_version = Consts.CISCO_SDK_VERSION_NOT_SUPPORTED
 
     return sdk_version
-
-
-def _set_debug(opt: options.Options):
-    """
-    Sets the global logging to debug and add console exporter to options
-    """
-    if opt.debug:
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format="%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)s - %(message)s",
-            datefmt="%Y-%m-%d %H:%M:%S",
-        )
-
-        opt.exporters.append(
-            options.ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
-        )
 
 
 def _set_tracing(opt: options.Options) -> TracerProvider:

@@ -16,6 +16,8 @@ limitations under the License.
 
 import os
 import logging
+
+from . import consts
 from distutils.util import strtobool
 from typing import Optional, Dict
 
@@ -74,6 +76,7 @@ class Options:
         debug: bool = None,
         payloads_enabled: bool = None,
         max_payload_size: int = None,
+        disable_instrumentations: bool = None,
         exporters: [ExporterOptions] = None,
     ):
 
@@ -102,6 +105,17 @@ class Options:
             )
         )
 
+        self.disable_instrumentations = (
+            disable_instrumentations
+            if disable_instrumentations is not None
+            else strtobool(
+                os.environ.get(
+                    Consts.CISCO_DISABLE_INSTRUMENTATIONS_ENV,
+                    str(Consts.DEFAULT_DISABLE_INSTRUMENTATIONS),
+                )
+            )
+        )
+
         self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
 
         self.exporters = exporters or [
@@ -114,14 +128,8 @@ class Options:
             )
         ]
 
-        # Validate parameters
-        if self.cisco_token is None and exporters is None:
-            raise ValueError("Can not initiate cisco-telescope without token")
-
-        if self.cisco_token and exporters is not None:
-            logging.warning(
-                "Warning: Custom exporters do not use cisco token, it can be passed as a custom header"
-            )
+        self._set_debug()
+        self._validate_params(exporters)
 
     def __str__(self):
         return (
@@ -131,6 +139,33 @@ class Options:
             f"max_payload_size: {self.max_payload_size},\n\t"
             f"exporters: \n\t{', '.join(map(str, self.exporters))})"
         )
+
+    def _validate_params(self, exporters):
+        if self.cisco_token is None and exporters is None:
+            raise ValueError("Can not initiate cisco-telescope without token")
+
+        if self.cisco_token and exporters is not None:
+            logging.warning(
+                "Warning: Custom exporters do not use cisco token, it can be passed as a custom header"
+            )
+
+        if self.disable_instrumentations:
+            logging.warning("Warning: All Telescope instrumentations are disabled")
+
+    def _set_debug(self):
+        """
+        Log spans to console, set global logging to debug level
+        """
+        if self.debug:
+            logging.basicConfig(
+                level=logging.DEBUG,
+                format="%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)s - %(message)s",
+                datefmt="%Y-%m-%d %H:%M:%S",
+            )
+
+            self.exporters.append(
+                ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
+            )
 
 
 def verify_token(token: str) -> str:

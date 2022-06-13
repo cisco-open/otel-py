@@ -19,8 +19,6 @@ HTTP_EXPORTER_TYPE = "otlp-http"
 GRPC_EXPORTER_TYPE = "otlp-grpc"
 CONSOLE_EXPORTER_TYPE = "console"
 
-DEFAULT_SDK_VERSION = "version not supported"
-
 ENCODING_UTF8 = "UTF8"
 DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
 

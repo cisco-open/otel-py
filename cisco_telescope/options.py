@@ -163,6 +163,10 @@ class Options:
                 datefmt="%Y-%m-%d %H:%M:%S",
             )
 
+            logging.debug(
+                "Log level is set to debug, spans will sent and printed to console"
+            )
+
             self.exporters.append(
                 ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
             )

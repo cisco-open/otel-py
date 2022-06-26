@@ -1,0 +1,5 @@
+#!/Users/nemos/Dev/SDK/cisco-open/otel-py/venv/bin/python
+from cisco_telescope.cmd.trace import run
+
+if __name__ == '__main__':
+    run()

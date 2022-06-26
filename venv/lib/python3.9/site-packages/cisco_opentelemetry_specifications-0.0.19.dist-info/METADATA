@@ -1,0 +1,24 @@
+Metadata-Version: 2.1
+Name: cisco-opentelemetry-specifications
+Version: 0.0.19
+Summary: Cisco Opentelemetry specifications
+Home-page: https://github.com/epsagon/cisco-otel-distribution-specifications
+License: Apache-2.0
+Author: Cisco Epsagon Team
+Author-email: support@epsagon.com
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Project-URL: Repository, https://github.com/epsagon/cisco-otel-distribution-specifications
+Description-Content-Type: text/markdown
+
+# This is an auto generated repo for all Cisco OpenTelemetry specifications
+

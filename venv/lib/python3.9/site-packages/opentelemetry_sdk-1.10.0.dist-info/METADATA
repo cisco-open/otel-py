@@ -1,0 +1,51 @@
+Metadata-Version: 2.1
+Name: opentelemetry-sdk
+Version: 1.10.0
+Summary: OpenTelemetry Python SDK
+Home-page: https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-sdk
+Author: OpenTelemetry Authors
+Author-email: cncf-opentelemetry-contributors@lists.cncf.io
+License: Apache-2.0
+Platform: any
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Typing :: Typed
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: opentelemetry-api (==1.10.0)
+Requires-Dist: opentelemetry-semantic-conventions (==0.29b0)
+Requires-Dist: setuptools (>=16.0)
+Requires-Dist: typing-extensions (>=3.7.4)
+Requires-Dist: dataclasses (==0.8) ; python_version < "3.7"
+Provides-Extra: test
+
+OpenTelemetry Python SDK
+============================================================================
+
+|pypi|
+
+.. |pypi| image:: https://badge.fury.io/py/opentelemetry-sdk.svg
+   :target: https://pypi.org/project/opentelemetry-sdk/
+
+Installation
+------------
+
+::
+
+    pip install opentelemetry-sdk
+
+References
+----------
+
+* `OpenTelemetry Project <https://opentelemetry.io/>`_
+
+

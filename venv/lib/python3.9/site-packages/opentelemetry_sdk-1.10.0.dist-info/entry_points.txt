@@ -1,0 +1,23 @@
+[opentelemetry_environment_variables]
+sdk = opentelemetry.sdk.environment_variables
+
+[opentelemetry_id_generator]
+random = opentelemetry.sdk.trace.id_generator:RandomIdGenerator
+
+[opentelemetry_log_emitter_provider]
+sdk_log_emitter_provider = opentelemetry.sdk._logs:LogEmitterProvider
+
+[opentelemetry_logs_exporter]
+console = opentelemetry.sdk._logs.export:ConsoleLogExporter
+
+[opentelemetry_meter_provider]
+sdk_meter_provider = opentelemetry.sdk._metrics:MeterProvider
+
+[opentelemetry_metrics_exporter]
+console = opentelemetry.sdk._metrics.export:ConsoleMetricExporter
+
+[opentelemetry_tracer_provider]
+sdk_tracer_provider = opentelemetry.sdk.trace:TracerProvider
+
+[opentelemetry_traces_exporter]
+console = opentelemetry.sdk.trace.export:ConsoleSpanExporter

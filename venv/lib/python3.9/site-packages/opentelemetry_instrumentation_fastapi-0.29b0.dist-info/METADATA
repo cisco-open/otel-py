@@ -1,0 +1,61 @@
+Metadata-Version: 2.1
+Name: opentelemetry-instrumentation-fastapi
+Version: 0.29b0
+Summary: OpenTelemetry FastAPI Instrumentation
+Home-page: https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/instrumentation/opentelemetry-instrumentation-fastapi
+Author: OpenTelemetry Authors
+Author-email: cncf-opentelemetry-contributors@lists.cncf.io
+License: Apache-2.0
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+Requires-Dist: opentelemetry-api (~=1.3)
+Requires-Dist: opentelemetry-semantic-conventions (==0.29b0)
+Requires-Dist: opentelemetry-instrumentation (==0.29b0)
+Requires-Dist: opentelemetry-instrumentation-asgi (==0.29b0)
+Requires-Dist: opentelemetry-util-http (==0.29b0)
+Provides-Extra: instruments
+Requires-Dist: fastapi (~=0.58) ; extra == 'instruments'
+Provides-Extra: test
+Requires-Dist: opentelemetry-test-utils (==0.29b0) ; extra == 'test'
+Requires-Dist: requests (~=2.23.0) ; extra == 'test'
+Requires-Dist: fastapi (~=0.58) ; extra == 'test'
+
+OpenTelemetry FastAPI Instrumentation
+=======================================
+
+|pypi|
+
+.. |pypi| image:: https://badge.fury.io/py/opentelemetry-instrumentation-fastapi.svg
+   :target: https://pypi.org/project/opentelemetry-instrumentation-fastapi/
+
+
+This library provides automatic and manual instrumentation of FastAPI web frameworks,
+instrumenting http requests served by applications utilizing the framework.
+
+auto-instrumentation using the opentelemetry-instrumentation package is also supported.
+
+Installation
+------------
+
+::
+
+    pip install opentelemetry-instrumentation-fastapi
+
+References
+----------
+
+* `OpenTelemetry Project <https://opentelemetry.io/>`_
+* `OpenTelemetry Python Examples <https://github.com/open-telemetry/opentelemetry-python/tree/main/docs/examples>`_
+
+

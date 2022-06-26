@@ -1,18 +1,15 @@
 DEV_VENV?=""
 VERSION?=""
 
-install-poetry:
 .PHONY: install-poetry
 install-poetry:
-	pip install poetry==1.1.12
+	pip install poetry
 
-.PHONY: install-tools
-install-tools: install-poetry
-
-deps:
 .PHONY: deps
 deps:
 	poetry install
+	poetry run toml-sort pyproject.toml --all --in-place
+	pip list --format=freeze > requirements.txt
 
 .PHONY: clean
 clean:
@@ -24,7 +21,7 @@ build:
 
 .PHONY: test
 test:
-	poetry run pytest --forked --cov=cisco_telescope
+	poetry run pytest --forked --cov=cisco_telescope --cov-report=xml
 
 .PHONY: proto
 proto:
@@ -38,12 +35,13 @@ pretty:
 .PHONY: prep
 prep:
 	make pretty
+	make deps
 	make test
 
 .PHONY: bootstrap
 bootstrap:
-	pip install opentelemetry-distro==0.29b0
+	make deps
 	opentelemetry-bootstrap --action=install
 
 .PHONY: all
-all: install-poetry deps bootstrap build
+all: install-poetry deps build

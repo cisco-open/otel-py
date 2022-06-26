@@ -1,0 +1,52 @@
+Metadata-Version: 2.1
+Name: opentelemetry-distro
+Version: 0.29b0
+Summary: OpenTelemetry Python Distro
+Home-page: https://github.com/open-telemetry/opentelemetry-python/tree/main/opentelemetry-distro
+Author: OpenTelemetry Authors
+Author-email: cncf-opentelemetry-contributors@lists.cncf.io
+License: Apache-2.0
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Typing :: Typed
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+Requires-Dist: opentelemetry-api (~=1.3)
+Requires-Dist: opentelemetry-instrumentation (==0.29b0)
+Requires-Dist: opentelemetry-sdk (==1.10.0)
+Provides-Extra: otlp
+Requires-Dist: opentelemetry-exporter-otlp (==1.10.0) ; extra == 'otlp'
+Provides-Extra: test
+
+OpenTelemetry Distro
+====================
+
+|pypi|
+
+.. |pypi| image:: https://badge.fury.io/py/opentelemetry-distro.svg
+   :target: https://pypi.org/project/opentelemetry-distro/
+
+Installation
+------------
+
+::
+
+    pip install opentelemetry-distro
+
+
+This package provides entrypoints to configure OpenTelemetry.
+
+References
+----------
+
+* `OpenTelemetry Project <https://opentelemetry.io/>`_
+* `Example using opentelemetry-distro <https://opentelemetry-python.readthedocs.io/en/latest/examples/distro/README.html>`_
+
+

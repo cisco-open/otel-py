@@ -9,13 +9,18 @@ jobs:
   release:
     runs-on: ubuntu-latest
     concurrency: release
+
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Python Semantic Release
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Semantic Release
         uses: relekang/python-semantic-release@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

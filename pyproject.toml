@@ -1,51 +1,70 @@
-[tool.poetry]
-name = "cisco-telescope"
-version = "0.1.0"
-description = "a Cisco Distribution for OpenTelemetry"
-license = "Apache-2.0"
-authors = ["Cisco Epsagon Team <support@epsagon.com>"]
-readme = "README.md"
-repository = "https://github.com/epsagon/otel-py"
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
 
-[tool.semantic_release]
-version_variable = "pyproject.toml:version"
-branch = "main"
-upload_to_PyPI = true
-upload_to_release = true
-build_command = "pip install poetry && poetry build"
+[tool]
+
+[tool.poetry]
+authors = ["Cisco Epsagon Team <support@epsagon.com>"]
+description = "Cisco Distribution for OpenTelemetry"
+license = "Apache-2.0"
+name = "cisco-telescope"
+readme = "README.md"
+repository = "https://github.com/cisco-open/otel-py"
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+Flask = "^2.1.2"
+aiohttp = "^3.8.1"
+argparse = "^1.4.0"
+certifi = "^2022.5.18.1"
+cisco-opentelemetry-specifications = "^0.0.19"
+fastapi = "^0.78.0"
+grpcio = "^1.46.3"
+httpcore = "^0.15.0"
+importlib-metadata = "^4.11.4"
+itsdangerous = "^2.1.2"
+opentelemetry-distro = "^0.29b0"
+opentelemetry-exporter-otlp = "^1.10.0"
+opentelemetry-exporter-otlp-proto-grpc = "^1.10.0"
+opentelemetry-exporter-otlp-proto-http = "^1.10.0"
+opentelemetry-instrumentation-aiohttp-client = "^0.29b0"
+opentelemetry-instrumentation-fastapi = "^0.29b0"
+opentelemetry-instrumentation-flask = "^0.29b0"
+opentelemetry-instrumentation-grpc = "^0.29b0"
+opentelemetry-instrumentation-requests = "^0.29b0"
+opentelemetry-sdk = "^1.10.0"
+opentelemetry-test-utils = "^0.29b0"
+opentelemetry-util-http = "^0.29b0"
+protobuf = "^3.19.0"
+python = "^3.8"
+requests = "^2.27.1"
+urllib3 = "^1.26.9"
+wheel = "^0.37.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.3.0"
+ipdb = "^0.13.9"
+opentelemetry-test-utils = "^0.29b0"
+pytest-cov = "^3.0.0"
+pytest-xdist = "^2.5.0"
+python-semantic-release = "^7.28.0"
+toml-sort = "^0.20.0"
+virtualenv = "^20.14.0"
 
 [tool.poetry.scripts]
 telescope = 'cisco_telescope.cmd.trace:run'
 telescope-bootstrap = 'cisco_telescope.cmd.bootstrap:run'
 
-[tool.poetry.dependencies]
-python = "^3.8"
-argparse = "^1.4.0"
-requests = "^2.27.1"
-aiohttp = "^3.8.1"
-opentelemetry-instrumentation-grpc = "0.29b0"
-cisco-opentelemetry-specifications = "^0.0.12"
-opentelemetry-semantic-conventions = "^0.29b0"
-opentelemetry-sdk = "^1.10.0"
-opentelemetry-instrumentation = "^0.29b0"
-opentelemetry-exporter-otlp = "^1.10.0"
-opentelemetry-instrumentation-requests = "^0.29b0"
-opentelemetry-instrumentation-aiohttp-client = "^0.29b0"
-
-[tool.poetry.dev-dependencies]
-ipdb = "^0.13.9"
-pytest-xdist = "^2.5.0"
-opentelemetry-test-utils = "0.29b0"
-pytest-cov = "^3.0.0"
-virtualenv = "^20.14.0"
-black = "^22.3.0"
-python-semantic-release = "^7.28.1"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
-
 [tool.pytest.ini_options]
 testpaths = [
     "tests",
 ]
+
+[tool.semantic_release]
+branch = "main"
+build_command = "pip install poetry && poetry build"
+upload_to_release = true
+upload_to_repository = true
+version_source = "tag"
+version_variable = "pyproject.toml:version"

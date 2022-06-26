@@ -1,0 +1,4 @@
+[console_scripts]
+telescope=cisco_telescope.cmd.trace:run
+telescope-bootstrap=cisco_telescope.cmd.bootstrap:run
+

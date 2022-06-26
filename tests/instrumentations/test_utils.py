@@ -5,6 +5,7 @@ from opentelemetry import trace as trace_api
 
 from cisco_telescope import consts
 from cisco_telescope.instrumentations import utils
+from cisco_telescope.configuration import Configuration
 
 
 class TestUtils(unittest.TestCase):
@@ -43,18 +44,16 @@ class TestUtils(unittest.TestCase):
             )
 
     def test_set_payload_sanity(self):
-        utils.Utils.set_payload(
-            self._test_span, "test.payload", "test payload", False, 1000
-        )
+        utils.Utils.set_payload(self._test_span, "test.payload", "test payload")
         self.assertEqual(self._test_span.attributes.get("test.payload"), "test payload")
 
     def test_set_payload_none(self):
-        utils.Utils.set_payload(self._test_span, "test.payload", None, False, 1000)
+        utils.Utils.set_payload(self._test_span, "test.payload", None)
         self.assertEqual(self._test_span.attributes.get("test.payload"), "")
 
     def test_set_payload_bytes_sanity(self):
         payload = bytes("test bytes", "utf8")
-        utils.Utils.set_payload(self._test_span, "test.payload", payload, False, 1000)
+        utils.Utils.set_payload(self._test_span, "test.payload", payload)
 
         self.assertIsInstance(self._test_span.attributes.get("test.payload"), str)
         self.assertEqual(
@@ -63,7 +62,7 @@ class TestUtils(unittest.TestCase):
 
     def test_set_payload_bytes_non_utf8(self):
         payload = bytes("🙀", "utf16")
-        utils.Utils.set_payload(self._test_span, "test.payload", payload, False, 1000)
+        utils.Utils.set_payload(self._test_span, "test.payload", payload)
 
         self.assertIsInstance(self._test_span.attributes.get("test.payload"), str)
         self.assertEqual(
@@ -75,7 +74,8 @@ class TestUtils(unittest.TestCase):
 
     def test_set_payload_above_max_payload_size(self):
         payload = bytes("test bytes", "utf8")
-        utils.Utils.set_payload(self._test_span, "test.payload", payload, False, 5)
+        Configuration().max_payload_size = 5
+        utils.Utils.set_payload(self._test_span, "test.payload", payload)
 
         self.assertIsInstance(self._test_span.attributes.get("test.payload"), str)
         self.assertEqual(

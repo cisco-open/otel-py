@@ -21,6 +21,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk import environment_variables
 from opentelemetry.semconv.resource import ResourceAttributes
 from cisco_telescope import tracing
+from cisco_opentelemetry_specifications import Consts
 from pkg_resources import get_distribution
 
 
@@ -36,8 +37,7 @@ class TestTracing(unittest.TestCase):
         self.assertEqual(
             resource.attributes[ResourceAttributes.SERVICE_NAME], "service"
         )
-        sdk_version = get_distribution("cisco_telescope").version
-        self.assertEqual(resource.attributes["cisco.sdk.version"], sdk_version)
+        self.assertIn(Consts.CISCO_SDK_VERSION, resource.attributes)
 
     def test_default_open_tel_variables(self):
         default_service_name = "default_service_name"

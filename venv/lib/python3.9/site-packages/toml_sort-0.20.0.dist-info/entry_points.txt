@@ -1,0 +1,3 @@
+[console_scripts]
+toml-sort=toml_sort.cli:cli
+

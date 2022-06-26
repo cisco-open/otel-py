@@ -1,0 +1,58 @@
+Metadata-Version: 2.1
+Name: opentelemetry-instrumentation-asgi
+Version: 0.29b0
+Summary: ASGI instrumentation for OpenTelemetry
+Home-page: https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/instrumentation/opentelemetry-instrumentation-asgi
+Author: OpenTelemetry Authors
+Author-email: cncf-opentelemetry-contributors@lists.cncf.io
+License: Apache-2.0
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+Requires-Dist: opentelemetry-api (~=1.3)
+Requires-Dist: opentelemetry-semantic-conventions (==0.29b0)
+Requires-Dist: opentelemetry-instrumentation (==0.29b0)
+Requires-Dist: opentelemetry-util-http (==0.29b0)
+Requires-Dist: asgiref (~=3.0)
+Provides-Extra: instruments
+Requires-Dist: asgiref (~=3.0) ; extra == 'instruments'
+Provides-Extra: test
+Requires-Dist: opentelemetry-test-utils (==0.29b0) ; extra == 'test'
+Requires-Dist: asgiref (~=3.0) ; extra == 'test'
+
+OpenTelemetry ASGI Instrumentation
+==================================
+
+|pypi|
+
+.. |pypi| image:: https://badge.fury.io/py/opentelemetry-instrumentation-asgi.svg
+   :target: https://pypi.org/project/opentelemetry-instrumentation-asgi/
+
+
+This library provides a ASGI middleware that can be used on any ASGI framework
+(such as Django, Starlette, FastAPI or Quart) to track requests timing through OpenTelemetry.
+
+Installation
+------------
+
+::
+
+    pip install opentelemetry-instrumentation-asgi
+
+References
+----------
+
+* `OpenTelemetry Project <https://opentelemetry.io/>`_
+* `OpenTelemetry Python Examples <https://github.com/open-telemetry/opentelemetry-python/tree/main/docs/examples>`_
+
+

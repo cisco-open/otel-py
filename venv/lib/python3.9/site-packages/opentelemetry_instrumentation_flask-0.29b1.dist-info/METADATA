@@ -1,0 +1,101 @@
+Metadata-Version: 2.1
+Name: opentelemetry-instrumentation-flask
+Version: 0.29b1
+Summary: Flask instrumentation for OpenTelemetry
+Home-page: https://github.com/open-telemetry/opentelemetry-python-contrib/tree/main/instrumentation/opentelemetry-instrumentation-flask
+Author: OpenTelemetry Authors
+Author-email: cncf-opentelemetry-contributors@lists.cncf.io
+License: Apache-2.0
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Requires-Python: >=3.6
+Description-Content-Type: text/x-rst
+Requires-Dist: opentelemetry-util-http (==0.29b0)
+Requires-Dist: opentelemetry-instrumentation (==0.29b0)
+Requires-Dist: opentelemetry-instrumentation-wsgi (==0.29b0)
+Requires-Dist: opentelemetry-api (~=1.3)
+Requires-Dist: opentelemetry-semantic-conventions (==0.29b0)
+Provides-Extra: instruments
+Requires-Dist: flask (<3.0,>=1.0) ; extra == 'instruments'
+Provides-Extra: test
+Requires-Dist: opentelemetry-test-utils (==0.29b0) ; extra == 'test'
+Requires-Dist: markupsafe (==2.0.1) ; extra == 'test'
+Requires-Dist: flask (<3.0,>=1.0) ; extra == 'test'
+
+OpenTelemetry Flask Tracing
+===========================
+
+|pypi|
+
+.. |pypi| image:: https://badge.fury.io/py/opentelemetry-instrumentation-flask.svg
+   :target: https://pypi.org/project/opentelemetry-instrumentation-flask/
+
+This library builds on the OpenTelemetry WSGI middleware to track web requests
+in Flask applications.
+
+Installation
+------------
+
+::
+
+    pip install opentelemetry-instrumentation-flask
+
+Configuration
+-------------
+
+Exclude lists
+*************
+To exclude certain URLs from being tracked, set the environment variable ``OTEL_PYTHON_FLASK_EXCLUDED_URLS``
+(or ``OTEL_PYTHON_EXCLUDED_URLS`` as fallback) with comma delimited regexes representing which URLs to exclude.
+
+For example,
+
+::
+
+    export OTEL_PYTHON_FLASK_EXCLUDED_URLS="client/.*/info,healthcheck"
+
+will exclude requests such as ``https://site/client/123/info`` and ``https://site/xyz/healthcheck``.
+
+You can also pass the comma delimited regexes to the ``instrument_app`` method directly:
+
+.. code-block:: python
+
+    FlaskInstrumentor().instrument_app(app, excluded_urls="client/.*/info,healthcheck")
+
+Request/Response hooks
+**********************
+
+Utilize request/reponse hooks to execute custom logic to be performed before/after performing a request. Environ is an instance of WSGIEnvironment (flask.request.environ).
+Response_headers is a list of key-value (tuples) representing the response headers returned from the response.
+
+.. code-block:: python
+
+    def request_hook(span: Span, environ: WSGIEnvironment):
+        if span and span.is_recording():
+            span.set_attribute("custom_user_attribute_from_request_hook", "some-value")
+
+    def response_hook(span: Span, status: str, response_headers: List):
+        if span and span.is_recording():
+            span.set_attribute("custom_user_attribute_from_response_hook", "some-value")
+
+    FlaskInstrumentation().instrument(request_hook=request_hook, response_hook=response_hook)
+
+Flask Request object reference: https://flask.palletsprojects.com/en/2.0.x/api/#flask.Request
+
+References
+----------
+
+* `OpenTelemetry Flask Instrumentation <https://opentelemetry-python-contrib.readthedocs.io/en/stable/instrumentation/flask/flask.html>`_
+* `OpenTelemetry Project <https://opentelemetry.io/>`_
+* `OpenTelemetry Python Examples <https://github.com/open-telemetry/opentelemetry-python/tree/main/docs/examples>`_
+
+

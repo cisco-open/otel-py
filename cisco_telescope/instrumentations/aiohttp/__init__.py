@@ -35,12 +35,14 @@ from opentelemetry.trace import (
     get_tracer,
     Status,
 )
+from opentelemetry import trace
 
 from cisco_telescope.instrumentations import BaseInstrumentorWrapper
 from ..utils import Utils
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 
+from ..utils import Utils
 from ... import consts
 
 
@@ -70,7 +72,7 @@ def response_hook(
         )
 
 
-class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor, BaseInstrumentorWrapper):
+class AiohttpInstrumentorWrapper(AioHttpClientInstrumentor):
     def __init__(self):
         super().__init__()
 

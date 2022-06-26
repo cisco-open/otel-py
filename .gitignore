@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 .coverage
+coverage.xml
 .pytest_cache
 dist/
 coverage/

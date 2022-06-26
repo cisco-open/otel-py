@@ -15,34 +15,56 @@ limitations under the License.
 """
 
 import os
-from distutils.util import strtobool
+import logging
+
 from . import consts
+from distutils.util import strtobool
+from typing import Optional, Dict
+
+from . import consts as project_consts
 from cisco_opentelemetry_specifications import Consts
 
 
 class ExporterOptions:
-    def __init__(self, exporter_type: str = None, collector_endpoint: str = None):
+    def __init__(
+        self,
+        exporter_type: str = None,
+        collector_endpoint: str = None,
+        custom_headers: Optional[Dict[str, str]] = None,
+    ):
         self.exporter_type = exporter_type or os.environ.get(
-            Consts.OTEL_EXPORTER_TYPE_ENV, Consts.DEFAULT_EXPORTER_TYPE
+            Consts.OTEL_EXPORTER_TYPE_ENV
         )
-        if self.exporter_type not in consts.ALLOWED_EXPORTER_TYPES:
-            raise ValueError("Unsupported exported type")
         self.collector_endpoint = collector_endpoint or os.environ.get(
-            Consts.OTEL_COLLECTOR_ENDPOINT, Consts.DEFAULT_COLLECTOR_ENDPOINT
+            Consts.OTEL_COLLECTOR_ENDPOINT
         )
+        if self.exporter_type not in project_consts.ALLOWED_EXPORTER_TYPES:
+            raise ValueError("Unsupported exported type")
+
+        if (
+            self.exporter_type is not project_consts.CONSOLE_EXPORTER_TYPE
+            and not self.collector_endpoint
+        ):
+            logging.warning(
+                "Warning: Custom exporter is set without collector endpoint"
+            )
+
+        self.custom_headers = custom_headers
 
     def __eq__(self, other):
         return (
             type(other) == ExporterOptions
             and self.exporter_type == other.exporter_type
             and self.collector_endpoint == other.collector_endpoint
+            and self.custom_headers == other.custom_headers
         )
 
     def __str__(self):
         return (
             f"{self.__class__.__name__}(\n\t"
             f"exporter_type: {self.exporter_type},\n\t"
-            f"endpoint: {self.collector_endpoint})"
+            f"endpoint: {self.collector_endpoint},\n\t"
+            f"custom_headers: {self.custom_headers})"
         )
 
 
@@ -51,29 +73,63 @@ class Options:
         self,
         service_name: str = None,
         cisco_token: str = None,
-        debug: bool = False,
-        payloads_enabled: bool = True,
+        debug: bool = None,
+        payloads_enabled: bool = None,
         max_payload_size: int = None,
+        disable_instrumentations: bool = None,
         exporters: [ExporterOptions] = None,
     ):
 
-        if not exporters or len(exporters) == 0:
-            self.exporters = [ExporterOptions()]
-        else:
-            self.exporters = exporters
+        # Set options parameters
+        self.service_name = service_name or os.environ.get(
+            Consts.SERVICE_NAME_KEY, Consts.DEFAULT_SERVICE_NAME
+        )
+        self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
 
-        self.service_name = service_name
-        self.payloads_enabled = payloads_enabled
-
-        self.debug = debug or strtobool(
-            os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
+        self.debug = (
+            debug
+            if debug is not None
+            else strtobool(
+                os.environ.get(Consts.CISCO_DEBUG_ENV, str(Consts.DEFAULT_CISCO_DEBUG))
+            )
         )
 
-        self.cisco_token = cisco_token or os.environ.get(Consts.CISCO_TOKEN_ENV)
+        self.payloads_enabled = (
+            payloads_enabled
+            if payloads_enabled is not None
+            else strtobool(
+                os.environ.get(
+                    Consts.CISCO_PAYLOADS_ENABLED_ENV,
+                    str(Consts.DEFAULT_PAYLOADS_ENABLED),
+                )
+            )
+        )
+
+        self.disable_instrumentations = (
+            disable_instrumentations
+            if disable_instrumentations is not None
+            else strtobool(
+                os.environ.get(
+                    Consts.CISCO_DISABLE_INSTRUMENTATIONS_ENV,
+                    str(Consts.DEFAULT_DISABLE_INSTRUMENTATIONS),
+                )
+            )
+        )
+
         self.max_payload_size = max_payload_size or Consts.DEFAULT_MAX_PAYLOAD_SIZE
 
-        if self.cisco_token is None:
-            raise ValueError("Can not initiate cisco-otel launcher without token")
+        self.exporters = exporters or [
+            ExporterOptions(
+                exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
+                collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
+                custom_headers={
+                    Consts.TOKEN_HEADER_KEY: verify_token(self.cisco_token)
+                },
+            )
+        ]
+
+        self._set_debug()
+        self._validate_params(exporters)
 
     def __str__(self):
         return (
@@ -83,3 +139,44 @@ class Options:
             f"max_payload_size: {self.max_payload_size},\n\t"
             f"exporters: \n\t{', '.join(map(str, self.exporters))})"
         )
+
+    def _validate_params(self, exporters):
+        if self.cisco_token is None and exporters is None:
+            raise ValueError("Can not initiate cisco-telescope without token")
+
+        if self.cisco_token and exporters is not None:
+            logging.warning(
+                "Warning: Custom exporters do not use cisco token, it can be passed as a custom header"
+            )
+
+        if self.disable_instrumentations:
+            logging.warning("Warning: All Telescope instrumentations are disabled")
+
+    def _set_debug(self):
+        """
+        Log spans to console, set global logging to debug level
+        """
+        if self.debug:
+            logging.basicConfig(
+                level=logging.DEBUG,
+                format="%(asctime)s %(levelname)-8s %(filename)s:%(funcName)s:%(lineno)s - %(message)s",
+                datefmt="%Y-%m-%d %H:%M:%S",
+            )
+
+            logging.debug(
+                "Log level is set to debug, spans will sent and printed to console"
+            )
+
+            self.exporters.append(
+                ExporterOptions(exporter_type=consts.CONSOLE_EXPORTER_TYPE)
+            )
+
+
+def verify_token(token: str) -> str:
+    auth_prefix = "Bearer "
+    if not token:
+        return ""
+    if token and token.startswith(auth_prefix):
+        return token
+    else:
+        return auth_prefix + token

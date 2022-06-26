@@ -14,14 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import asyncio
-import unittest
-
 import aiohttp
 
 from opentelemetry.test.test_base import TestBase
 from unittest import IsolatedAsyncioTestCase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
+from cisco_telescope.configuration import Configuration
 from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
 from .base_http_test import BaseHttpTest
 
@@ -29,14 +28,15 @@ from .base_http_test import BaseHttpTest
 class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     def setUp(self) -> None:
         super().setUp()
-        self._instrumentWrapper = AiohttpInstrumentorWrapper()
-        self._instrumentWrapper.instrument()
+        AiohttpInstrumentorWrapper().instrument()
 
     def tearDown(self) -> None:
         super().tearDown()
-        self._instrumentWrapper.uninstrument()
+        AiohttpInstrumentorWrapper().uninstrument()
+        Configuration().reset_to_default()
 
     async def test_get_request_sanity(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="GET",
             url=self.http_url_sanity,
@@ -59,6 +59,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             )
 
     async def test_post_request_sanity(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="POST",
             url=self.http_url_sanity,
@@ -70,6 +71,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             spans = self.memory_exporter.get_finished_spans()
             self.assertEqual(len(spans), 1)
             span = spans[0]
+
             self.assert_captured_headers(
                 span,
                 SemanticAttributes.HTTP_REQUEST_HEADER,
@@ -90,6 +92,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             )
 
     async def test_get_request_error(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="GET", url=self.http_url_error, headers=self.request_headers()
         ) as resp:
@@ -104,6 +107,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             )
 
     async def test_post_request_error(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="POST", url=self.http_url_error, headers=self.request_headers()
         ) as resp:
@@ -118,7 +122,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             )
 
     async def test_post_request_payloads_not_enabled(self):
-        self._instrumentWrapper.payloads_enabled = False
+        Configuration().payloads_enabled = False
         async with aiohttp.client.request(
             method="POST",
             url=self.http_url_sanity,
@@ -129,18 +133,17 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             spans = self.memory_exporter.get_finished_spans()
             self.assertEqual(len(spans), 1)
             request_span = spans[0]
-            self.assert_captured_headers(
-                request_span,
-                SemanticAttributes.HTTP_REQUEST_HEADER,
-                self.request_headers(),
+            self.assertNotIn(
+                f"{SemanticAttributes.HTTP_REQUEST_HEADER}.test-header-key",
+                request_span.attributes,
             )
-            self.assert_captured_headers(
-                request_span,
-                SemanticAttributes.HTTP_RESPONSE_HEADER,
-                self.response_headers(),
+            self.assertNotIn(
+                f"{SemanticAttributes.HTTP_RESPONSE_HEADER}.server-response-header",
+                request_span.attributes,
             )
 
     async def test_response_content_unharmed(self):
+        Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="POST",
             url=self.http_url_sanity,

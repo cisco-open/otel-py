@@ -20,6 +20,7 @@ from opentelemetry.test.test_base import TestBase
 from unittest import IsolatedAsyncioTestCase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
+from opentelemetry.semconv.trace import SpanAttributes
 from cisco_telescope.configuration import Configuration
 from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
 from .base_http_test import BaseHttpTest
@@ -43,20 +44,7 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             headers=self.request_headers(),
             chunked=True,
         ) as resp:
-            self.assertEqual(resp.status, 200)
-            spans = self.memory_exporter.get_finished_spans()
-            self.assertEqual(len(spans), 1)
-            span = spans[0]
-            self.assert_captured_headers(
-                span,
-                SemanticAttributes.HTTP_REQUEST_HEADER,
-                self.request_headers(),
-            )
-            self.assert_captured_headers(
-                span,
-                SemanticAttributes.HTTP_RESPONSE_HEADER,
-                self.response_headers(),
-            )
+            self._assert_basic_attributes_and_headers(resp)
 
     async def test_post_request_sanity(self):
         Configuration().payloads_enabled = True
@@ -67,21 +55,10 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             chunked=True,
             data=self.request_body(),
         ) as resp:
-            self.assertEqual(resp.status, 200)
+            self._assert_basic_attributes_and_headers(resp)
             spans = self.memory_exporter.get_finished_spans()
-            self.assertEqual(len(spans), 1)
             span = spans[0]
 
-            self.assert_captured_headers(
-                span,
-                SemanticAttributes.HTTP_REQUEST_HEADER,
-                self.request_headers(),
-            )
-            self.assert_captured_headers(
-                span,
-                SemanticAttributes.HTTP_RESPONSE_HEADER,
-                self.response_headers(),
-            )
             self.assertEqual(
                 span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
                 self.request_body(),
@@ -167,3 +144,21 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
                 span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
                 resp_body,
             )
+
+    def _assert_basic_attributes_and_headers(self, resp):
+        self.assertEqual(resp.status, 200)
+        spans = self.memory_exporter.get_finished_spans()
+        self.assertEqual(len(spans), 1)
+        span = spans[0]
+        self.assertEqual(span.attributes[SpanAttributes.HTTP_METHOD], resp.method)
+        self.assertEqual(span.attributes[SpanAttributes.HTTP_URL], str(resp.url))
+        self.assert_captured_headers(
+            span,
+            SemanticAttributes.HTTP_REQUEST_HEADER,
+            self.request_headers(),
+        )
+        self.assert_captured_headers(
+            span,
+            SemanticAttributes.HTTP_RESPONSE_HEADER,
+            self.response_headers(),
+        )

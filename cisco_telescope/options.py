@@ -123,7 +123,7 @@ class Options:
                 exporter_type=Consts.DEFAULT_EXPORTER_TYPE,
                 collector_endpoint=Consts.DEFAULT_COLLECTOR_ENDPOINT,
                 custom_headers={
-                    Consts.TOKEN_HEADER_KEY: verify_token(self.cisco_token)
+                    Consts.TOKEN_HEADER_KEY: _verify_token(self.cisco_token)
                 },
             )
         ]
@@ -137,6 +137,7 @@ class Options:
             f"token: {self.cisco_token},\n\t"
             f"service_name:{self.service_name},\n\t"
             f"max_payload_size: {self.max_payload_size},\n\t"
+            f"disable_instrumentations: {self.disable_instrumentations},\n\t"
             f"exporters: \n\t{', '.join(map(str, self.exporters))})"
         )
 
@@ -172,7 +173,7 @@ class Options:
             )
 
 
-def verify_token(token: str) -> str:
+def _verify_token(token: str) -> str:
     auth_prefix = "Bearer "
     if not token:
         return ""

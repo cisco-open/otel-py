@@ -62,6 +62,7 @@ opentelemetry-instrumentation-flask==0.29b1
 opentelemetry-instrumentation-grpc==0.29b0
 opentelemetry-instrumentation-requests==0.29b0
 opentelemetry-instrumentation-wsgi==0.29b0
+opentelemetry-instrumentation-pymongo==0.29b0
 opentelemetry-proto==1.10.0
 opentelemetry-sdk==1.10.0
 opentelemetry-semantic-conventions==0.29b0

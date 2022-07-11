@@ -24,6 +24,7 @@ DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
 
 REQUESTS_KEY = "requests"
 AIOHTTP_KEY = "aiohttp"
+PYMONGO_KEY = "pymongo"
 AIOHTTP_CLIENT_KEY = "aiohttp-client"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"
@@ -36,3 +37,5 @@ ALLOWED_CONTENT_TYPES = [
     "application/graphql",
     "application/x-www-form-urlencoded",
 ]
+MONGODB_ARGUMENTS_KEYS = ["insert", "update"]
+MONGODB_RESPONSE_KEYS = ["insert", "update", "find", "createIndexes"]

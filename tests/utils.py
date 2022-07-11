@@ -16,7 +16,6 @@ limitations under the License.
 
 from os import environ
 
-# SDK test utils
 LOCAL_COLLECTOR = "localhost:4317"
 TEST_TOKEN = "test_token"
 TEST_SERVICE_NAME = "test_service_name"
@@ -28,11 +27,3 @@ CUSTOM_HEADER_VALUE = "custom-header-value"
 def clean_env_vars(env_var_names):
     for key in env_var_names:
         environ.pop(key, None)
-
-
-# Instrumentation test utils
-MONGODB_SUCCESS_RESPONSE = "'ok': 1.0"
-MONGODB_RECORD = {"name": "John", "address": "Highway 37"}
-MONGODB_RECORD_STRIPPED = "'name': 'John', 'address': 'Highway 37"
-MONGODB_HOST = "localhost"
-MONGODB_PORT = 27017

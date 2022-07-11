@@ -1,4 +1,3 @@
-import collections
 from typing import AnyStr
 from opentelemetry.trace.span import Span
 from cisco_opentelemetry_specifications.payload_attributes import PAYLOAD_ATTRIBUTES

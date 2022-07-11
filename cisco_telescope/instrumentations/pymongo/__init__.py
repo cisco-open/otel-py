@@ -22,7 +22,7 @@ from ... import consts
 
 
 def request_hook(span: Span, params: monitoring.CommandStartedEvent) -> None:
-    if not span or not span.is_recording() or not params.command_name:
+    if not span or not span.is_recording():
         return
 
     if params.command_name == "insert":
@@ -38,7 +38,7 @@ def request_hook(span: Span, params: monitoring.CommandStartedEvent) -> None:
 
 
 def response_hook(span: Span, params: monitoring.CommandSucceededEvent) -> None:
-    if not span or not span.is_recording() or not params.command_name:
+    if not span or not span.is_recording():
         return
 
     if params.reply and params.command_name in consts.MONGODB_RESPONSE_KEYS:

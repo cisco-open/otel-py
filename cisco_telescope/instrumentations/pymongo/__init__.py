@@ -13,9 +13,11 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import json
 
 from opentelemetry.instrumentation.pymongo import PymongoInstrumentor
 from pymongo import monitoring
+from bson import objectid
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.trace import Span
 from ... import consts
@@ -26,14 +28,21 @@ def request_hook(span: Span, params: monitoring.CommandStartedEvent) -> None:
         return
 
     if params.command_name == "insert":
+        arguments = json.dumps(
+            params.command.__getitem__("documents"), cls=ObjectIDEncoder, skipkeys=True
+        )
         span.set_attribute(
             SemanticAttributes.DB_MONGODB_ARGUMENTS,
-            str(params.command.get("documents")),
+            arguments,
         )
 
     if params.command_name == "update":
+        arguments = json.dumps(
+            params.command.__getitem__("updates"), cls=ObjectIDEncoder, skipkeys=True
+        )
         span.set_attribute(
-            SemanticAttributes.DB_MONGODB_ARGUMENTS, str(params.command.get("updates"))
+            SemanticAttributes.DB_MONGODB_ARGUMENTS,
+            arguments,
         )
 
 
@@ -42,7 +51,11 @@ def response_hook(span: Span, params: monitoring.CommandSucceededEvent) -> None:
         return
 
     if params.reply and params.command_name in consts.MONGODB_RESPONSE_KEYS:
-        span.set_attribute(SemanticAttributes.DB_MONGODB_RESPONSE, str(params.reply))
+
+        span.set_attribute(
+            SemanticAttributes.DB_MONGODB_RESPONSE,
+            json.dumps(params.reply, cls=ObjectIDEncoder, skipkeys=True),
+        )
 
 
 class PymongoInstrumentorWrapper(PymongoInstrumentor):
@@ -58,3 +71,10 @@ class PymongoInstrumentorWrapper(PymongoInstrumentor):
 
     def _uninstrument(self, **kwargs) -> None:
         super()._uninstrument()
+
+
+class ObjectIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, objectid.ObjectId):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)

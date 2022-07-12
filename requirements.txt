@@ -10,7 +10,6 @@ backcall==0.2.0
 backoff==1.10.0
 black==22.3.0
 bleach==5.0.0
-bson==0.5.10
 certifi==2022.5.18.1
 charset-normalizer==2.0.12
 cisco-opentelemetry-specifications==0.0.21

@@ -12,9 +12,9 @@ from .base_http_test import BaseHttpTest
 
 
 class TestPymongoWrapper(BaseHttpTest, TestBase):
-    SUCCESS_RESPONSE = "\"ok\": 1.0"
+    SUCCESS_RESPONSE = '"ok": 1.0'
     RECORD = {"name": "John", "address": "Highway 37"}
-    RECORD_STRIPPED = "\"name\": \"John\", \"address\": \"Highway 37\""
+    RECORD_STRIPPED = '"name": "John", "address": "Highway 37"'
     DB_HOST = "localhost"
     DB_PORT = 27017
 

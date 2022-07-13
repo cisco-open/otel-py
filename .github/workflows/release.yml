@@ -21,7 +21,7 @@ jobs:
           python-version: 3.x
 
       - name: Semantic Release
-        uses: relekang/python-semantic-release@master
+        uses: relekang/python-semantic-release@v7.29.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository_username: __token__

@@ -23,6 +23,7 @@ jobs:
       - name: Semantic Release
         uses: relekang/python-semantic-release@v7.29.3
         with:
+          debug: *
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository_username: __token__
           repository_password: ${{ secrets.PYPI_TOKEN }}

@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: 3.x
 
+      - name: Install Dep
+        run: pip install packaging
+
       - name: Semantic Release
         uses: relekang/python-semantic-release@v7.29.3
         with:

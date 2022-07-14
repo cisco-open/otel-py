@@ -67,7 +67,7 @@ testpaths = [
 
 [tool.semantic_release]
 branch = "main"
-build_command = "pip install poetry && poetry build"
+build_command = "pip install poetry packaging && poetry build"
 upload_to_release = true
 upload_to_repository = true
 version_source = "tag"

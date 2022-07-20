@@ -21,7 +21,7 @@ build:
 
 .PHONY: test
 test:
-	poetry run pytest --forked --cov=cisco_telescope --cov-report=xml
+	poetry run pytest --forked --cov=telescope_instrumentor --cov-report=xml
 
 .PHONY: proto
 proto:

@@ -203,7 +203,7 @@ unicode_backport = ["unicodedata2"]
 
 [[package]]
 name = "cisco-opentelemetry-specifications"
-version = "0.0.21"
+version = "0.0.22"
 description = "Cisco Opentelemetry specifications"
 category = "main"
 optional = false

@@ -64,3 +64,13 @@ class TestTracing(unittest.TestCase):
             resource.attributes[ResourceAttributes.SERVICE_NAME],
             configuration_service_name,
         )
+
+    def test_telescope_is_running_log(self):
+        with self.assertLogs() as captured:
+            _ = tracing.init(
+                cisco_token="sometoken", service_name="service", debug=True
+            )
+            self.assertEqual(
+                Consts.TELESCOPE_IS_RUNNING_MESSAGE in str(captured.records),
+                True
+            )

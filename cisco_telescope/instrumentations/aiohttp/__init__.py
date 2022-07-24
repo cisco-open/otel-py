@@ -192,7 +192,7 @@ def create_trace_config(
             decoded_chunk = chunk.decode()
         except UnicodeDecodeError as e:
             decoded_chunk = str(chunk)
-            logging.info(f'Could\'nt decode the chunk: {decoded_chunk}, {e}')
+            logging.info(f"Could'nt decode the chunk: {decoded_chunk}, {e}")
 
         return decoded_chunk
 

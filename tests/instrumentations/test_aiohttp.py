@@ -73,11 +73,11 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
         Configuration().payloads_enabled = True
         data_to_send = b'/">Miso\xdfNoContinuation'
         async with aiohttp.client.request(
-                method="POST",
-                url=self.http_url_sanity,
-                headers=self.request_headers(),
-                chunked=True,
-                data=data_to_send,
+            method="POST",
+            url=self.http_url_sanity,
+            headers=self.request_headers(),
+            chunked=True,
+            data=data_to_send,
         ) as resp:
             self._assert_basic_attributes_and_headers(resp)
             spans = self.memory_exporter.get_finished_spans()

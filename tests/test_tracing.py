@@ -71,6 +71,5 @@ class TestTracing(unittest.TestCase):
                 cisco_token="sometoken", service_name="service", debug=True
             )
             self.assertEqual(
-                Consts.TELESCOPE_IS_RUNNING_MESSAGE in str(captured.records),
-                True
+                Consts.TELESCOPE_IS_RUNNING_MESSAGE in str(captured.records), True
             )

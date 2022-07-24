@@ -14,6 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import asyncio
+import logging
 import types
 from collections import deque
 
@@ -176,8 +177,7 @@ def create_trace_config(
         params: aiohttp.TraceRequestChunkSentParams,
     ):
         if getattr(params, "chunk"):
-            decoded_chunk = params.chunk.decode()
-            trace_config_ctx.request_body += decoded_chunk
+            trace_config_ctx.request_body += _decode_chunk(params.chunk)
 
     async def on_responde_chunk_received(
         unused_session: aiohttp.ClientSession,
@@ -185,8 +185,16 @@ def create_trace_config(
         params: aiohttp.TraceRequestChunkSentParams,
     ):
         if getattr(params, "chunk"):
-            decoded_chunk = params.chunk.decode()
-            trace_config_ctx.response_body += decoded_chunk
+            trace_config_ctx.response_body += _decode_chunk(params.chunk)
+
+    def _decode_chunk(chunk):
+        try:
+            decoded_chunk = chunk.decode()
+        except UnicodeDecodeError as e:
+            decoded_chunk = str(chunk)
+            logging.info(f'Could\'nt decode the chunk: {decoded_chunk}, {e}')
+
+        return decoded_chunk
 
     def _trace_config_ctx_factory(**kwargs):
         kwargs.setdefault("trace_request_ctx", {})

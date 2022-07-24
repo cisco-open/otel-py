@@ -13,6 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import base64
 import asyncio
 import aiohttp
 
@@ -62,6 +63,29 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
             self.assertEqual(
                 span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
                 self.request_body(),
+            )
+            self.assertEqual(
+                span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
+                self.response_body(),
+            )
+
+    async def test_post_request_invalid_utf8(self):
+        Configuration().payloads_enabled = True
+        data_to_send = b'/">Miso\xdfNoContinuation'
+        async with aiohttp.client.request(
+                method="POST",
+                url=self.http_url_sanity,
+                headers=self.request_headers(),
+                chunked=True,
+                data=data_to_send,
+        ) as resp:
+            self._assert_basic_attributes_and_headers(resp)
+            spans = self.memory_exporter.get_finished_spans()
+            span = spans[0]
+
+            self.assertEqual(
+                span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
+                str(data_to_send),
             )
             self.assertEqual(
                 span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],

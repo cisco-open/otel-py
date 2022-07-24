@@ -71,26 +71,28 @@ class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
 
     async def test_post_request_invalid_utf8(self):
         Configuration().payloads_enabled = True
-        data_to_send = b'/">Miso\xdfNoContinuation'
-        async with aiohttp.client.request(
-            method="POST",
-            url=self.http_url_sanity,
-            headers=self.request_headers(),
-            chunked=True,
-            data=data_to_send,
-        ) as resp:
-            self._assert_basic_attributes_and_headers(resp)
-            spans = self.memory_exporter.get_finished_spans()
-            span = spans[0]
+        with self.assertLogs() as logs_written:
+            data_to_send = b'/">Miso\xdfNoContinuation'
+            async with aiohttp.client.request(
+                method="POST",
+                url=self.http_url_sanity,
+                headers=self.request_headers(),
+                chunked=True,
+                data=data_to_send,
+            ) as resp:
+                self._assert_basic_attributes_and_headers(resp)
+                spans = self.memory_exporter.get_finished_spans()
+                span = spans[0]
 
-            self.assertEqual(
-                span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
-                str(data_to_send),
-            )
-            self.assertEqual(
-                span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
-                self.response_body(),
-            )
+                self.assertEqual(
+                    span.attributes[SemanticAttributes.HTTP_REQUEST_BODY],
+                    str(data_to_send),
+                )
+                self.assertEqual(
+                    span.attributes[SemanticAttributes.HTTP_RESPONSE_BODY],
+                    self.response_body(),
+                )
+                self.assertEqual(len(logs_written.records), 1)
 
     async def test_get_request_error(self):
         Configuration().payloads_enabled = True

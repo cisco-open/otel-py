@@ -17,7 +17,7 @@ limitations under the License.
 import os
 import logging
 
-from telescope_instrumentor import consts as project_consts
+from telescope_instrumentor.src import consts as project_consts
 from distutils.util import strtobool
 from typing import Optional, Dict
 

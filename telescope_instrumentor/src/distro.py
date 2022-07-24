@@ -18,7 +18,7 @@ from typing import Any, Dict
 
 from opentelemetry.instrumentation.distro import BaseDistro
 
-from telescope_instrumentor import tracing, options
+from telescope_instrumentor.src import options, tracing
 
 
 class _CiscoDistro(BaseDistro):

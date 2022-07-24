@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-from telescope_instrumentor import options, consts
+from telescope_instrumentor.src import options
+from telescope_instrumentor.src import consts
 
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (

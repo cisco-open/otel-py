@@ -24,10 +24,11 @@ from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
     OTLPSpanExporter as OTLPHTTPExporter,
 )
 
-from telescope_instrumentor import consts, options, exporter_factory
+from telescope_instrumentor.src import options
+from telescope_instrumentor.src import exporter_factory, consts
 from cisco_opentelemetry_specifications import Consts
 
-from telescope_instrumentor.tests import utils
+from . import utils
 
 
 class TestExporterFactory(unittest.TestCase):

@@ -22,9 +22,9 @@ from cisco_opentelemetry_specifications import SemanticAttributes
 
 from tests import hello_pb2_grpc, hello_pb2, server
 
-from telescope_instrumentor import GrpcInstrumentorClientWrapper
-from telescope_instrumentor import GrpcInstrumentorServerWrapper
-from telescope_instrumentor import Configuration
+from telescope_instrumentation.grpc import GrpcInstrumentorClientWrapper, GrpcInstrumentorServerWrapper
+
+from telescope_instrumentor.src.configuration import Configuration
 
 
 class TestGrpcInstrumentationWrapper(TestBase):

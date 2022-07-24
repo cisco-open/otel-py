@@ -1,4 +1,4 @@
-from telescope_instrumentor import options
+from telescope_instrumentor.src import options
 
 from cisco_opentelemetry_specifications.consts import Consts
 

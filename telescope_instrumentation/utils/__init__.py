@@ -17,8 +17,8 @@ limitations under the License.
 from typing import AnyStr
 from opentelemetry.trace.span import Span
 from cisco_opentelemetry_specifications.payload_attributes import PAYLOAD_ATTRIBUTES
-from telescope_instrumentor.configuration import Configuration
-from telescope_instrumentor import consts
+from telescope_instrumentor.src.configuration import Configuration
+from telescope_instrumentor.src import consts
 
 
 class Utils(object):

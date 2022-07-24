@@ -3,9 +3,9 @@ import unittest
 from opentelemetry.sdk import trace
 from opentelemetry import trace as trace_api
 
-from telescope_instrumentor import consts
+from telescope_instrumentor.src import consts
 from telescope_instrumentation.utils import Utils
-from telescope_instrumentor.configuration import Configuration
+from telescope_instrumentor.src.configuration import Configuration
 
 
 class TestUtils(unittest.TestCase):

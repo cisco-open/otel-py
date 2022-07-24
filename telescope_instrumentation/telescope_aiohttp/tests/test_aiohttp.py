@@ -21,8 +21,8 @@ from unittest import IsolatedAsyncioTestCase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
-from telescope_instrumentor.configuration import Configuration
-from telescope_instrumentation.aiohttp import AiohttpInstrumentorWrapper
+from telescope_instrumentor.src.configuration import Configuration
+from telescope_instrumentation.telescope_aiohttp import AiohttpInstrumentorWrapper
 from telescope_instrumentation.utils.tests.base_http_test import BaseHttpTest
 
 

@@ -24,8 +24,9 @@ from pkg_resources import iter_entry_points
 from importlib_metadata import version, PackageNotFoundError
 from cisco_opentelemetry_specifications import Consts
 
-from telescope_instrumentor.instrumentation_wrapper import InstrumentationWrapper
-from telescope_instrumentor import configuration, exporter_factory, options
+from telescope_instrumentor.src.instrumentation_wrapper import InstrumentationWrapper
+from telescope_instrumentor.src import options, configuration
+from telescope_instrumentor.src import exporter_factory
 
 
 def init(

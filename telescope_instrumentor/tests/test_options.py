@@ -17,11 +17,11 @@ import os
 import unittest
 from unittest import mock
 
-from telescope_instrumentor.options import Options, ExporterOptions
-from telescope_instrumentor import consts as project_consts
+from telescope_instrumentor.src.options import Options, ExporterOptions
+from telescope_instrumentor.src import consts as project_consts
 from cisco_opentelemetry_specifications import Consts
 
-from telescope_instrumentor.tests import utils
+from . import utils
 
 
 class TestOptions(unittest.TestCase):

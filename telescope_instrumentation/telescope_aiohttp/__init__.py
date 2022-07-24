@@ -44,7 +44,7 @@ from opentelemetry.util.http import remove_url_credentials
 from cisco_opentelemetry_specifications import SemanticAttributes
 
 from telescope_instrumentation.utils import Utils
-from telescope_instrumentor import consts
+from telescope_instrumentor.src import consts
 
 
 def request_hook(span: Span, params: aiohttp.TraceRequestStartParams) -> None:

@@ -1,7 +1,7 @@
 import pymongo
 from pymongo.errors import DuplicateKeyError
 
-from telescope_instrumentor.configuration import Configuration
+from telescope_instrumentor.src.configuration import Configuration
 from telescope_instrumentation.pymongo import PymongoInstrumentorWrapper
 from opentelemetry.test.test_base import TestBase
 from cisco_opentelemetry_specifications import SemanticAttributes

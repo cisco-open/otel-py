@@ -57,7 +57,7 @@ def init(
         provider = _set_tracing(opt)
         _auto_instrument(opt)
 
-    logging.info(Consts.TELESCOPE_IS_RUNNING_MESSAGE)
+    print(Consts.TELESCOPE_IS_RUNNING_MESSAGE)
 
     return provider
 

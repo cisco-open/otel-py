@@ -70,9 +70,7 @@ class TestTracing(unittest.TestCase):
         captured_output = io.StringIO()
         sys.stdout = captured_output
 
-        tracing.init(
-            cisco_token="sometoken", service_name="service", debug=True
-        )
+        tracing.init(cisco_token="sometoken", service_name="service", debug=True)
 
         sys.stdout = sys.__stdout__
 

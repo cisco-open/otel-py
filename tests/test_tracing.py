@@ -16,13 +16,14 @@ limitations under the License.
 
 import os
 import unittest
+import io
+import sys
 
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk import environment_variables
 from opentelemetry.semconv.resource import ResourceAttributes
 from cisco_telescope import tracing
 from cisco_opentelemetry_specifications import Consts
-from pkg_resources import get_distribution
 
 
 class TestTracing(unittest.TestCase):
@@ -63,4 +64,16 @@ class TestTracing(unittest.TestCase):
         self.assertEqual(
             resource.attributes[ResourceAttributes.SERVICE_NAME],
             configuration_service_name,
+        )
+
+    def test_telescope_is_running_log(self):
+        captured_output = io.StringIO()
+        sys.stdout = captured_output
+
+        tracing.init(cisco_token="sometoken", service_name="service", debug=True)
+
+        sys.stdout = sys.__stdout__
+
+        self.assertEqual(
+            Consts.TELESCOPE_IS_RUNNING_MESSAGE in str(captured_output.getvalue()), True
         )

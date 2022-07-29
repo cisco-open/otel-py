@@ -15,11 +15,11 @@ limitations under the License.
 """
 
 import logging
-from cisco_telescope.instrumentations.requests import RequestsInstrumentorWrapper
-from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
-from cisco_telescope.instrumentations.pymongo import PymongoInstrumentorWrapper
-from cisco_telescope.instrumentations.grpc import GrpcInstrumentorServerWrapper
-from cisco_telescope.instrumentations.grpc import GrpcInstrumentorClientWrapper
+from .requests import RequestsInstrumentorWrapper
+from .aiohttp import AiohttpInstrumentorWrapper
+from .pymongo import PymongoInstrumentorWrapper
+from .grpc import GrpcInstrumentorServerWrapper
+from .grpc import GrpcInstrumentorClientWrapper
 from .. import consts, options
 
 

@@ -81,3 +81,4 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(
             self._test_span.attributes.get("test.payload"), payload.decode("utf8")[:5]
         )
+        Configuration().max_payload_size = 1024

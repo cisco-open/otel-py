@@ -18,7 +18,7 @@ class BaseHttpTest(unittest.TestCase):
     server, server_thread = None, None
 
     @classmethod
-    def request_headers(cls) -> dict[str, str]:
+    def request_headers(cls):  # -> dict[str, str]:
         return {"test-header-key": "test-header-value"}
 
     @classmethod

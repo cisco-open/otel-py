@@ -13,7 +13,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
 from . import options
 from . import consts
 
@@ -24,6 +23,9 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
     OTLPSpanExporter as OTLPHTTPExporter,
 )
+
+
+
 
 
 def _set_exporter(exporter: options.ExporterOptions, opt: options.Options):

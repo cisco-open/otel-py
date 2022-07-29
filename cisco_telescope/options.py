@@ -80,6 +80,8 @@ class Options:
         exporters: [ExporterOptions] = None,
     ):
 
+        os.environ.setdefault("PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION", "python")
+
         # Set options parameters
         self.service_name = service_name or os.environ.get(
             Consts.SERVICE_NAME_KEY, Consts.DEFAULT_SERVICE_NAME

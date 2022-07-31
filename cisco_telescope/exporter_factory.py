@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,16 +12,15 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-from . import options
-from . import consts
-
-from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
     OTLPSpanExporter as OTLPGrpcExporter,
 )
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
     OTLPSpanExporter as OTLPHTTPExporter,
 )
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter
+
+from . import consts, options
 
 
 def _set_exporter(exporter: options.ExporterOptions, opt: options.Options):

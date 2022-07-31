@@ -1,6 +1,7 @@
 from concurrent import futures
 
 import grpc
+
 from tests.instrumentations.grpc.stream_stream import bidirectional_pb2_grpc
 
 

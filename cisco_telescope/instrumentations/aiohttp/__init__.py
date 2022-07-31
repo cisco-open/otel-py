@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,13 +19,14 @@ from collections import deque
 
 import aiohttp
 import wrapt
-
-from opentelemetry.context import create_key
+from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry import context as context_api
+from opentelemetry import trace
+from opentelemetry.context import create_key
 from opentelemetry.instrumentation.aiohttp_client import (
     AioHttpClientInstrumentor,
-    _ResponseHookT,
     _RequestHookT,
+    _ResponseHookT,
 )
 from opentelemetry.instrumentation.aiohttp_client.version import __version__
 from opentelemetry.instrumentation.utils import http_status_to_status_code
@@ -34,18 +34,16 @@ from opentelemetry.propagate import inject
 from opentelemetry.semconv.trace import SpanAttributes
 from opentelemetry.trace import (
     Span,
+    SpanKind,
+    Status,
+    StatusCode,
     TracerProvider,
     get_tracer,
-    Status,
-    SpanKind,
-    StatusCode,
 )
-from opentelemetry import trace
 from opentelemetry.util.http import remove_url_credentials
-from cisco_opentelemetry_specifications import SemanticAttributes
 
-from ..utils import Utils
 from ... import consts
+from ..utils import Utils
 
 
 def request_hook(span: Span, params: aiohttp.TraceRequestStartParams) -> None:

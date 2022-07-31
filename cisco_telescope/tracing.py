@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,19 +14,18 @@ limitations under the License.
 """
 
 import logging
+
+from cisco_opentelemetry_specifications import Consts
+from importlib_metadata import PackageNotFoundError, version
 from opentelemetry import trace
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.semconv.resource import ResourceAttributes
 from pkg_resources import iter_entry_points
-from importlib_metadata import version, PackageNotFoundError
-from cisco_opentelemetry_specifications import Consts
 
+from . import configuration, exporter_factory, options
 from .instrumentations.instrumentation_wrapper import InstrumentationWrapper
-from . import options
-from . import exporter_factory
-from . import configuration
 
 
 def init(

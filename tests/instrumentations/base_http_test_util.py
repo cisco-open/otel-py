@@ -1,16 +1,14 @@
 import re
 import unittest
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
 from http import HTTPStatus
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
 
 from opentelemetry.sdk.trace import Span
 
 
 class BaseHttpTest(unittest.TestCase):
-    """
-    A base test class for all Http Tests
+    """A base test class for all Http Tests.
 
     The class create an HTTP server for all class test suits
     """

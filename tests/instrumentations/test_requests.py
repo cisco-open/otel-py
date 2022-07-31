@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,12 +13,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import requests
-
+from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.test.test_base import TestBase
 
-from cisco_opentelemetry_specifications import SemanticAttributes
 from cisco_telescope.configuration import Configuration
 from cisco_telescope.instrumentations.requests import RequestsInstrumentorWrapper
+
 from .base_http_test_util import BaseHttpTest
 
 

@@ -19,7 +19,8 @@ jobs:
           mongodb-version: 4.4
 
       - name: test
-        run: ./pants test ::
+        run: |
+          - ./pants test ::
 
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v2

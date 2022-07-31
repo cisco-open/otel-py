@@ -13,15 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os
 import logging
+import os
+from distutils.util import strtobool
+from typing import Dict, Optional
+
+from cisco_opentelemetry_specifications import Consts
 
 from . import consts
-from distutils.util import strtobool
-from typing import Optional, Dict
-
 from . import consts as project_consts
-from cisco_opentelemetry_specifications import Consts
 
 
 class ExporterOptions:

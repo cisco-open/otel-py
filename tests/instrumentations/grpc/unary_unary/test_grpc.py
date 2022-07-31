@@ -12,18 +12,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import grpc
 import logging
 
-from opentelemetry.test.test_base import TestBase
-from opentelemetry.sdk.trace import ReadableSpan
+import grpc
 from cisco_opentelemetry_specifications import SemanticAttributes
+from opentelemetry.sdk.trace import ReadableSpan
+from opentelemetry.test.test_base import TestBase
 
-from tests.instrumentations.grpc.unary_unary import hello_pb2_grpc, hello_pb2, server
-
-from cisco_telescope.instrumentations.grpc import GrpcInstrumentorClientWrapper
-from cisco_telescope.instrumentations.grpc import GrpcInstrumentorServerWrapper
 from cisco_telescope.configuration import Configuration
+from cisco_telescope.instrumentations.grpc import (
+    GrpcInstrumentorClientWrapper,
+    GrpcInstrumentorServerWrapper,
+)
+from tests.instrumentations.grpc.unary_unary import hello_pb2, hello_pb2_grpc, server
 
 
 class TestGrpcInstrumentationWrapper(TestBase):

@@ -1,4 +1,5 @@
-"""Copyright The Cisco Authors.
+"""
+Copyright The Cisco Authors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -22,10 +23,8 @@ from unittest import IsolatedAsyncioTestCase
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
 from cisco_telescope.configuration import Configuration
-from cisco_telescope.instrumentations.aiohttp import (
-    AiohttpInstrumentorWrapper,
-)
-from tests.instrumentations.base_http_test import BaseHttpTest
+from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
+from tests.instrumentations.base_http_test_util import BaseHttpTest
 
 
 class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):

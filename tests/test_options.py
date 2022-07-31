@@ -16,8 +16,9 @@ import os
 import unittest
 from unittest import mock
 
-from cisco_telescope import options, consts
 from cisco_opentelemetry_specifications import Consts
+
+from cisco_telescope import consts, options
 
 from . import utils
 

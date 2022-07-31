@@ -13,16 +13,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os
-import unittest
 import io
+import os
 import sys
+import unittest
 
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk import environment_variables
-from opentelemetry.semconv.resource import ResourceAttributes
-from cisco_telescope import tracing
 from cisco_opentelemetry_specifications import Consts
+from opentelemetry.sdk import environment_variables
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.semconv.resource import ResourceAttributes
+
+from cisco_telescope import tracing
 
 
 class TestTracing(unittest.TestCase):

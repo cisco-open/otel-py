@@ -1,6 +1,8 @@
 from typing import AnyStr
-from opentelemetry.trace.span import Span
+
 from cisco_opentelemetry_specifications.payload_attributes import PAYLOAD_ATTRIBUTES
+from opentelemetry.trace.span import Span
+
 from cisco_telescope.configuration import Configuration
 
 from .. import consts

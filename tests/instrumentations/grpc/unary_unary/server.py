@@ -1,7 +1,8 @@
-import grpc
 from concurrent import futures
 
-from tests.instrumentations.grpc.unary_unary import hello_pb2_grpc, hello_pb2
+import grpc
+
+from tests.instrumentations.grpc.unary_unary import hello_pb2, hello_pb2_grpc
 
 
 class Greeter(hello_pb2_grpc.GreeterServicer):

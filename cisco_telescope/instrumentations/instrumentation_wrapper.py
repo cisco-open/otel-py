@@ -14,12 +14,12 @@ limitations under the License.
 """
 
 import logging
-from .requests import RequestsInstrumentorWrapper
-from .aiohttp import AiohttpInstrumentorWrapper
-from .pymongo import PymongoInstrumentorWrapper
-from .grpc import GrpcInstrumentorServerWrapper
-from .grpc import GrpcInstrumentorClientWrapper
+
 from .. import consts, options
+from .aiohttp import AiohttpInstrumentorWrapper
+from .grpc import GrpcInstrumentorClientWrapper, GrpcInstrumentorServerWrapper
+from .pymongo import PymongoInstrumentorWrapper
+from .requests import RequestsInstrumentorWrapper
 
 
 class InstrumentationWrapper:

@@ -1,31 +1,30 @@
 import json
-import grpc
 import logging
-from typing import MutableMapping
 from collections import OrderedDict
+from typing import Any, MutableMapping
 
-from wrapt import wrap_function_wrapper as _wrap
-from typing import Any
+import grpc
+from cisco_opentelemetry_specifications import SemanticAttributes
 from google.protobuf.json_format import MessageToDict
 from opentelemetry import trace
 from opentelemetry.instrumentation.grpc import (
-    GrpcInstrumentorServer,
     GrpcInstrumentorClient,
-    _server,
+    GrpcInstrumentorServer,
     _client,
+    _server,
 )
+from opentelemetry.instrumentation.grpc._utilities import RpcInfo
+from opentelemetry.instrumentation.grpc.grpcext import intercept_channel
+from opentelemetry.instrumentation.grpc.version import __version__
 from opentelemetry.propagate import inject
 from opentelemetry.propagators.textmap import Setter
-from opentelemetry.instrumentation.grpc.version import __version__
-from opentelemetry.instrumentation.grpc.grpcext import intercept_channel
-from ..utils import Utils
-from opentelemetry.instrumentation.grpc._utilities import RpcInfo
+from opentelemetry.semconv.trace import SpanAttributes
 from opentelemetry.trace.status import Status, StatusCode
+from wrapt import wrap_function_wrapper as _wrap
+
 from cisco_telescope.instrumentations import utils
 
-from cisco_opentelemetry_specifications import SemanticAttributes
-from opentelemetry.semconv.trace import SpanAttributes
-
+from ..utils import Utils
 
 # code was taken from github commit sha: f7eb9673bca5d6fb4d16040e8ac28053225ad302
 # https://github.com/hypertrace/pythonagent/pull/262

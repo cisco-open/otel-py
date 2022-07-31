@@ -21,6 +21,7 @@ class TestUtils(unittest.TestCase):
 
     def tearDown(self) -> None:
         self._test_span.end()
+        Configuration().reset_to_default()
 
     def test_lowered_case_items(self):
         lowered_items = utils.Utils.lowercase_items(
@@ -81,4 +82,3 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(
             self._test_span.attributes.get("test.payload"), payload.decode("utf8")[:5]
         )
-        Configuration().max_payload_size = 1024

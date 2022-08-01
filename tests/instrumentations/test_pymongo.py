@@ -5,7 +5,10 @@ from pymongo.errors import DuplicateKeyError
 import json
 import pandas as pd
 from cisco_telescope.configuration import Configuration
-from cisco_telescope.instrumentations.pymongo import PymongoInstrumentorWrapper, ObjectIDEncoder
+from cisco_telescope.instrumentations.pymongo import (
+    PymongoInstrumentorWrapper,
+    ObjectIDEncoder,
+)
 from opentelemetry.test.test_base import TestBase
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
@@ -49,8 +52,10 @@ class TestPymongoWrapper(BaseHttpTest, TestBase):
         )
 
     def test_json_with_timestamp_parsing(self):
-        tstamp = pd.Timestamp('2023-01-01T12')
-        json_str = json.dumps({'created_at': tstamp}, cls=ObjectIDEncoder, skipkeys=True)
+        tstamp = pd.Timestamp("2023-01-01T12")
+        json_str = json.dumps(
+            {"created_at": tstamp}, cls=ObjectIDEncoder, skipkeys=True
+        )
         print(json_str)
 
     def test_insert(self):

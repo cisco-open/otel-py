@@ -43,7 +43,7 @@ class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
         Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="GET",
-            url="https://google.com",
+            url="https://www.google.com/",
             headers=self.request_headers(),
             chunked=True,
         ) as resp:

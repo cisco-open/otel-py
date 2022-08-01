@@ -1,4 +1,5 @@
 import re
+import time
 import typing
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
@@ -22,7 +23,7 @@ class BaseHttpTest(unittest.TestCase):
     server, server_thread = None, None
 
     @classmethod
-    def request_headers(cls) -> typing.Mapping[str, str]:
+    def request_headers(cls) -> typing.Dict[str, str]:
         return {"test-header-key": "test-header-value"}
 
     @classmethod
@@ -93,6 +94,8 @@ class BaseHttpTest(unittest.TestCase):
             target=httpd.serve_forever, daemon=True, name="Test server worker"
         )
         worker.start()
+        time.sleep(1)
+
         return worker, httpd
 
     @classmethod

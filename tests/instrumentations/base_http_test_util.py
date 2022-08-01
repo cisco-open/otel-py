@@ -18,7 +18,7 @@ class BaseHttpTest(unittest.TestCase):
     server, server_thread = None, None
 
     @classmethod
-    def request_headers(cls) -> typing.Dict[str, str]:
+    def request_headers(cls) -> typing.Mapping[str, str]:
         return {"test-header-key": "test-header-value"}
 
     @classmethod

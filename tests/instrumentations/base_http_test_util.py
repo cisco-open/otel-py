@@ -1,4 +1,5 @@
 import re
+import typing
 import unittest
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -17,7 +18,7 @@ class BaseHttpTest(unittest.TestCase):
     server, server_thread = None, None
 
     @classmethod
-    def request_headers(cls):
+    def request_headers(cls) -> typing.Dict[str, str]:
         return {"test-header-key": "test-header-value"}
 
     @classmethod

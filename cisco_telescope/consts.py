@@ -22,9 +22,9 @@ ENCODING_UTF8 = "UTF8"
 DECODE_PAYLOAD_IN_CASE_OF_ERROR = "backslashreplace"
 
 REQUESTS_KEY = "requests"
-AIOHTTP_KEY = "telescope_instrumentation_aiohttp"
+AIOHTTP_KEY = "aiohttp"
 PYMONGO_KEY = "pymongo"
-AIOHTTP_CLIENT_KEY = "telescope_instrumentation_aiohttp-client"
+AIOHTTP_CLIENT_KEY = "aiohttp-client"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"
 

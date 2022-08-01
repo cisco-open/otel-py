@@ -48,10 +48,10 @@ class TestPymongoWrapper(BaseHttpTest, TestBase):
             span.attributes[SpanAttributes.DB_STATEMENT], "insert customers"
         )
 
-    # def test_json_with_timestamp_parsing(self):
-    #     tstamp = pd.Timestamp('2023-01-01T12')
-    #     json_str = json.dumps({'created_at': tstamp}, cls=ObjectIDEncoder, skipkeys=True)
-    #     print(json_str)
+    def test_json_with_timestamp_parsing(self):
+        tstamp = pd.Timestamp('2023-01-01T12')
+        json_str = json.dumps({'created_at': tstamp}, cls=ObjectIDEncoder, skipkeys=True)
+        print(json_str)
 
     def test_insert(self):
         spans = self.memory_exporter.get_finished_spans()

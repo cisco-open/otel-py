@@ -77,6 +77,6 @@ class ObjectIDEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, objectid.ObjectId):
             return str(obj)
-        # if isinstance(obj, pandas.Timestamp):
-        #     return str(obj)
+        if isinstance(obj, pandas.Timestamp):
+            return str(obj)
         return json.JSONEncoder.default(self, obj)

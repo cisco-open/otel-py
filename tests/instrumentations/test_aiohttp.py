@@ -30,6 +30,7 @@ from tests.instrumentations.base_http_test import BaseHttpTest
 
 class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     def setUp(self) -> None:
+        self.setUpClass()
         super().setUp()
         AiohttpInstrumentorWrapper().instrument()
 

@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import json
-
+import pandas
 from opentelemetry.instrumentation.pymongo import PymongoInstrumentor
 from pymongo import monitoring
 from bson import objectid
@@ -77,4 +77,6 @@ class ObjectIDEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, objectid.ObjectId):
             return str(obj)
+        # if isinstance(obj, pandas.Timestamp):
+        #     return str(obj)
         return json.JSONEncoder.default(self, obj)

@@ -51,7 +51,8 @@ class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def test_post_request_sanity(self):
         Configuration().payloads_enabled = True
         async with aiohttp.client.request(
-            method="POST",
+            # fmt: off
+            method='POST',
             url=self.http_url_sanity,
             headers=self.request_headers(),
             chunked=True,
@@ -128,7 +129,8 @@ class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def test_post_request_payloads_not_enabled(self):
         Configuration().payloads_enabled = False
         async with aiohttp.client.request(
-            method="POST",
+            # fmt: off
+            method='POST',
             url=self.http_url_sanity,
             headers=self.request_headers(),
             data=self.request_body(),

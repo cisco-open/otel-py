@@ -9,8 +9,7 @@ from opentelemetry.sdk.trace import Span
 
 
 class BaseHttpTest(unittest.TestCase):
-    """
-    A base test class for all Http Tests
+    """A base test class for all Http Tests.
 
     The class create an HTTP server for all class test suits
     """

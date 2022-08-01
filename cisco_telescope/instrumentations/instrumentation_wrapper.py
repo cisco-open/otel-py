@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -40,12 +39,12 @@ class InstrumentationWrapper:
 
     @classmethod
     def is_already_instrumented(cls, library_key):
-        """check if an instrumentation wrapper is already registered"""
+        """check if an instrumentation wrapper is already registered."""
         return library_key in cls._INSTRUMENTATION_STATE.keys()
 
     @classmethod
     def get_instrumentation_wrapper(cls, opt: options.Options, library_key):
-        """load and initialize an instrumentation wrapper"""
+        """load and initialize an instrumentation wrapper."""
         if cls.is_already_instrumented(library_key):
             return None
         try:
@@ -73,5 +72,5 @@ class InstrumentationWrapper:
 
     @classmethod
     def _mark_as_instrumented(cls, library_key, wrapper_instance):
-        """mark an instrumentation wrapper as registered"""
+        """mark an instrumentation wrapper as registered."""
         cls._INSTRUMENTATION_STATE[library_key] = wrapper_instance

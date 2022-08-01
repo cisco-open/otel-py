@@ -32,14 +32,14 @@ from opentelemetry.semconv.trace import SpanAttributes
 
 
 class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer):
-    """wrapper around OTel grpc:server instrumentor class"""
+    """wrapper around OTel grpc:server instrumentor class."""
 
     def __init__(self):
         super().__init__()
         self._original_wrapper_func = None
 
     def instrument(self, **kwargs) -> None:
-        """instrument grpc:server"""
+        """instrument grpc:server."""
         super().instrument()
 
     def uninstrument(self, **kwargs) -> None:
@@ -48,7 +48,7 @@ class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer):
 
     # Internal enable wrapper instrumentation
     def _instrument(self, **kwargs) -> None:
-        """Enable wrapper instrumentation internal call"""
+        """Enable wrapper instrumentation internal call."""
         super()._instrument(**kwargs)
         self._original_wrapper_func = grpc.server
 
@@ -60,7 +60,7 @@ class GrpcInstrumentorServerWrapper(GrpcInstrumentorServer):
 
     # Internal disable wrapper instrumentation
     def _uninstrument(self, **kwargs) -> None:
-        """Disable wrapper instrumentation internal call"""
+        """Disable wrapper instrumentation internal call."""
         super()._uninstrument(**kwargs)
 
 
@@ -70,7 +70,7 @@ class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient):
         super().__init__()
 
     def _instrument(self, **kwargs) -> None:
-        """Internal initialize instrumentation"""
+        """Internal initialize instrumentation."""
         logging.debug("Instrumenting")
         for ctype in self._which_channel(kwargs):
             _wrap(
@@ -80,11 +80,11 @@ class GrpcInstrumentorClientWrapper(GrpcInstrumentorClient):
             )
 
     def _uninstrument(self, **kwargs) -> None:
-        """Internal disable instrumentation"""
+        """Internal disable instrumentation."""
         super()._uninstrument(**kwargs)
 
     def wrapper_fn_wrapper(self, original_func, instance, args, kwargs) -> None:
-        """Wrap function for initializing the request handler"""
+        """Wrap function for initializing the request handler."""
         channel = original_func(*args, **kwargs)
         tracer_provider = kwargs.get("tracer_provider")
         return intercept_channel(
@@ -106,10 +106,8 @@ def client_interceptor_wrapper(gicw, tracer_provider):
 
 
 class _OpenTelemetryWrapperServicerContext(_server._OpenTelemetryServicerContext):
-    """
-    Wrapper around Server-side telemetry context
-    grpc:server telemetry context
-    """
+    """Wrapper around Server-side telemetry context grpc:server telemetry
+    context."""
 
     def __init__(self, servicer_context, active_span):
         super().__init__(servicer_context, active_span)
@@ -117,17 +115,19 @@ class _OpenTelemetryWrapperServicerContext(_server._OpenTelemetryServicerContext
 
     def set_trailing_metadata(self, *args, **kwargs) -> None:
         """Override trailing metadata(response headers) method.
-        Allows us to capture the response headers"""
+
+        Allows us to capture the response headers
+        """
         self._response_headers = args
         return self._servicer_context.set_trailing_metadata(*args, **kwargs)
 
     def get_trailing_metadata(self) -> tuple:
-        """Return response headers"""
+        """Return response headers."""
         return self._response_headers
 
 
 class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerInterceptor):
-    """Wrapper around server-side interceptor"""
+    """Wrapper around server-side interceptor."""
 
     def __init__(self, tracer, gisw):
         super().__init__(tracer)
@@ -226,17 +226,15 @@ class OpenTelemetryServerInterceptorWrapper(_server.OpenTelemetryServerIntercept
 
 
 class _CarrierSetter(Setter):
-    """
-    We use a custom setter in order to be able to lower case
-    keys as is required by grpc.
-    """
+    """We use a custom setter in order to be able to lower case keys as is
+    required by grpc."""
 
     def set(self, carrier: MutableMapping[str, str], key: str, value: str):
         carrier[key.lower()] = value
 
 
 class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientInterceptor):
-    """Wrapper around client-side interceptor"""
+    """Wrapper around client-side interceptor."""
 
     def __init__(self, tracer, gicw):
         super().__init__(tracer)

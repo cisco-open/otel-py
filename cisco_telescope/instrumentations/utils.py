@@ -31,7 +31,8 @@ class Utils(object):
 
     @staticmethod
     def add_flattened_dict(span: Span, prefix, attributes: dict):
-        """Add Dictionary to Span as flattened labels with lower cased key values"""
+        """Add Dictionary to Span as flattened labels with lower cased key
+        values."""
         payloads_enabled = Configuration().payloads_enabled
         if payloads_enabled or (prefix not in PAYLOAD_ATTRIBUTES):
             for attribute_key, attribute_value in Utils.lowercase_items(

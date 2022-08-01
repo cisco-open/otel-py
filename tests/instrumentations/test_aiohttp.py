@@ -12,7 +12,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-import base64
+
 import asyncio
 import aiohttp
 
@@ -22,7 +22,9 @@ from unittest import IsolatedAsyncioTestCase
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
 from cisco_telescope.configuration import Configuration
-from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
+from cisco_telescope.instrumentations.telescope_instrumentation_aiohttp import (
+    AiohttpInstrumentorWrapper,
+)
 from tests.instrumentations.base_http_test_util import BaseHttpTest
 
 

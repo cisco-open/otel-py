@@ -15,7 +15,7 @@ limitations under the License.
 
 import logging
 from .requests import RequestsInstrumentorWrapper
-from .aiohttp import AiohttpInstrumentorWrapper
+from .telescope_instrumentation_aiohttp import AiohttpInstrumentorWrapper
 from .pymongo import PymongoInstrumentorWrapper
 from .grpc import GrpcInstrumentorServerWrapper
 from .grpc import GrpcInstrumentorClientWrapper

@@ -9,6 +9,10 @@ from threading import Thread
 from opentelemetry.sdk.trace import Span
 
 
+def test_sanity():
+    assert 1 == 1
+
+
 class BaseHttpTest(unittest.TestCase):
     """A base test class for all Http Tests.
 

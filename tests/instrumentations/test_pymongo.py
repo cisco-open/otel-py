@@ -8,7 +8,7 @@ from cisco_telescope.instrumentations.pymongo import PymongoInstrumentorWrapper
 from opentelemetry.test.test_base import TestBase
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
-from .base_http_test_util import BaseHttpTest
+from .base_http_test import BaseHttpTest
 
 
 class TestPymongoWrapper(BaseHttpTest, TestBase):

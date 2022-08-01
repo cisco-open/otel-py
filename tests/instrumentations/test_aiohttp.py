@@ -24,10 +24,10 @@ from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
 from cisco_telescope.configuration import Configuration
 from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
-from .base_http_test import BaseHttpTest
+from tests.instrumentations.base_http_test_util import BaseHttpTest
 
 
-class TestRequestsWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
+class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     def setUp(self) -> None:
         super().setUp()
         AiohttpInstrumentorWrapper().instrument()

@@ -1,5 +1,6 @@
 import unittest
-
+from cisco_telescope import consts, options, exporter_factory
+from cisco_opentelemetry_specifications import Consts
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
     OTLPSpanExporter as OTLPGrpcExporter,
@@ -7,9 +8,6 @@ from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
     OTLPSpanExporter as OTLPHTTPExporter,
 )
-
-from cisco_telescope import consts, options, exporter_factory
-from cisco_opentelemetry_specifications import Consts
 
 from . import utils
 

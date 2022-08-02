@@ -77,5 +77,7 @@ class ObjectIDEncoder(json.JSONEncoder):
         try:
             return json.JSONEncoder.default(self, obj)
         except TypeError as e:
-            logging.info(f"Could not decode object of type: {type(obj)}, return is as a string, {e}")
+            logging.info(
+                f"Could not decode object of type: {type(obj)}, return is as a string, {e}"
+            )
             return str(obj)

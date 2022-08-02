@@ -29,6 +29,7 @@ from tests.instrumentations.base_http_test import BaseHttpTest
 class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def asyncSetUp(self):
         super().setUp()
+        await asyncio.sleep(1)
         AiohttpInstrumentorWrapper().instrument()
 
     async def asyncTearDown(self):

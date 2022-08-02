@@ -54,18 +54,3 @@ to generate .proto files:
 ```
 python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. hello.proto
 ```
-
-After setting up the repo you will be able to work with every scope package individually (using the familiar npm commands)
-
-#### Conventional commit
-
-The Conventional Commits specification is a lightweight convention on top of commit messages. It provides an easy set of rules for creating an explicit commit history; which makes it easier to write automated tools on top of. This convention dovetails with SemVer, by describing the features, fixes, and breaking changes made in commit messages. You can see examples [here](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#examples).
-We use [commitlint](https://github.com/conventional-changelog/commitlint) and [husky](https://github.com/typicode/husky) to prevent bad commit message.
-For example, you want to submit the following commit message `git commit -s -am "my bad commit"`.
-You will receive the following error :
-
-```text
-✖   type must be one of [ci, feat, fix, docs, style, refactor, perf, test, revert, chore] [type-enum]
-```
-
-Here's an example that will pass the verification: `git commit -s -am "chore(cisco-telescope): update deps"`

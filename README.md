@@ -50,9 +50,8 @@ Cisco OpenTelemetry Distribution is activated and instruments the supported libr
 
 To initialize the library, you'll need a cisco-token, which is taken from your [Account tab on the Telescope console Settings page](https://console.telescope.app/settings/account).
 
-
 ```python
-from cisco_telescope import tracing
+from telescope_instrumentor import tracing
 
 tracing.init(
   service_name="<your-service-name>",
@@ -71,7 +70,7 @@ Cisco OpenTelemetry Distribution supports the configuration of multiple custom e
 Example for creating OtlpGrpc Span exporter to local OpenTelemetry collector:
 
 ```python
-from cisco_telescope import tracing, options
+from telescope_instrumentor import tracing, options
 
 tracing.init(
   service_name="<your-service-name>",

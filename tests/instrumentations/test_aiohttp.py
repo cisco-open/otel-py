@@ -39,6 +39,7 @@ class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
         # await asyncio.sleep(2)
 
     async def test_get_request_sanity(self):
+        await asyncio.sleep(1)
         Configuration().payloads_enabled = True
         async with aiohttp.client.request(
             method="GET",

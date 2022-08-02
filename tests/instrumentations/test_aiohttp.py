@@ -28,11 +28,11 @@ from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
 from tests.instrumentations.base_http_tests_util import BaseHttpTest
 
 
-class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
-    async def asyncSetUp(self):
-        await super().asyncSetUp()
+class TestAiohttpWrapper(BaseHttpTest, TestBase):
+
+    def setUp(self):
+        super().setUp()
         AiohttpInstrumentorWrapper().instrument()
-        await asyncio.sleep(1)
 
     def tearDown(self):
         super().tearDown()

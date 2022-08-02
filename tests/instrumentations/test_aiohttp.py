@@ -28,16 +28,15 @@ from tests.instrumentations.base_http_test import BaseHttpTest
 class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def asyncSetUp(self):
         await super().asyncSetUp()
-        super().setUp()
-        AiohttpInstrumentorWrapper().instrument()
-        await asyncio.sleep(2)
+        await AiohttpInstrumentorWrapper().instrument()
+        # await asyncio.sleep(2)
 
     async def asyncTearDown(self):
-        super().tearDown()
+        # super().tearDown()
         await super().asyncTearDown()
-        AiohttpInstrumentorWrapper().uninstrument()
-        Configuration().reset_to_default()
-        await asyncio.sleep(2)
+        await AiohttpInstrumentorWrapper().uninstrument()
+        await Configuration().reset_to_default()
+        # await asyncio.sleep(2)
 
     async def test_get_request_sanity(self):
         Configuration().payloads_enabled = True

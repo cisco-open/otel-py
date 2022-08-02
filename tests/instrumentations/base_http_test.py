@@ -93,7 +93,6 @@ class BaseHttpTest(unittest.TestCase):
             target=httpd.serve_forever, daemon=True, name="Test server worker"
         )
         worker.start()
-        time.sleep(1)
 
         return worker, httpd
 
@@ -106,8 +105,6 @@ class BaseHttpTest(unittest.TestCase):
 
         cls.http_url_sanity = f"{http_url_base}/status/200"
         cls.http_url_error = f"{http_url_base}/status/404"
-
-        time.sleep(3)
 
     @classmethod
     def tearDownClass(cls):

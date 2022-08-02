@@ -1,5 +1,4 @@
 import re
-import time
 import typing
 import unittest
 from http import HTTPStatus
@@ -7,10 +6,6 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
 
 from opentelemetry.sdk.trace import Span
-
-
-def test_sanity():
-    assert 1 == 1
 
 
 class BaseHttpTest(unittest.TestCase):

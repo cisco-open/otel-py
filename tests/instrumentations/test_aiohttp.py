@@ -12,7 +12,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+from __future__ import annotations
+
 import asyncio
+import unittest
 from unittest import IsolatedAsyncioTestCase
 
 import aiohttp
@@ -29,7 +32,7 @@ class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def asyncSetUp(self):
         await super().asyncSetUp()
         AiohttpInstrumentorWrapper().instrument()
-        # await asyncio.sleep(2)
+        await asyncio.sleep(3)
 
     async def asyncTearDown(self):
         await super().asyncTearDown()

@@ -26,9 +26,8 @@ from cisco_telescope.instrumentations.aiohttp import AiohttpInstrumentorWrapper
 from tests.instrumentations.base_http_test import BaseHttpTest
 
 
-class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
+class TestAiohttpWrapper(BaseHttpTest, IsolatedAsyncioTestCase, TestBase):
     def setUp(self) -> None:
-        BaseHttpTest.setUpClass()
         super().setUp()
         AiohttpInstrumentorWrapper().instrument()
 

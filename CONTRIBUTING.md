@@ -47,7 +47,7 @@ This will install the main package deps and then all the scope packages deps (an
 To run all tests:
 
 ```bash
-make tests
+make test
 ```
 
 to generate .proto files:

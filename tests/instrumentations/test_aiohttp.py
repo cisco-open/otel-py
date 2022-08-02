@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import asyncio
-import base64
 from unittest import IsolatedAsyncioTestCase
 
 import aiohttp
@@ -28,14 +27,17 @@ from tests.instrumentations.base_http_test import BaseHttpTest
 
 class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def asyncSetUp(self):
+        await super().asyncSetUp()
         super().setUp()
-        await asyncio.sleep(1)
         AiohttpInstrumentorWrapper().instrument()
+        await asyncio.sleep(2)
 
     async def asyncTearDown(self):
         super().tearDown()
+        await super().asyncTearDown()
         AiohttpInstrumentorWrapper().uninstrument()
         Configuration().reset_to_default()
+        await asyncio.sleep(2)
 
     async def test_get_request_sanity(self):
         Configuration().payloads_enabled = True

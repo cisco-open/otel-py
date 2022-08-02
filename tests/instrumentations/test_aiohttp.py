@@ -15,8 +15,7 @@ limitations under the License.
 from __future__ import annotations
 
 import asyncio
-import unittest
-from unittest import IsolatedAsyncioTestCase
+
 
 import aiohttp
 from cisco_opentelemetry_specifications import SemanticAttributes

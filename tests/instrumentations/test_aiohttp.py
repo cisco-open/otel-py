@@ -32,10 +32,10 @@ class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def asyncSetUp(self):
         await super().asyncSetUp()
         AiohttpInstrumentorWrapper().instrument()
-        await asyncio.sleep(3)
+        await asyncio.sleep(1)
 
-    async def asyncTearDown(self):
-        await super().asyncTearDown()
+    def tearDown(self):
+        super().tearDown()
         AiohttpInstrumentorWrapper().uninstrument()
         Configuration().reset_to_default()
 

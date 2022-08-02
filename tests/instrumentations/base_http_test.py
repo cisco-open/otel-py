@@ -107,6 +107,8 @@ class BaseHttpTest(unittest.TestCase):
         cls.http_url_sanity = f"{http_url_base}/status/200"
         cls.http_url_error = f"{http_url_base}/status/404"
 
+        time.sleep(3)
+
     @classmethod
     def tearDownClass(cls):
         cls.server.shutdown()

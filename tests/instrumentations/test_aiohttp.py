@@ -29,7 +29,6 @@ from tests.instrumentations.base_http_tests_util import BaseHttpTest
 
 
 class TestAiohttpWrapper(BaseHttpTest, TestBase):
-
     def setUp(self):
         super().setUp()
         AiohttpInstrumentorWrapper().instrument()

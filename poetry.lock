@@ -432,7 +432,7 @@ grpc = ["grpcio (>=1.0.0,<2.0.0dev)"]
 
 [[package]]
 name = "grpcio"
-version = "1.47.0"
+version = "1.48.0"
 description = "HTTP/2-based RPC framework"
 category = "main"
 optional = false
@@ -442,7 +442,7 @@ python-versions = ">=3.6"
 six = ">=1.5.2"
 
 [package.extras]
-protobuf = ["grpcio-tools (>=1.47.0)"]
+protobuf = ["grpcio-tools (>=1.48.0)"]
 
 [[package]]
 name = "h11"
@@ -1222,7 +1222,7 @@ testing = ["filelock"]
 
 [[package]]
 name = "python-gitlab"
-version = "3.6.0"
+version = "3.7.0"
 description = "Interact with GitLab API"
 category = "dev"
 optional = false
@@ -1588,7 +1588,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b95f282e9d3ade3d8216e695015790365ffd5b7626c8d1c28b9db0ed3fbeb284"
+content-hash = "c5b2978d8ca5ec2b60a71e1c94045ff81363670b6b39ec0238f18f3a603d4261"
 
 [metadata.files]
 aiohttp = [

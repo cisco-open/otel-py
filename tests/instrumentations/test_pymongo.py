@@ -57,7 +57,7 @@ class TestPymongoWrapper(BaseHttpTest, TestBase):
         json_str = json.dumps(
             {"created_at": dt_object}, cls=ObjectIDEncoder, skipkeys=True
         )
-        self.assertEqual(json_str, '''{"created_at": "2020-01-02 00:00:00"}''')  # fmt: skip
+        self.assertEqual(json_str, '''{"created_at": "2020-01-01 22:00:00"}''')  # fmt: skip
 
     def test_insert(self):
         spans = self.memory_exporter.get_finished_spans()

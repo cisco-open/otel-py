@@ -3,7 +3,7 @@ import json
 import pymongo
 from pymongo.errors import DuplicateKeyError
 import json
-import pandas as pd
+from datetime import datetime
 from cisco_telescope.configuration import Configuration
 from cisco_telescope.instrumentations.pymongo import (
     PymongoInstrumentorWrapper,
@@ -52,11 +52,12 @@ class TestPymongoWrapper(BaseHttpTest, TestBase):
         )
 
     def test_json_with_timestamp_parsing(self):
-        tstamp = pd.Timestamp("2023-01-01T12")
+        timestamp = 1577916000  # selected date: 1/2/2020 10:00:00
+        dt_object = datetime.fromtimestamp(timestamp)
         json_str = json.dumps(
-            {"created_at": tstamp}, cls=ObjectIDEncoder, skipkeys=True
+            {"created_at": dt_object}, cls=ObjectIDEncoder, skipkeys=True
         )
-        print(json_str)
+        self.assertEqual(json_str, '''{"created_at": "2020-01-02 00:00:00"}''')
 
     def test_insert(self):
         spans = self.memory_exporter.get_finished_spans()

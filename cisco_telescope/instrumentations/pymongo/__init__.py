@@ -14,10 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import json
-import pandas
+import logging
 from opentelemetry.instrumentation.pymongo import PymongoInstrumentor
 from pymongo import monitoring
-from bson import objectid
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.trace import Span
 from ... import consts
@@ -75,8 +74,8 @@ class PymongoInstrumentorWrapper(PymongoInstrumentor):
 
 class ObjectIDEncoder(json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, objectid.ObjectId):
+        try:
+            return json.JSONEncoder.default(self, obj)
+        except TypeError as e:
+            logging.info(f"Could not decode object of type: {type(obj)}, return is as a string, {e}")
             return str(obj)
-        if isinstance(obj, pandas.Timestamp):
-            return str(obj)
-        return json.JSONEncoder.default(self, obj)

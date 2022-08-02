@@ -27,20 +27,20 @@ from tests.instrumentations.base_http_test import BaseHttpTest
 
 class TestAiohttpWrapper(IsolatedAsyncioTestCase, BaseHttpTest, TestBase):
     async def asyncSetUp(self):
-        await super().asyncSetUp()
         AiohttpInstrumentorWrapper().instrument()
-        await asyncio.sleep(2)
+        await super().asyncSetUp()
+        # await asyncio.sleep(2)
 
     async def asyncTearDown(self):
         # super().tearDown()
-        await super().asyncTearDown()
         AiohttpInstrumentorWrapper().uninstrument()
         Configuration().reset_to_default()
+        await super().asyncTearDown()
+
         # await asyncio.sleep(2)
 
     async def test_get_request_sanity(self):
-        await asyncio.sleep(1)
-        Configuration().payloads_enabled = True
+        await asyncio.sleep(2)
         async with aiohttp.client.request(
             method="GET",
             url=self.http_url_sanity,

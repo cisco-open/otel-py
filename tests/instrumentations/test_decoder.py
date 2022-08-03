@@ -8,7 +8,6 @@ from .base_http_test_util import BaseHttpTest
 
 
 class TestJsonEncoder(BaseHttpTest, TestBase):
-
     def test_json_with_double(self):
         person = {"name": "John", "age": 10.5}
         json_str = json.dumps(person, cls=ObjectIDEncoder, skipkeys=True)

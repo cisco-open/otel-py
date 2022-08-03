@@ -2,17 +2,13 @@ import json
 
 import pymongo
 from pymongo.errors import DuplicateKeyError
-import json
-from datetime import datetime
+
 from cisco_telescope.configuration import Configuration
-from cisco_telescope.instrumentations.pymongo import (
-    PymongoInstrumentorWrapper,
-    ObjectIDEncoder,
-)
+from cisco_telescope.instrumentations.pymongo import PymongoInstrumentorWrapper
 from opentelemetry.test.test_base import TestBase
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
-from .base_http_test_util import BaseHttpTest
+from tests.instrumentations.base_http_test_util import BaseHttpTest
 
 
 class TestPymongoWrapper(BaseHttpTest, TestBase):
@@ -50,14 +46,6 @@ class TestPymongoWrapper(BaseHttpTest, TestBase):
         self.assertEqual(
             span.attributes[SpanAttributes.DB_STATEMENT], "insert customers"
         )
-
-    def test_json_with_timestamp_parsing(self):
-        timestamp = 1577916000  # selected date: 1/2/2020 10:00:00
-        dt_object = datetime.fromtimestamp(timestamp)
-        json_str = json.dumps(
-            {"created_at": dt_object}, cls=ObjectIDEncoder, skipkeys=True
-        )
-        self.assertEqual(json_str, '''{"created_at": "2020-01-01 22:00:00"}''')  # fmt: skip
 
     def test_insert(self):
         spans = self.memory_exporter.get_finished_spans()

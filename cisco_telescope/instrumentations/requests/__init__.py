@@ -1,8 +1,7 @@
+from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.instrumentation.requests import RequestsInstrumentor
 
 from ..utils import Utils
-
-from cisco_opentelemetry_specifications import SemanticAttributes
 
 
 def get_active_span_for_call_wrapper():

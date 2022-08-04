@@ -14,12 +14,11 @@ limitations under the License.
 """
 import json
 
-from bson import objectid
 from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.instrumentation.pymongo import PymongoInstrumentor
 from opentelemetry.trace import Span
 from pymongo import monitoring
-
+import logging
 from ... import consts
 
 

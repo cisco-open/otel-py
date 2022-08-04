@@ -4,7 +4,7 @@ from cisco_telescope.instrumentations.pymongo import (
     ObjectIDEncoder,
 )
 from opentelemetry.test.test_base import TestBase
-from .base_http_test_util import BaseHttpTest
+from tests.instrumentations.base_http_tests_util import BaseHttpTest
 
 
 class TestJsonEncoder(BaseHttpTest, TestBase):

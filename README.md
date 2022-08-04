@@ -76,8 +76,8 @@ tracing.init(
   service_name="<your-service-name>",
   exporters=[
     options.ExporterOptions(
-      exporter_type="otlp-grpc",
-      collector_endpoint="grpc://localhost:4317"
+      exporter_type="otlp-telescope_instrumentation_grpc",
+      collector_endpoint="telescope_instrumentation_grpc://localhost:4317"
     ),
   ]
 )

@@ -196,6 +196,6 @@ class TestExporterOptions(unittest.TestCase):
 
             messages = [record.getMessage() for record in captured.records]
             self.assertIn(
-                "Warning: All Telescope telescope_instrumentation are disabled",
+                "Warning: All Telescope instrumentation are disabled",
                 messages,
             )

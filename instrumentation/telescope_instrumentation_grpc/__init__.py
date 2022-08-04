@@ -22,9 +22,9 @@ from opentelemetry.semconv.trace import SpanAttributes
 from opentelemetry.trace.status import Status, StatusCode
 from wrapt import wrap_function_wrapper as _wrap
 
-from .. import utils
+from .. import telescope_instrumentation_utils
 
-from telescope_instrumentation.utils.__init__ import Utils
+from instrumentation.telescope_instrumentation_utils.__init__ import Utils
 
 # code was taken from github commit sha: f7eb9673bca5d6fb4d16040e8ac28053225ad302
 # https://github.com/hypertrace/pythonagent/pull/262
@@ -270,7 +270,9 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
                 Utils.add_flattened_dict(
                     span,
                     SemanticAttributes.RPC_REQUEST_METADATA,
-                    utils.Utils.lowercase_items(dict(metadata)),
+                    telescope_instrumentation_utils.Utils.lowercase_items(
+                        dict(metadata)
+                    ),
                 )
 
                 # Add request body

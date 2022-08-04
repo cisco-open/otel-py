@@ -2,13 +2,13 @@
 #
 # import grpc
 #
-# from tests.telescope_instrumentation.grpc.stream_stream import (
+# from tests.instrumentation.telescope_instrumentation_grpc.stream_stream import (
 #     bidirectional_pb2_grpc,
 #     bidirectional_pb2,
 #     bidirectional_server,
 # )
-# from telescope_instrumentor.telescope_instrumentation.grpc import GrpcInstrumentorClientWrapper
-# from telescope_instrumentor.telescope_instrumentation.grpc import GrpcInstrumentorServerWrapper
+# from telescope_instrumentor.instrumentation.telescope_instrumentation_grpc import GrpcInstrumentorClientWrapper
+# from telescope_instrumentor.instrumentation.telescope_instrumentation_grpc import GrpcInstrumentorServerWrapper
 #
 # from opentelemetry.test.test_base import TestBase
 #

@@ -18,8 +18,12 @@ from opentelemetry.test.test_base import TestBase
 
 from cisco_opentelemetry_specifications import SemanticAttributes
 from telescope_instrumentor.configuration import Configuration
-from telescope_instrumentation.requests import RequestsInstrumentorWrapper
-from telescope_instrumentation.utils.base_http_tests_util import BaseHttpTest
+from instrumentation.telescope_instrumentaion_requests import (
+    RequestsInstrumentorWrapper,
+)
+from instrumentation.telescope_instrumentation_utils.base_http_tests_util import (
+    BaseHttpTest,
+)
 
 
 class TestRequestsWrapper(BaseHttpTest, TestBase):

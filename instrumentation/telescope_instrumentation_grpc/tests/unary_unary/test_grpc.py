@@ -20,12 +20,15 @@ from opentelemetry.sdk.trace import ReadableSpan
 from opentelemetry.test.test_base import TestBase
 
 from telescope_instrumentor.configuration import Configuration
-from telescope_instrumentation.grpc import (
+from instrumentation.telescope_instrumentation_grpc import (
     GrpcInstrumentorClientWrapper,
     GrpcInstrumentorServerWrapper,
 )
-from telescope_instrumentation.grpc.tests.unary_unary import server
-from telescope_instrumentation.grpc.tests.unary_unary import hello_pb2_grpc, hello_pb2
+from instrumentation.telescope_instrumentation_grpc.tests.unary_unary import server
+from instrumentation.telescope_instrumentation_grpc.tests.unary_unary import (
+    hello_pb2_grpc,
+    hello_pb2,
+)
 
 
 class TestGrpcInstrumentationWrapper(TestBase):

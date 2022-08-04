@@ -2,7 +2,9 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
-from telescope_instrumentation.grpc.tests.unary_unary import hello_pb2 as hello__pb2
+from instrumentation.telescope_instrumentation_grpc.tests.unary_unary import (
+    hello_pb2 as hello__pb2,
+)
 
 
 class GreeterStub(object):

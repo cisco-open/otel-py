@@ -16,13 +16,15 @@ limitations under the License.
 import logging
 
 from telescope_instrumentor import consts, options
-from telescope_instrumentation.aiohttp import AiohttpInstrumentorWrapper
-from telescope_instrumentation.grpc import (
+from instrumentation.telescope_instrumentation_aiohttp import AiohttpInstrumentorWrapper
+from instrumentation.telescope_instrumentation_grpc import (
     GrpcInstrumentorClientWrapper,
     GrpcInstrumentorServerWrapper,
 )
-from telescope_instrumentation.pymongo import PymongoInstrumentorWrapper
-from telescope_instrumentation.requests import RequestsInstrumentorWrapper
+from instrumentation.telescope_instrumentation_pymongo import PymongoInstrumentorWrapper
+from instrumentation.telescope_instrumentaion_requests import (
+    RequestsInstrumentorWrapper,
+)
 
 
 class InstrumentationWrapper:

@@ -2,7 +2,10 @@ from concurrent import futures
 
 import grpc
 
-from telescope_instrumentation.grpc.tests.unary_unary import hello_pb2_grpc, hello_pb2
+from instrumentation.telescope_instrumentation_grpc.tests.unary_unary import (
+    hello_pb2_grpc,
+    hello_pb2,
+)
 
 
 class Greeter(hello_pb2_grpc.GreeterServicer):

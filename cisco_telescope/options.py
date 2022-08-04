@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,15 +13,15 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
-import os
 import logging
+import os
+from distutils.util import strtobool
+from typing import Dict, Optional
+
+from cisco_opentelemetry_specifications import Consts
 
 from . import consts
-from distutils.util import strtobool
-from typing import Optional, Dict
-
 from . import consts as project_consts
-from cisco_opentelemetry_specifications import Consts
 
 
 class ExporterOptions:
@@ -154,9 +153,7 @@ class Options:
             logging.warning("Warning: All Telescope instrumentations are disabled")
 
     def _set_debug(self):
-        """
-        Log spans to console, set global logging to debug level
-        """
+        """Log spans to console, set global logging to debug level."""
         if self.debug:
             logging.basicConfig(
                 level=logging.DEBUG,

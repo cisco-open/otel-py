@@ -29,7 +29,8 @@ class BidirectionalServicer(object):
     def SendMessage(self, request_iterator, context):
         """A Bidirectional streaming RPC.
 
-        Accepts a stream of Message sent while a route is being traversed,
+        Accepts a stream of Message sent while a route is being
+        traversed,
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details("Method not implemented!")

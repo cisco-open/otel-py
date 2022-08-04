@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +17,7 @@ from typing import Any, Dict
 
 from opentelemetry.instrumentation.distro import BaseDistro
 
-from . import tracing
-from . import options
+from . import options, tracing
 
 
 class _CiscoDistro(BaseDistro):

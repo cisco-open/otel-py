@@ -18,11 +18,17 @@ jobs:
         with:
           mongodb-version: 4.4
 
-      - name: build
-        run: make all
-
-      - name: test
-        run: make test
+      - name: Bootstrap Pants
+        run: |
+          ./pants --version
+      - name: Check BUILD files
+        run: ./pants tailor --check update-build-files --check
+      - name: Lint and typecheck
+        run: |
+          ./pants lint check ::
+      - name: Test
+        run: |
+          ./pants test ::
 
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v2

@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,8 +16,9 @@ import os
 import unittest
 from unittest import mock
 
-from cisco_telescope import options, consts
 from cisco_opentelemetry_specifications import Consts
+
+from cisco_telescope import consts, options
 
 from . import utils
 

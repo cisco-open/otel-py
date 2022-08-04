@@ -1,0 +1,9 @@
+[GLOBAL]
+dynamic_ui = false
+colors = true
+
+remote_cache_read = false
+remote_cache_write = false
+
+[pytest]
+args = ["-vv", "--no-header"]

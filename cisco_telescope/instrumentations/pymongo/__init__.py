@@ -1,5 +1,4 @@
-"""
-Copyright The Cisco Authors
+"""Copyright The Cisco Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,11 +13,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 import json
-import logging
-from opentelemetry.instrumentation.pymongo import PymongoInstrumentor
-from pymongo import monitoring
+
+from bson import objectid
 from cisco_opentelemetry_specifications import SemanticAttributes
+from opentelemetry.instrumentation.pymongo import PymongoInstrumentor
 from opentelemetry.trace import Span
+from pymongo import monitoring
+
 from ... import consts
 
 

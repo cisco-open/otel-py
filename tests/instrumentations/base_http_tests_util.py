@@ -1,16 +1,15 @@
 import re
+import typing
 import unittest
-from http.server import BaseHTTPRequestHandler, HTTPServer
-
 from http import HTTPStatus
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from threading import Thread
 
 from opentelemetry.sdk.trace import Span
 
 
 class BaseHttpTest(unittest.TestCase):
-    """
-    A base test class for all Http Tests
+    """A base test class for all Http Tests.
 
     The class create an HTTP server for all class test suits
     """
@@ -18,7 +17,7 @@ class BaseHttpTest(unittest.TestCase):
     server, server_thread = None, None
 
     @classmethod
-    def request_headers(cls):
+    def request_headers(cls) -> typing.Dict[str, str]:
         return {"test-header-key": "test-header-value"}
 
     @classmethod
@@ -89,6 +88,7 @@ class BaseHttpTest(unittest.TestCase):
             target=httpd.serve_forever, daemon=True, name="Test server worker"
         )
         worker.start()
+
         return worker, httpd
 
     @classmethod

@@ -30,7 +30,11 @@ proto:
 
 .PHONY: pretty
 pretty:
-	black .
+	./pants fmt ::
+
+.PHONY: lint
+lint:
+	./pants lint ::
 
 .PHONY: prep
 prep:

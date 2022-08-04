@@ -1,6 +1,6 @@
-from . import options
-
 from cisco_opentelemetry_specifications.consts import Consts
+
+from . import options
 
 
 def singleton(class_):

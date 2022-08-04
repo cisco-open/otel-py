@@ -7,8 +7,8 @@
 #     bidirectional_pb2,
 #     bidirectional_server,
 # )
-# from telescope_instrumentor.instrumentation.telescope_instrumentation_grpc import GrpcInstrumentorClientWrapper
-# from telescope_instrumentor.instrumentation.telescope_instrumentation_grpc import GrpcInstrumentorServerWrapper
+# from cisco_telescope.instrumentation.telescope_instrumentation_grpc import GrpcInstrumentorClientWrapper
+# from cisco_telescope.instrumentation.telescope_instrumentation_grpc import GrpcInstrumentorServerWrapper
 #
 # from opentelemetry.test.test_base import TestBase
 #

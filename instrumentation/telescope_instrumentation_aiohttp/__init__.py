@@ -42,7 +42,7 @@ from opentelemetry.trace import (
 )
 from opentelemetry.util.http import remove_url_credentials
 
-from telescope_instrumentor import consts
+from cisco_telescope import consts
 from instrumentation.telescope_instrumentation_utils import Utils
 
 

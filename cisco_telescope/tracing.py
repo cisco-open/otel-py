@@ -25,7 +25,7 @@ from opentelemetry.semconv.resource import ResourceAttributes
 from pkg_resources import iter_entry_points
 
 from . import configuration, exporter_factory, options
-from telescope_instrumentor.instrumentation_wrapper import InstrumentationWrapper
+from cisco_telescope.instrumentation_wrapper import InstrumentationWrapper
 
 
 def init(

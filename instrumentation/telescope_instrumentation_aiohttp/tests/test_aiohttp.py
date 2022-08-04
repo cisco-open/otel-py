@@ -22,7 +22,7 @@ from cisco_opentelemetry_specifications import SemanticAttributes
 from opentelemetry.semconv.trace import SpanAttributes
 from opentelemetry.test.test_base import TestBase
 
-from telescope_instrumentor.configuration import Configuration
+from cisco_telescope.configuration import Configuration
 from instrumentation.telescope_instrumentation_aiohttp import AiohttpInstrumentorWrapper
 from instrumentation.telescope_instrumentation_utils.base_http_tests_util import (
     BaseHttpTest,

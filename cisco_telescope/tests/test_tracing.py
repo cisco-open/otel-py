@@ -23,7 +23,7 @@ from opentelemetry.sdk import environment_variables
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.semconv.resource import ResourceAttributes
 
-from telescope_instrumentor import tracing
+from cisco_telescope import tracing
 
 
 class TestTracing(unittest.TestCase):

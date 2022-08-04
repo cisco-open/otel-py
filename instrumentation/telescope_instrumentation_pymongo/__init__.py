@@ -20,7 +20,7 @@ from opentelemetry.instrumentation.pymongo import PymongoInstrumentor
 from opentelemetry.trace import Span
 from pymongo import monitoring
 
-from telescope_instrumentor import consts
+from cisco_telescope import consts
 
 
 def request_hook(span: Span, params: monitoring.CommandStartedEvent) -> None:

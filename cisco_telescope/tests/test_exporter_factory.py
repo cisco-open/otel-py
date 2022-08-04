@@ -1,5 +1,5 @@
 import unittest
-from telescope_instrumentor import consts, options, exporter_factory
+from cisco_telescope import consts, options, exporter_factory
 from cisco_opentelemetry_specifications import Consts
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (

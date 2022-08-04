@@ -3,8 +3,8 @@ import unittest
 from opentelemetry import trace as trace_api
 from opentelemetry.sdk import trace
 
-from telescope_instrumentor import consts
-from telescope_instrumentor.configuration import Configuration
+from cisco_telescope import consts
+from cisco_telescope.configuration import Configuration
 from instrumentation import telescope_instrumentation_utils
 
 

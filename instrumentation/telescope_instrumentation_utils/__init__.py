@@ -3,9 +3,9 @@ from typing import AnyStr
 from cisco_opentelemetry_specifications.payload_attributes import PAYLOAD_ATTRIBUTES
 from opentelemetry.trace.span import Span
 
-from telescope_instrumentor.configuration import Configuration
+from cisco_telescope.configuration import Configuration
 
-from telescope_instrumentor import consts
+from cisco_telescope import consts
 
 
 class Utils(object):

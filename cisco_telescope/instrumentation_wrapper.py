@@ -15,7 +15,7 @@ limitations under the License.
 
 import logging
 
-from telescope_instrumentor import consts, options
+from cisco_telescope import consts, options
 from instrumentation.telescope_instrumentation_aiohttp import AiohttpInstrumentorWrapper
 from instrumentation.telescope_instrumentation_grpc import (
     GrpcInstrumentorClientWrapper,

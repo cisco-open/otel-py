@@ -50,7 +50,6 @@ Cisco OpenTelemetry Distribution is activated and instruments the supported libr
 
 To initialize the library, you'll need a cisco-token, which is taken from your [Account tab on the Telescope console Settings page](https://console.telescope.app/settings/account).
 
-
 ```python
 from cisco_telescope import tracing
 

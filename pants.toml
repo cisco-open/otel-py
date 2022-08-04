@@ -12,3 +12,6 @@ tailor_ignore_solitary_init_files = false
 
 [python-infer]
 inits = true
+
+[anonymous-telemetry]
+enabled = false

@@ -270,9 +270,7 @@ class OpenTelemetryClientInterceptorWrapper(_client.OpenTelemetryClientIntercept
                 Utils.add_flattened_dict(
                     span,
                     SemanticAttributes.RPC_REQUEST_METADATA,
-                    telescope_instrumentation_utils.Utils.lowercase_items(
-                        dict(metadata)
-                    ),
+                    dict(metadata),
                 )
 
                 # Add request body

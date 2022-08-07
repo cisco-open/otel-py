@@ -25,6 +25,9 @@ from instrumentation.telescope_instrumentation_pymongo import PymongoInstrumento
 from instrumentation.telescope_instrumentaion_requests import (
     RequestsInstrumentorWrapper,
 )
+from instrumentation.telescope_instrumentaion_fastapi import (
+    FastApiInstrumentorWrapper,
+)
 
 
 class InstrumentationWrapper:
@@ -40,6 +43,7 @@ class InstrumentationWrapper:
             consts.AIOHTTP_CLIENT_KEY: AiohttpInstrumentorWrapper,
             consts.GRPC_SERVER_KEY: GrpcInstrumentorServerWrapper,
             consts.GRPC_CLIENT_KEY: GrpcInstrumentorClientWrapper,
+            consts.FASTAPI_KEY: FastApiInstrumentorWrapper,
         }
 
     @classmethod

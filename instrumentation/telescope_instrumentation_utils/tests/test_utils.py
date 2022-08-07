@@ -23,19 +23,8 @@ class TestUtils(unittest.TestCase):
         self._test_span.end()
         Configuration().reset_to_default()
 
-    def test_lowered_case_items(self):
-        lowered_items = telescope_instrumentation_utils.Utils.lowercase_items(
-            {"Cisco-Label": "Don't touch me", "Another One": "YAP"}
-        )
-
-        self.assertDictEqual(
-            lowered_items, {"cisco-label": "Don't touch me", "another one": "YAP"}
-        )
-
     def test_add_flattened_dict(self):
-        test_dict = telescope_instrumentation_utils.Utils.lowercase_items(
-            {"Cisco-Label": "Don't touch me", "Another One": "YAP"}
-        )
+        test_dict = {"Cisco-Label": "Don't touch me", "Another One": "YAP"}
 
         telescope_instrumentation_utils.Utils.add_flattened_dict(
             self._test_span, "test.attrs", test_dict

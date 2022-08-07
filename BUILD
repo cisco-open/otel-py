@@ -51,6 +51,12 @@ python_requirement(
 )
 
 python_requirement(
+    name="opentelemetry instrumentation fastapi",
+    requirements=["opentelemetry-instrumentation-fastapi>=0.29b"],
+    modules=["opentelemetry.instrumentation.fastapi"],
+)
+
+python_requirement(
     name="opentelemetry test utils",
     requirements=["opentelemetry-test-utils>=0.29b"],
     modules=["opentelemetry.test"],

@@ -27,6 +27,7 @@ PYMONGO_KEY = "pymongo"
 AIOHTTP_CLIENT_KEY = "aiohttp-client"
 GRPC_SERVER_KEY = "grpc_server"
 GRPC_CLIENT_KEY = "grpc_client"
+KAFKA_KEY = "kafka"
 
 # Configurations
 MAX_WAIT_TIME = 0.1  # seconds

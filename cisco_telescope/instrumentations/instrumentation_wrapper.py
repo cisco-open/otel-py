@@ -15,6 +15,7 @@ limitations under the License.
 
 import logging
 
+from .kafka import KafkaInstrumentorWrapper
 from .. import consts, options
 from .aiohttp import AiohttpInstrumentorWrapper
 from .grpc import GrpcInstrumentorClientWrapper, GrpcInstrumentorServerWrapper
@@ -35,6 +36,7 @@ class InstrumentationWrapper:
             consts.AIOHTTP_CLIENT_KEY: AiohttpInstrumentorWrapper,
             consts.GRPC_SERVER_KEY: GrpcInstrumentorServerWrapper,
             consts.GRPC_CLIENT_KEY: GrpcInstrumentorClientWrapper,
+            consts.KAFKA_KEY: KafkaInstrumentorWrapper,
         }
 
     @classmethod

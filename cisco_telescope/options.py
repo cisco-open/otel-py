@@ -150,7 +150,7 @@ class Options:
             )
 
         if self.disable_instrumentations:
-            logging.warning("Warning: All Telescope instrumentations are disabled")
+            logging.warning("Warning: All Telescope instrumentation are disabled")
 
     def _set_debug(self):
         """Log spans to console, set global logging to debug level."""

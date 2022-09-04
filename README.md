@@ -3,6 +3,8 @@
 [![Apache License][license-image]][license-image]
 [![Coverage][coverage-image]][coverage-url]
 
+> **Note:**  This repository is archived since Telescope is no longer supported
+
 ![Trace](trace.png)
 
 This package provides OpenTelemetry-compliant tracing to Python
